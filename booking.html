@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>booking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <header>
+        <a href="#" class="logo">Car Rental</a>
+        <nav class="navigation">
+            <a href="#cars" >Cars</a>
+            <a href="#login" >Login</a>
+            <a href="#admin" >Admin</a> 
+            
+        </nav>
+        
+    </header>
+
+    <section class="bookingPage">
+        <div class="carPhoto">
+            <img src="images/car1.jpg" alt="car1">
+        </div>
+        <div class="form">
+            <form action="#" method="post" name="bookingForm">
+            <div >
+                <div class="labels">
+                    <input type="text" id="pickup" name="pickup" placeholder="Pickup Location">
+                    <input type="date" id="pickupDate" name="pickup-date" >
+                    <input type="time" id="pickupTime" name="pickup-time" >
+                </div>
+                <div class="labels">
+                    <input type="text" id="return" name="return" placeholder="Return Location">
+                    <input type="date" id="returnDate" name="return-date" >
+                    <input type="time" id="returnTime" name="return-time" >
+                </div>
+            </div>
+            <div class="priceANDbtn"> 
+                <select>
+                    <option>
+                    daily
+                </option>
+                    <option>
+                        weekly
+                    </option><option>
+                        annual
+                    </option>
+                </select>
+                <h1 id="priceCalc">100$</h1>
+                <button type="submit" name="bookingForm">Submit</button>
+            </div>
+            </form>
+        </div>
+
+    </section>
+
+
+    <footer>
+        <div class="copyRights">
+            <p>&copy; 2025 YourWebsite.com. All rights reserved.</p>
+        </div>
+        <hr>
+        <div class="contacts">
+            <a href="mailto:abdulkader2307019@miuegypt.edu.eg">
+                Email: abdulkader2307019@miuegypt.edu.eg                
+            </a>
+            <a href="tel:01150318798">
+                Call Us: 01150318798                
+            </a>
+            <a href="https://facebook.com">Facebook</a> 
+            <a href="https://twitter.com">Twitter</a> 
+            <a href="https://instagram.com">Instagram</a>
+
+        </div>
+        <hr>
+        <div class="top">
+            <a href="#">Back to the Top ↑</a>
+        </div>
+    </footer>
+    
+
+</body>
+</html>
