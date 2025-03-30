@@ -1,0 +1,261 @@
+
+* {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+header{
+background-color: #900C3F;
+width: 100%;
+position: fixed;
+z-index: 999;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 10px 200px;
+}
+
+.logo {
+    text-decoration: none;
+    color: #F8DE22;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.8em;    
+}
+
+.navigation a{
+    color: #F8DE22;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: 500;
+    padding-left: 30;
+    padding-right: 30px;
+}
+
+.navigation a:hover{
+    color: #F94C10;   
+}
+
+
+section {
+    padding: 100px 200px;
+}
+
+.hero{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: url(alex-suprun-A53o1drQS2k-unsplash.jpg) no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed    ;
+}
+
+.browsebtn{
+    
+    color:#ffffff;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 1000;
+    font-size: larger;
+   
+    
+}
+#wel{
+    text-shadow:  5px 5px 5px black;
+}
+
+.browsebtn a{
+    text-decoration: none;
+    color:#900C3F;
+    font-weight: 900;
+    background-color:#F8DE22;
+    padding: 10px;
+    margin-top: 30px;
+    border-radius: 10px;
+    transition: 0.7s ease;
+}
+
+.browsebtn a:hover{
+    transform: scale(1.1);
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.card{
+    background-color: #C70039;
+    width: 15.25em;
+    box-shadow: 0 5px rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 25px;
+    margin: 15px;
+    transition: 0.7s ease;
+    min-height: 14em;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+
+}
+
+.details{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.card p{
+    font-size: 15   px;
+    color: #ffffff;
+
+}
+.details h2{
+    color: #000000;
+}
+
+.details a{
+    text-decoration: none;
+    background-color: #a200ff;
+    color:#ffffff;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 10.8em;
+    height: 1.8em;
+    margin: 5px;
+}
+
+.card:hover{
+    transform: scale(1.1);
+}
+
+.car-img img{
+width: 100%;
+border-radius: 10px;
+}
+
+hr{
+    border-color: #F8DE22;
+
+}
+
+.card:hover .car-img{
+    opacity: 0.9;
+}
+
+.CTA{
+    background-color: #C70039;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@keyframes colorChange {
+    50% { color: red; }
+    50% { color: blue; }
+    25% { color: green; }
+    25% { color: rgb(250, 212, 0); }
+  }
+
+.ctaText {
+    margin-bottom: 50px;
+    color :#F8DE22;
+    border: #F94C10 dotted 5px;
+    padding: 10px;
+    border-radius: 10px;
+    transition: 0.7s ease;
+    animation: colorChange 3s infinite alternate;
+}
+
+.bookBtn{
+    
+    width: 200px;
+    min-height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 25px;
+    text-transform: capitalize;
+    
+}
+
+.ctaText h1{
+    font-size: 50px;
+
+}
+
+.bookBtn a{
+    color: #000;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: 0.7s ease;
+    background-color: #F8DE22;
+    padding: 30px;
+    border:#c8ff00 dashed 2.5px;
+    border-radius: 10px;
+    
+}
+
+.bookBtn a:hover{
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+.ctaText:hover{
+    color: #ffffff;
+    transform: scale(1.1);
+    
+}
+
+footer{
+    padding: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #900C3F;
+}
+
+footer hr{
+    width: 2px;
+    height: 70px;
+    margin: 20px;
+
+}
+
+.contacts{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+}
+
+footer a{
+    text-decoration: none;
+    color: navy;
+}
+
+footer a:hover{
+    color: #ffffff;
+}
+
+.top a{
+    margin-right: 20px;
+}
