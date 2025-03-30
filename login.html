@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #1a1a2e;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .left-side {
+    display: block; 
+    position: relative;
+    flex: 2;
+    background: url('https://images.unsplash.com/photo-1520608760-eff2c44afa2b?q=80&w=2070&auto=format&fit=crop') center/cover no-repeat;
+}
+
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(74, 47, 89, 0.3);
+        }
+
+        .left-side h1 {
+            position: relative;
+            z-index: 1;
+            color: #f8f8f8;
+            font-size: 2.5rem;
+            font-weight: 300;
+            line-height: 1.4;
+            padding: 2rem;
+            margin-top: 20vh;
+        }
+
+        .right-side {
+            flex: 1;
+            background-color: #1a1a2e;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        h2 {
+            color: #f8f8f8;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #a0a0a0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 2rem;
+        }
+
+        .name-fields {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-field {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 1rem;
+            background-color: #2a2a40;
+            border: 1px solid #3a3a50;
+            border-radius: 0.5rem;
+            color: #f8f8f8;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: #6b4684;
+        }
+
+        .input-field label {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            color: #a0a0a0;
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        .input-field input:focus + label,
+        .input-field input:not(:placeholder-shown) + label {
+            top: -0.5rem;
+            left: 0.5rem;
+            font-size: 0.8rem;
+            background-color: #1a1a2e;
+            padding: 0 0.5rem;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .forgot-link {
+            color: #6b4684;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .forgot-link:hover {
+            color: #7d549a;
+            text-decoration: underline;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: #6b4684;
+            color: #f8f8f8;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .auth-btn:hover {
+            background-color: #7d549a;
+        }
+
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: calc(50% - 4rem);
+            height: 1px;
+            background-color: #3a3a50;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .divider span {
+            color: #a0a0a0;
+            background-color: #1a1a2e;
+            padding: 0 1rem;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background-color: #2a2a40;
+            border: 1px solid #3a3a50;
+            border-radius: 0.5rem;
+            color: #f8f8f8;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .social-btn:hover {
+            background-color: #3a3a50;
+        }
+
+        .social-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .switch-form {
+            text-align: center;
+            color: #a0a0a0;
+        }
+
+        .switch-form a {
+            color: #6b4684;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ff4444;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        @media (min-width: 1024px) {
+            .left-side {
+                display: block;
+            }
+        }
+
+        .form-page {
+            display: none;
+        }
+
+        .form-page.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-side">
+            <div class="overlay"></div>
+            <h1 id="leftSideText">Drive Your Dreams,<br>Rent Your Ride Today</h1>
+        </div>
+
+        <div class="right-side">
+            <div class="form-container">
+                <div id="signupPage" class="form-page active">
+                    <h2>Create Account</h2>
+                    <p class="subtitle">Sign up to get started</p>
+
+                    <form id="signup-form">
+                        <div class="input-group">
+                            <div class="name-fields">
+                                <div class="input-field">
+                                    <input type="text" id="firstName" required placeholder=" ">
+                                    <label for="firstName">First Name</label>
+                                </div>
+                                <div class="input-field">
+                                    <input type="text" id="lastName" required placeholder=" ">
+                                    <label for="lastName">Last Name</label>
+                                </div>
+                            </div>
+                            <div class="input-field">
+                                <input type="email" id="signupEmail" required placeholder=" ">
+                                <label for="signupEmail">Email Address</label>
+                            </div>
+                            <div class="input-field">
+                                <input type="password" id="signupPassword" required placeholder=" ">
+                                <label for="signupPassword">Password</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="auth-btn">Create Account</button>
+
+                        <div class="divider">
+                            <span>or continue with</span>
+                        </div>
+
+                        <div class="social-buttons">
+                            <button type="button" class="social-btn google">
+                                <img src="https://www.google.com/favicon.ico" alt="Google">
+                                Google
+                            </button>
+                            <button type="button" class="social-btn apple">
+                                <img src="https://www.apple.com/favicon.ico" alt="Apple">
+                                Apple
+                            </button>
+                        </div>
+
+                        <p class="switch-form">
+                            Already have an account? <a onclick="switchForm('login')">Sign in</a>
+                        </p>
+                    </form>
+                </div>
+
+                <div id="loginPage" class="form-page">
+                    <h2>Welcome Back</h2>
+                    <p class="subtitle">Sign in to continue</p>
+
+                    <form id="login-form">
+                        <div class="input-group">
+                            <div class="input-field">
+                                <input type="email" id="loginEmail" required placeholder=" ">
+                                <label for="loginEmail">Email Address</label>
+                            </div>
+                            <div class="input-field">
+                                <input type="password" id="loginPassword" required placeholder=" ">
+                                <label for="loginPassword">Password</label>
+                            </div>
+                            <div class="forgot-password">
+                                <a href="#" class="forgot-link">Forgot Password?</a>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="auth-btn">Sign In</button>
+
+                        <div class="divider">
+                            <span>or continue with</span>
+                        </div>
+
+                        <div class="social-buttons">
+                            <button type="button" class="social-btn google">
+                                <img src="https://www.google.com/favicon.ico" alt="Google">
+                                Google
+                            </button>
+                            <button type="button" class="social-btn apple">
+                                <img src="https://www.apple.com/favicon.ico" alt="Apple">
+                                Apple
+                            </button>
+                        </div>
+
+                        <p class="switch-form">
+                            Don't have an account? <a onclick="switchForm('signup')">Sign up</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchForm(form) {
+            const signupPage = document.getElementById('signupPage');
+            const loginPage = document.getElementById('loginPage');
+            const leftSideText = document.getElementById('leftSideText');
+
+            if (form === 'login') {
+                signupPage.classList.remove('active');
+                loginPage.classList.add('active');
+                leftSideText.innerHTML = 'Welcome Back <br>Your Next Ride Awaits';
+            } else {
+                loginPage.classList.remove('active');
+                signupPage.classList.add('active');
+                leftSideText.innerHTML = 'Capturing Moments,<br>Creating Memories';
+            }
+        }
+
+        const validateEmail = (email) => {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email.toLowerCase());
+        };
+
+        const validatePassword = (password) => {
+            return password.length >= 6;
+        };
+
+        const showError = (input, message) => {
+            const field = input.parentElement;
+            const existingError = field.querySelector('.error-message');
+            
+            if (!existingError) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = message;
+                field.appendChild(errorDiv);
+            }
+        };
+
+        const removeError = (input) => {
+            const field = input.parentElement;
+            const existingError = field.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+        };
+
+        const loginForm = document.getElementById('login-form');
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let isValid = true;
+            
+            const email = loginForm.loginEmail.value;
+            const password = loginForm.loginPassword.value;
+
+            removeError(loginForm.loginEmail);
+            removeError(loginForm.loginPassword);
+
+            if (!validateEmail(email)) {
+                showError(loginForm.loginEmail, 'Please enter a valid email address');
+                isValid = false;
+            }
+
+            if (!validatePassword(password)) {
+                showError(loginForm.loginPassword, 'Password must be at least 6 characters');
+                isValid = false;
+            }
+
+            if (isValid) {
+                const formData = {
+                    email: email,
+                    password: password
+                };
+                console.log('Login form submitted:', formData);
+            }
+        });
+
+        const signupForm = document.getElementById('signup-form');
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let isValid = true;
+
+            const formData = {
+                firstName: signupForm.firstName.value,
+                lastName: signupForm.lastName.value,
+                email: signupForm.signupEmail.value,
+                password: signupForm.signupPassword.value
+            };
+
+            removeError(signupForm.signupEmail);
+            removeError(signupForm.signupPassword);
+
+            if (!validateEmail(formData.email)) {
+                showError(signupForm.signupEmail, 'Please enter a valid email address');
+                isValid = false;
+            }
+
+            if (!validatePassword(formData.password)) {
+                showError(signupForm.signupPassword, 'Password must be at least 6 characters');
+                isValid = false;
+            }
+
+            if (isValid) {
+                console.log('Signup form submitted:', formData);
+            }
+        });
+
+        document.querySelectorAll('.google').forEach(btn => {
+            btn.addEventListener('click', () => {
+                console.log('Google sign in clicked');
+            });
+        });
+
+        document.querySelectorAll('.apple').forEach(btn => {
+            btn.addEventListener('click', () => {
+                console.log('Apple sign in clicked');
+            });
+        });
+
+       
+const forgotLink = document.querySelector('.forgot-link');
+forgotLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    const loginPage = document.getElementById('loginPage');
+    const currentContent = loginPage.innerHTML;
+    
+    loginPage.dataset.originalContent = currentContent;
+    
+    loginPage.innerHTML = `
+        <h2>Reset Password</h2>
+        <p class="subtitle">Enter your email to receive a reset link</p>
+        
+        <div class="input-group">
+            <div class="input-field">
+                <input type="email" id="resetEmail" required placeholder=" ">
+                <label for="resetEmail">Email Address</label>
+            </div>
+        </div>
+        
+        <button id="sendResetLink" class="auth-btn">Send Reset Link</button>
+        
+        <p class="switch-form">
+            <a id="backToLogin">Back to Login</a>
+        </p>
+    `;
+    
+    document.getElementById('sendResetLink').addEventListener('click', () => {
+        const resetEmail = document.getElementById('resetEmail').value;
+        if (validateEmail(resetEmail)) {
+            loginPage.innerHTML = `
+                <h2>Email Sent</h2>
+                <p class="subtitle">Check your inbox for reset instructions</p>
+                <p style="color: #a0a0a0; text-align: center; margin: 2rem 0;">
+                    A password reset link has been sent to:<br>
+                    <span style="color: #f8f8f8; font-weight: bold;">${resetEmail}</span>
+                </p>
+                <button id="backToLoginAfterReset" class="auth-btn">Back to Login</button>
+            `;
+            
+            document.getElementById('backToLoginAfterReset').addEventListener('click', () => {
+                loginPage.innerHTML = loginPage.dataset.originalContent;
+                attachLoginListeners(); 
+            });
+        } else {
+            const emailField = document.getElementById('resetEmail').parentElement;
+            const existingError = emailField.querySelector('.error-message');
+            if (!existingError) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = 'Please enter a valid email address';
+                emailField.appendChild(errorDiv);
+            }
+        }
+    });
+    
+    document.getElementById('backToLogin').addEventListener('click', () => {
+        loginPage.innerHTML = loginPage.dataset.originalContent;
+        attachLoginListeners(); 
+    });
+});
+
+
+function attachLoginListeners() {
+    
+    const loginForm = document.getElementById('login-form');
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let isValid = true;
+        
+        const email = loginForm.loginEmail.value;
+        const password = loginForm.loginPassword.value;
+
+        removeError(loginForm.loginEmail);
+        removeError(loginForm.loginPassword);
+
+        if (!validateEmail(email)) {
+            showError(loginForm.loginEmail, 'Please enter a valid email address');
+            isValid = false;
+        }
+
+        if (!validatePassword(password)) {
+            showError(loginForm.loginPassword, 'Password must be at least 6 characters');
+            isValid = false;
+        }
+
+        if (isValid) {
+            const formData = {
+                email: email,
+                password: password
+            };
+            console.log('Login form submitted:', formData);
+        }
+    });
+    
+    
+    const forgotLink = document.querySelector('.forgot-link');
+    forgotLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+     
+        const loginPage = document.getElementById('loginPage');
+        const currentContent = loginPage.innerHTML;
+        
+        loginPage.dataset.originalContent = currentContent;
+        
+       
+    });
+}
+    </script>
+</body>
+</html>
