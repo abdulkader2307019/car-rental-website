@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental Admin</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Side Navigation -->
+        <nav class="side-nav">
+            <h2 class="logo">CarRental Admin</h2>
+            <ul class="nav-links">
+                <li><a href="#bookings" class="active">Bookings</a></li>
+                <li><a href="#cars">Cars</a></li>
+                <li><a href="#users"> Users</a></li>
+                <li><a href="#reports">Reports</a></li>
+                <li><a href="#settings">Settings</a></li>
+            </ul>
+            <a href="#logout" class="logout">Logout</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <h1>Admin Dashboard</h1>
+                <div class="admin-profile">
+                    <span>Admin User</span>
+                    <div class="avatar">A</div>
+                </div>
+            </header>
+
+            <!-- Bookings Section -->
+            <section id="bookings" class="content-section">
+                <h2>Manage Bookings</h2>
+                <div class="card">
+                    <table id="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Car</th>
+                                <th>Dates</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Bookings will load here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Cars Section -->
+            <section id="cars" class="content-section hidden">
+                <h2>Manage Cars</h2>
+                <div class="card">
+                    <form id="car-form">
+                        <div class="form-row">
+                            <input type="text" id="car-make" placeholder="Make" required>
+                            <input type="text" id="car-model" placeholder="Model" required>
+                        </div>
+                        <div class="form-row">
+                            <input type="number" id="car-year" placeholder="Year" required>
+                            <input type="number" id="car-price" placeholder="Daily Price" required>
+                        </div>
+                        <select id="car-status">
+                            <option value="available">Available</option>
+                            <option value="unavailable">Unavailable</option>
+                        </select>
+                        <div class="form-actions">
+                            <button type="button" id="save-car" class="btn primary">Save Car</button>
+                            <button type="button" id="clear-form" class="btn">Clear</button>
+                        </div>
+                    </form>
+                    <table id="cars-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Make & Model</th>
+                                <th>Year</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Cars will load here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users" class="content-section hidden">
+                <h2>Manage Users</h2>
+                <div class="card">
+                    <table id="users-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Users will load here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="content-section hidden">
+                <h2>Reports</h2>
+                <div class="card">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Total Bookings</h3>
+                            <p id="total-bookings">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Active Rentals</h3>
+                            <p id="active-rentals">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Revenue</h3>
+                            <p id="total-revenue">$0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Available Cars</h3>
+                            <p id="available-cars">0</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section hidden">
+                <h2>Settings</h2>
+                <div class="card">
+                    <form id="settings-form">
+                        <div class="form-group">
+                            <label>Admin Name</label>
+                            <input type="text" value="Admin User">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" value="admin@carrental.com">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" placeholder="Leave blank to keep current">
+                        </div>
+                        <button type="submit" class="btn primary">Save Settings</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
