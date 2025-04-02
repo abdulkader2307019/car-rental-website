@@ -13,42 +13,44 @@ body {
 }
 
 /* Header */
-header {
-    background: #1e1e1e;
+
+header{
+    background-color: #1E1E1E;
     width: 100%;
+    position: fixed;
+    z-index: 999;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 50px;
-    position: static;
-    z-index: 999;
-}
-
-.logo {
-    text-decoration: none;
-    color: white;
-    font-size: 1.8em;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-.navigation a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.1em;
-    font-weight: 500;
-    margin: 0 15px;
-    transition: 0.3s;
-}
-
-.navigation a:hover {
-    color: #d4af37;
-}
+    padding: 10px 5%;
+    }
+    
+    .logo {
+        text-decoration: none;
+        color: #fffffe;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 1.8em;    
+    }
+    
+    .navigation a{
+        color: #EDEDED;
+        text-decoration: none;
+        font-size: 1.1em;
+        font-weight: 500;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    
+    .navigation a:hover{
+        color: #D4AF37;  
+        text-shadow: 0 0 10px rgba(212, 175, 55, 0.8); 
+    }
 
 /* Main Section */
 .main {
     display: flex;
-    flex-wrap: wrap;
+    
     justify-content: space-between;
     padding: 20px;
     /*background-color: #121212;*/
@@ -90,43 +92,71 @@ header {
 button {
     width: 100%;
     padding: 10px;
-    background: #007bff;
-    color: white;
+    background:#0f0e17;
+    color:#bebe27;
     font-size: 16px;
     border: none;
     cursor: pointer;
     transition: 0.3s;
     border-radius: 5px;
+    font-weight: 900;
 }
 
-button:hover {
-    background: #d4af37;
+button:hover{
+    transform: scale(1.1);
 }
 
 /* Car Image Section */
-.carimage {
+.car-image {
     display: flex;
     flex-direction: column;
+    justify-content:flex-start;
     align-items: center;
-    background: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    overflow: hidden;
-    width: 100%;
+
     
 }
 
-.car-image {
-    width: 80%;
-    margin: auto;
+.carimage {
+    margin-top:33px;
+    height: auto;
+    max-width: 800px;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white; 
+    
+    
 }
 
 .carimage img {
     width: 100%;
-    max-height: 350px;
+    height: auto;
+    max-width: 50em;
+    margin-bottom: 10px;
     object-fit: contain;
-    border-radius: 10px;
+   
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
+    
 }
+
+.car-desc{
+    padding: 10px;
+}
+
+.Pricing {
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 100px;
+    margin-top: 20px;
+    width: 50%;
+}
+
 
 /* Call to Action */
 .CTA {
@@ -149,39 +179,75 @@ button:hover {
     font-size: 50px;
 }
 
-.bookBtn a {
-    color: black;
-    text-decoration: none;
-    background-color: #F8DE22;
-    padding: 15px 30px;
-    border: 2.5px dashed #c8ff00;
-    border-radius: 10px;
-    display: inline-block;
-    transition: 0.3s;
+.bookNowBtn{
+        
+        padding: 10px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+        justify-content: space-between;
+        font-weight: 1000;
+        font-size: larger;
+
 }
 
-.bookBtn a:hover {
-    color: white;
+.bookNowBtn a{
+    text-decoration: none;
+    color:#bebe27;
+    font-weight: 900;
+    background-color:#0f0e17;
+    padding: 10px;
+    margin-top: 30px;
+    border-radius: 10px;
+    transition: 0.7s ease;
+}
+
+.bookNowBtn a:hover{
     transform: scale(1.1);
 }
 
 /* Footer */
-footer {
-    background: #222;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    margin-top: 20px;
+footer{
+    padding: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color:#121212;
 }
 
-footer a {
-    color: #007bff;
+footer hr{
+    border: none;
+    background-color: #ff8906;
+    width: 2px;
+    height: 70px;
+    margin: 20px 10px;
+
+}
+
+.contacts{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+}
+
+footer a{
     text-decoration: none;
-    margin: 0 10px;
+    color: #fffffe;
 }
 
-footer a:hover {
-    color: #0056b3;
+footer a:hover{
+    color: #ffffff;
+}
+
+.top a{
+    margin-right: 20px;
+}
+
+footer p{
+    color: #fffffe;
 }
 
 /* Keyframes Animation Fix */
