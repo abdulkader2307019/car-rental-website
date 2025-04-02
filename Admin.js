@@ -5,11 +5,33 @@ const data = {
     users: []
 };
 
+// Track currently editing car
+let currentEditingCarId = null;
+
 // Initialize the dashboard when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    loadData();
-    setupEventListeners();
-    showSection('bookings');
+    // Check login status
+    if (localStorage.getItem('adminLoggedIn') !== 'true') {
+        window.location.href = 'login.html';
+    } else {
+        // Display admin name
+        const adminName = localStorage.getItem('adminName') || 'Admin';
+        document.getElementById('adminName').textContent = adminName;
+        document.getElementById('adminAvatar').textContent = adminName.charAt(0).toUpperCase();
+        
+        loadData();
+        setupEventListeners();
+        showSection('bookings');
+        initReports(); // Initialize reports section
+    }
+});
+
+// Logout functionality
+document.getElementById('logout').addEventListener('click', function(e) {
+    e.preventDefault();
+    localStorage.removeItem('adminLoggedIn');
+    localStorage.removeItem('adminName');
+    window.location.href = 'login.html';
 });
 
 // Load sample data if none exists
@@ -33,9 +55,9 @@ function loadData() {
         ];
         
         data.users = [
-            {id: 1, name: 'John Doe', email: 'john@example.com', status: 'active'},
-            {id: 2, name: 'Jane Smith', email: 'jane@example.com', status: 'active'},
-            {id: 3, name: 'Mike Johnson', email: 'mike@example.com', status: 'suspended'}
+            {id: 1, name: 'John Doe', email: 'john@example.com', type: 'buyer', status: 'active'},
+            {id: 2, name: 'Jane Smith', email: 'jane@example.com', type: 'seller', status: 'active'},
+            {id: 3, name: 'Mike Johnson', email: 'mike@example.com', type: 'buyer', status: 'suspended'}
         ];
         
         saveData();
@@ -69,12 +91,7 @@ function setupEventListeners() {
     document.getElementById('save-car').addEventListener('click', saveCar);
     document.getElementById('clear-form').addEventListener('click', () => {
         document.getElementById('car-form').reset();
-    });
-    
-    // Settings form
-    document.getElementById('settings-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('Settings saved!');
+        currentEditingCarId = null;
     });
 }
 
@@ -85,6 +102,11 @@ function showSection(sectionId) {
     });
     
     document.getElementById(sectionId).classList.remove('hidden');
+    
+    // Hide all report details when switching sections
+    if (sectionId !== 'reports') {
+        hideAllReportDetails();
+    }
 }
 
 // Update all tables with current data
@@ -92,9 +114,10 @@ function updateTables() {
     updateBookingsTable();
     updateCarsTable();
     updateUsersTable();
+    updateReportTables(); // Update report tables too
 }
 
-// Update bookings table
+// Update bookings table with edit button functionality
 function updateBookingsTable() {
     const tbody = document.querySelector('#bookings-table tbody');
     tbody.innerHTML = '';
@@ -111,14 +134,26 @@ function updateBookingsTable() {
             <td>${booking.dates}</td>
             <td><span class="status-${booking.status}">${booking.status}</span></td>
             <td class="actions">
-                ${booking.status === 'pending' ? `
-                    <button class="btn primary" onclick="updateBookingStatus(${booking.id}, 'approved')">Approve</button>
-                    <button class="btn danger" onclick="updateBookingStatus(${booking.id}, 'rejected')">Reject</button>
-                ` : ''}
+                <button class="btn" onclick="showBookingActions(${booking.id})">Edit</button>
+                <div id="booking-actions-${booking.id}" class="hidden" style="display: inline-block; margin-left: 5px;">
+                    ${booking.status === 'pending' ? `
+                        <button class="btn primary" onclick="updateBookingStatus(${booking.id}, 'approved')">Approve</button>
+                        <button class="btn danger" onclick="updateBookingStatus(${booking.id}, 'rejected')">Reject</button>
+                    ` : ''}
+                    ${booking.status !== 'pending' ? `
+                        <button class="btn" onclick="updateBookingStatus(${booking.id}, 'pending')">Reset</button>
+                    ` : ''}
+                </div>
             </td>
         `;
         tbody.appendChild(row);
     });
+}
+
+// Show/hide booking action buttons
+function showBookingActions(bookingId) {
+    const actionsDiv = document.getElementById(`booking-actions-${bookingId}`);
+    actionsDiv.classList.toggle('hidden');
 }
 
 // Update cars table
@@ -136,13 +171,14 @@ function updateCarsTable() {
             <td><span class="status-${car.status}">${car.status}</span></td>
             <td>
                 <button class="btn primary" onclick="editCar(${car.id})">Edit</button>
+                <button class="btn danger" onclick="deleteCar(${car.id})">Delete</button>
             </td>
         `;
         tbody.appendChild(row);
     });
 }
 
-// Update users table
+// Update users table with suspension handling
 function updateUsersTable() {
     const tbody = document.querySelector('#users-table tbody');
     tbody.innerHTML = '';
@@ -153,6 +189,7 @@ function updateUsersTable() {
             <td>${user.id}</td>
             <td>${user.name}</td>
             <td>${user.email}</td>
+            <td>${user.type || 'buyer'}</td>
             <td><span class="status-${user.status}">${user.status}</span></td>
             <td>
                 ${user.status === 'active' ? 
@@ -165,18 +202,193 @@ function updateUsersTable() {
     });
 }
 
-// Update statistics
+// Update statistics with proper filtering
 function updateStats() {
-    document.getElementById('total-bookings').textContent = data.bookings.length;
+    // Filter out bookings from suspended users
+    const activeUsers = data.users.filter(u => u.status === 'active').map(u => u.id);
+    const validBookings = data.bookings.filter(b => activeUsers.includes(b.userId));
     
-    const activeRentals = data.bookings.filter(b => b.status === 'approved').length;
+    document.getElementById('total-bookings').textContent = validBookings.length;
+    
+    const activeRentals = validBookings.filter(b => b.status === 'approved').length;
     document.getElementById('active-rentals').textContent = activeRentals;
     
-    const totalRevenue = data.bookings.reduce((sum, b) => sum + (b.total || 0), 0);
+    const totalRevenue = validBookings
+        .filter(b => b.status === 'approved')
+        .reduce((sum, b) => sum + (b.total || 0), 0);
     document.getElementById('total-revenue').textContent = `$${totalRevenue}`;
     
-    const availableCars = data.cars.filter(c => c.status === 'available').length;
+    // Filter out cars from rejected bookings
+    const rejectedCars = data.bookings
+        .filter(b => b.status === 'rejected')
+        .map(b => b.carId);
+    
+    const availableCars = data.cars.filter(c => 
+        c.status === 'available' && !rejectedCars.includes(c.id)
+    ).length;
+    
     document.getElementById('available-cars').textContent = availableCars;
+}
+
+// Initialize reports section
+function initReports() {
+    updateStats();
+    setupReportEventListeners();
+    updateReportTables();
+}
+
+// Setup event listeners for stat cards
+function setupReportEventListeners() {
+    document.querySelectorAll('.stat-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            showReportDetails(targetId);
+        });
+    });
+}
+
+// Update all report tables
+function updateReportTables() {
+    updateBookingsDetailsTable();
+    updateActiveRentalsTable();
+    updateRevenueTable();
+    updateAvailableCarsTable();
+}
+
+// Update bookings details table
+function updateBookingsDetailsTable() {
+    const tbody = document.getElementById('bookings-details-body');
+    tbody.innerHTML = '';
+    
+    // Filter out suspended users' bookings
+    const activeUsers = data.users.filter(u => u.status === 'active').map(u => u.id);
+    const validBookings = data.bookings.filter(b => activeUsers.includes(b.userId));
+    
+    validBookings.forEach(booking => {
+        const user = data.users.find(u => u.id === booking.userId) || {};
+        const car = data.cars.find(c => c.id === booking.carId) || {};
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${booking.id}</td>
+            <td>${car.make || 'Unknown'} ${car.model || ''}</td>
+            <td>${user.name || 'Unknown'}</td>
+            <td>${booking.dates}</td>
+            <td><span class="status-${booking.status}">${booking.status}</span></td>
+            <td>$${booking.total || 0}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Update active rentals table
+function updateActiveRentalsTable() {
+    const tbody = document.getElementById('active-rentals-details-body');
+    tbody.innerHTML = '';
+    
+    // Filter out suspended users' bookings
+    const activeUsers = data.users.filter(u => u.status === 'active').map(u => u.id);
+    const activeRentals = data.bookings.filter(b => 
+        b.status === 'approved' && activeUsers.includes(b.userId)
+    );
+    
+    activeRentals.forEach(booking => {
+        const user = data.users.find(u => u.id === booking.userId) || {};
+        const car = data.cars.find(c => c.id === booking.carId) || {};
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${booking.id}</td>
+            <td>${car.make || 'Unknown'} ${car.model || ''}</td>
+            <td>${user.name || 'Unknown'}</td>
+            <td>${booking.dates}</td>
+            <td>$${booking.total || 0}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Update revenue table (only approved bookings from active users)
+function updateRevenueTable() {
+    const tbody = document.getElementById('revenue-details-body');
+    tbody.innerHTML = '';
+    
+    const revenueByCar = {};
+    const countByCar = {};
+    
+    // Filter out suspended users' bookings
+    const activeUsers = data.users.filter(u => u.status === 'active').map(u => u.id);
+    const validBookings = data.bookings.filter(b => 
+        b.status === 'approved' && activeUsers.includes(b.userId)
+    );
+    
+    validBookings.forEach(b => {
+        const car = data.cars.find(c => c.id === b.carId);
+        if (car) {
+            const key = `${car.make} ${car.model}`;
+            revenueByCar[key] = (revenueByCar[key] || 0) + (b.total || 0);
+            countByCar[key] = (countByCar[key] || 0) + 1;
+        }
+    });
+    
+    Object.entries(revenueByCar).forEach(([car, revenue]) => {
+        const carData = data.cars.find(c => `${c.make} ${c.model}` === car) || {};
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${car}</td>
+            <td>${countByCar[car] || 0}</td>
+            <td>$${revenue}</td>
+            <td>$${carData.price || 'N/A'}/day</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Update available cars table (excluding rejected bookings' cars)
+function updateAvailableCarsTable() {
+    const tbody = document.getElementById('available-cars-details-body');
+    tbody.innerHTML = '';
+    
+    // Get IDs of cars from rejected bookings
+    const rejectedCars = data.bookings
+        .filter(b => b.status === 'rejected')
+        .map(b => b.carId);
+    
+    const availableCars = data.cars.filter(c => 
+        c.status === 'available' && !rejectedCars.includes(c.id)
+    );
+    
+    availableCars.forEach(car => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${car.id}</td>
+            <td>${car.make} ${car.model}</td>
+            <td>${car.year}</td>
+            <td>$${car.price}/day</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// Show specific report details
+function showReportDetails(targetId) {
+    // Hide all report details first
+    hideAllReportDetails();
+    
+    // Show the selected one
+    if (targetId) {
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+            targetElement.classList.remove('hidden');
+        }
+    }
+}
+
+// Helper function to hide all report details
+function hideAllReportDetails() {
+    document.querySelectorAll('.report-details').forEach(el => {
+        el.classList.add('hidden');
+    });
 }
 
 // Booking actions
@@ -184,6 +396,15 @@ function updateBookingStatus(bookingId, newStatus) {
     const booking = data.bookings.find(b => b.id === bookingId);
     if (booking) {
         booking.status = newStatus;
+        
+        // If rejecting booking, mark car as unavailable
+        if (newStatus === 'rejected') {
+            const car = data.cars.find(c => c.id === booking.carId);
+            if (car) {
+                car.status = 'unavailable';
+            }
+        }
+        
         saveData();
         updateTables();
         updateStats();
@@ -191,21 +412,38 @@ function updateBookingStatus(bookingId, newStatus) {
     }
 }
 
-// User actions
+// User actions with suspension handling
 function updateUserStatus(userId, newStatus) {
     const user = data.users.find(u => u.id === userId);
     if (user) {
         user.status = newStatus;
+        
+        // If suspending user, mark their bookings as rejected
+        if (newStatus === 'suspended') {
+            data.bookings.forEach(booking => {
+                if (booking.userId === userId && booking.status === 'approved') {
+                    booking.status = 'rejected';
+                    // Also mark the car as unavailable
+                    const car = data.cars.find(c => c.id === booking.carId);
+                    if (car) {
+                        car.status = 'unavailable';
+                    }
+                }
+            });
+        }
+        
         saveData();
         updateTables();
+        updateStats();
         alert(`User ${newStatus}!`);
     }
 }
 
-// Car actions
+// Car actions with proper editing functionality
 function editCar(carId) {
     const car = data.cars.find(c => c.id === carId);
     if (car) {
+        currentEditingCarId = carId;
         document.getElementById('car-make').value = car.make;
         document.getElementById('car-model').value = car.model;
         document.getElementById('car-year').value = car.year;
@@ -218,11 +456,23 @@ function editCar(carId) {
     }
 }
 
+function deleteCar(carId) {
+    if (confirm('Are you sure you want to delete this car?')) {
+        data.cars = data.cars.filter(c => c.id !== carId);
+        // Also remove any bookings for this car
+        data.bookings = data.bookings.filter(b => b.carId !== carId);
+        saveData();
+        updateTables();
+        updateStats();
+        alert('Car deleted successfully!');
+    }
+}
+
 function saveCar() {
     const make = document.getElementById('car-make').value;
     const model = document.getElementById('car-model').value;
-    const year = parseInt(document.getElementById('car-year').value);
-    const price = parseInt(document.getElementById('car-price').value);
+    const year = document.getElementById('car-year').value;
+    const price = document.getElementById('car-price').value;
     const status = document.getElementById('car-status').value;
     
     if (!make || !model || !year || !price) {
@@ -230,15 +480,16 @@ function saveCar() {
         return;
     }
     
-    // Check if we're editing existing car
-    const existingCar = data.cars.find(c => 
-        c.make === make && c.model === model && c.year === year
-    );
-    
-    if (existingCar) {
-        // Update existing car
-        existingCar.price = price;
-        existingCar.status = status;
+    if (currentEditingCarId) {
+        // Editing existing car
+        const car = data.cars.find(c => c.id === currentEditingCarId);
+        if (car) {
+            car.make = make;
+            car.model = model;
+            car.year = year;
+            car.price = price;
+            car.status = status;
+        }
     } else {
         // Add new car
         const newId = data.cars.length > 0 ? Math.max(...data.cars.map(c => c.id)) + 1 : 1;
@@ -256,5 +507,6 @@ function saveCar() {
     updateTables();
     updateStats();
     document.getElementById('car-form').reset();
+    currentEditingCarId = null;
     alert('Car saved successfully!');
 }
