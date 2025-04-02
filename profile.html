@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental Profile</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-info">
+                <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200&h=200" 
+                     alt="Profile" 
+                     class="profile-image">
+                <div class="profile-details">
+                    <h1>Mahmoud Reda</h1>
+                    <p class="status"><span class="status-dot"></span>Online</p>
+                </div>
+            </div>
+            <div class="bio-info">
+                <div class="bio-item">
+                    <span class="label">On-site</span>
+                    <span class="value">Cairo</span>
+                </div>
+                <div class="bio-item">
+                    <span class="label">Country</span>
+                    <span class="value">Egypt</span>
+                </div>
+                <div class="bio-item">
+                    <span class="label">Birthday</span>
+                    <span class="value">March 15, 1990</span>
+                </div>
+                <div class="bio-item">
+                    <span class="label">Member Since</span>
+                    <span class="value">2021</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🚗</div>
+                <div class="stat-value" id="carsRented">0</div>
+                <div class="stat-label">Cars Rented</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🛣️</div>
+                <div class="stat-value" id="milesOvercome">0</div>
+                <div class="stat-label">Miles Overcome</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏰</div>
+                <div class="stat-value" id="hoursOnRoad">0</div>
+                <div class="stat-label">Hours on Road</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌆</div>
+                <div class="stat-value" id="citiesVisited">0</div>
+                <div class="stat-label">Cities Visited</div>
+            </div>
+        </div>
+
+        <div class="comments-section">
+            <h2>Recent Comments</h2>
+            <div class="comment">
+                <div class="comment-header">
+                    <strong>Great experience!</strong>
+                    <span class="comment-date">2 days ago</span>
+                </div>
+                <p>The car was in perfect condition and the service was exceptional. Would definitely rent again!</p>
+            </div>
+            <div class="comment">
+                <div class="comment-header">
+                    <strong>Smooth rental process</strong>
+                    <span class="comment-date">1 week ago</span>
+                </div>
+                <p>Quick pickup and return. The staff was very professional and helpful.</p>
+            </div>
+        </div>
+    </div>
+    <script src="profile.js"></script>
+</body>
+</html>
