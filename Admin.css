@@ -262,3 +262,61 @@ input, select {
         gap: 10px;
     }
 }
+
+/* Report Details Styles */
+.report-details {
+    margin-top: 30px;
+    background: var(--gunmetal);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--gold);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.report-details h3 {
+    color: var(--gold);
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 10px;
+}
+
+.report-details table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+}
+
+.report-details th {
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--gold);
+    text-align: left;
+    padding: 12px 15px;
+}
+
+.report-details td {
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.report-details tr:hover {
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.report-details.hidden {
+    display: none;
+}
+
+.stat-card {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
