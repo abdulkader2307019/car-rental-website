@@ -152,6 +152,8 @@ tr:hover {
 
 .form-row input {
     flex: 1;
+    width: 50%; /* Reduced width of input fields */
+    padding: 5px; /* Reduced padding */
 }
 
 .form-group {
@@ -165,7 +167,7 @@ tr:hover {
 }
 
 input, select {
-    width: 100%;
+    width: 70%;
     padding: 10px;
     background: var(--gunmetal);
     border: 1px solid var(--gold);
@@ -220,6 +222,8 @@ input, select {
     border-radius: 8px;
     text-align: center;
     border: 1px solid var(--gold);
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
 .stat-card h3 {
@@ -232,35 +236,14 @@ input, select {
     font-weight: bold;
 }
 
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 /* Utility Classes */
 .hidden {
     display: none;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .dashboard {
-        flex-direction: column;
-    }
-    
-    .side-nav {
-        width: 100%;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .form-row {
-        flex-direction: column;
-        gap: 10px;
-    }
 }
 
 /* Report Details Styles */
@@ -306,17 +289,58 @@ input, select {
     display: none;
 }
 
-.stat-card {
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+    }
+    
+    .side-nav {
+        width: 100%;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+select {
+    width: 70%;
+    padding: 10px;
+    background: var(--gunmetal);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    color: var(--text);
+    margin-bottom: 15px;
+}
+
+.form-row select {
+    margin-bottom: 0;
+}
+
+.actions {
+    white-space: nowrap;
+}
+
+.actions .hidden {
+    display: none;
+}
+
+.actions .hidden.show {
+    display: inline-block;
 }
