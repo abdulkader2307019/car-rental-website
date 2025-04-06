@@ -58,6 +58,7 @@
         <div class="header">
             <h1 class="welcome-text">Welcome, <span id="userName">User</span>!</h1>
             <button class="logout-btn" onclick="handleLogout()">Logout</button>
+            <button class="logout-btn" onclick="handleLoglogin()">go to Home Page</button>
         </div>
         <p>You have successfully logged in.</p>
     </div>
@@ -73,6 +74,9 @@
         function handleLogout() {
             localStorage.removeItem('user');
             window.location.href = 'login.html';
+        }
+        function handleLoglogin() {
+            window.location.href = '../HomePage/index.html';
         }
     </script>
 </body>
