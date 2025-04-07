@@ -12,7 +12,7 @@ let currentEditingCarId = null;
 document.addEventListener('DOMContentLoaded', function() {
     // Check login status
     if (localStorage.getItem('adminLoggedIn') !== 'true') {
-        window.location.href = 'login.html';
+        window.location.href = '../LoginPage/login.html';
     } else {
         // Display admin name
         const adminName = localStorage.getItem('adminName') || 'Admin';
@@ -31,7 +31,7 @@ document.getElementById('logout').addEventListener('click', function(e) {
     e.preventDefault();
     localStorage.removeItem('adminLoggedIn');
     localStorage.removeItem('adminName');
-    window.location.href = 'login.html';
+    window.location.href = '../LoginPage/login.html';
 });
 
 // Load sample data if none exists
