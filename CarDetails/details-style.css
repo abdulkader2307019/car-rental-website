@@ -211,6 +211,13 @@ summary{
 }
 .Pricing select{
     font-size: large;
+    background-color: #333;
+    color: #D4AF37;
+    padding: 8px;
+    margin: 8px;
+}
+.Pricing p{
+    color: #D4AF37;
 }
 
 .CTA {
