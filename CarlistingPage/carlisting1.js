@@ -6,32 +6,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const availabilityFilter = document.getElementById('availabilityFilter');
     const carListings = document.querySelectorAll('.car');
 
-    function filterCars() {
+    function filterAndSortCars() {
         const searchTerm = searchBar.value.toLowerCase();
         const priceSort = priceFilter.value;
         const typeSort = typeFilter.value;
         const availabilitySort = availabilityFilter.value;
 
-        const carArray = Array.from(carListings);
-
-        if (priceSort === 'low') {
-            carArray.sort((a, b) => parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price')));
-        } else if (priceSort === 'high') {
-            carArray.sort((a, b) => parseFloat(b.getAttribute('data-price')) - parseFloat(a.getAttribute('data-price')));
-        }
-
-        carArray.forEach(car => {
-            let carName = car.getAttribute('data-name').toLowerCase();
-            let carPrice = parseFloat(car.getAttribute('data-price'));
-            let carType = car.getAttribute('data-type');
-            let carAvailability = car.getAttribute('data-availability');
+        let filteredCars = Array.from(carListings).filter(car => {
+            const carName = car.getAttribute('data-name').toLowerCase();
+            const carPrice = parseFloat(car.getAttribute('data-price'));
+            const carType = car.getAttribute('data-type');
+            const carAvailability = car.getAttribute('data-availability');
 
             const isSearchMatch = carName.includes(searchTerm);
             const isPriceMatch = priceSort === '' || (priceSort === 'low' ? carPrice < 50000 : carPrice >= 50000);
             const isTypeMatch = typeSort === '' || carType === typeSort;
             const isAvailabilityMatch = availabilitySort === '' || carAvailability === availabilitySort;
 
-            if (isSearchMatch && isPriceMatch && isTypeMatch && isAvailabilityMatch) {
+            return isSearchMatch && isPriceMatch && isTypeMatch && isAvailabilityMatch;
+        });
+
+        if (priceSort === 'low') {
+            filteredCars.sort((a, b) => parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price')));
+        } else if (priceSort === 'high') {
+            filteredCars.sort((a, b) => parseFloat(b.getAttribute('data-price')) - parseFloat(a.getAttribute('data-price')));
+        }
+
+        carListings.forEach(car => {
+            if (filteredCars.includes(car)) {
                 car.style.display = 'block';
             } else {
                 car.style.display = 'none';
@@ -39,13 +41,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    searchButton.addEventListener('click', filterCars);
-    searchBar.addEventListener('input', filterCars);
-    priceFilter.addEventListener('change', filterCars);
-    typeFilter.addEventListener('change', filterCars);
-    availabilityFilter.addEventListener('change', filterCars);
+    searchButton.addEventListener('click', filterAndSortCars);
+    searchBar.addEventListener('input', filterAndSortCars);
+    priceFilter.addEventListener('change', filterAndSortCars);
+    typeFilter.addEventListener('change', filterAndSortCars);
+    availabilityFilter.addEventListener('change', filterAndSortCars);
 
-    filterCars();
+    filterAndSortCars();
 
     document.querySelectorAll('.view-details').forEach(button => {
         button.addEventListener('click', function () {
@@ -55,4 +57,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
 
