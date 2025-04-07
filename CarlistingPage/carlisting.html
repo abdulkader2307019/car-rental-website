@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Car Listing</title>
+   <link rel="stylesheet" href="StyleSheet1.css">
+</head>
+<body>
+   <header>
+     <h1>Car Listing</h1>
+   </header>
+   
+   <section class="search-filter-section">
+     <input type="text" id="searchBar" placeholder="Search by car name..." class="search-bar">
+     <button id="searchButton" class="search-button">Search</button>
+     
+     <div class="filters">
+       <select id="priceFilter" class="filter">
+         <option value="">Filter by Price</option>
+         <option value="low">Low to High</option>
+         <option value="high">High to Low</option>
+       </select>
+       <select id="typeFilter" class="filter">
+         <option value="">Filter by Type</option>
+         <option value="sedan">Sedan</option>
+         <option value="suv">SUV</option>
+         <option value="truck">Truck</option>
+       </select>
+       <select id="availabilityFilter" class="filter">
+         <option value="">Filter by Availability</option>
+         <option value="available">Available</option>
+         <option value="sold">Sold</option>
+       </select>
+     </div>
+   </section>
+   
+   <section class="car-listings">
+     <div class="car" data-name="Tesla Model 3" data-price="35000" data-type="sedan" data-availability="available">
+       <img src="../car listing/2024-tesla-model-3-long-range-rwd-132-66feb663ecf17.avif" alt="Car Image">
+       <h2>Tesla Model 3</h2>
+       <p class="price">$35,000</p>
+       <button class="view-details">
+          View Details
+       </button>
+     </div>
+     
+     <div class="car" data-name="Ford Mustang" data-price="45000" data-type="sedan" data-availability="sold">
+       <img src="https://via.placeholder.com/150" alt="Car Image">
+       <h2>Ford Mustang</h2>
+       <p class="price">$45,000</p>
+       <button class="view-details">
+         <img src="https://via.placeholder.com/20" alt="View Icon"> View Details
+       </button>
+     </div>
+     
+     <div class="car" data-name="Chevy Tahoe" data-price="60000" data-type="suv" data-availability="available">
+       <img src="https://via.placeholder.com/150" alt="Car Image">
+       <h2>Chevy Tahoe</h2>
+       <p class="price">$60,000</p>
+       <button class="view-details">
+         <img src="https://via.placeholder.com/20" alt="View Icon"> View Details
+       </button>
+     </div>
+     
+     <div class="car" data-name="Toyota Tacoma" data-price="38000" data-type="truck" data-availability="sold">
+       <img src="https://via.placeholder.com/150" alt="Car Image">
+       <h2>Toyota Tacoma</h2>
+       <p class="price">$38,000</p>
+       <button class="view-details">
+         <img src="https://via.placeholder.com/20" alt="View Icon"> View Details
+       </button>
+     </div>
+   </section>
+
+   <script src="document.js"></script>
+</body>
+</html>
+
+       
+
