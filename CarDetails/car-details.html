@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car-rental</title>
     <link rel="stylesheet" href="../CarDetails/details-style.css">
+    <script src="../CarDetails/cardetails.js"></script>
 </head>
 <body>
     <header>
@@ -21,13 +22,13 @@
                 <div class="title">Car-Details</div>
                 <div class="availability">
                     <h3>Check Availability</h3>
-                    <input type="text" placeholder="Enter Pickup location">
-                    <input type="text" placeholder="Enter Return location">
+                    <input type="text" id="pickup" placeholder="Enter Pickup location">
+                    <input type="text" id="return" placeholder="Enter Return location">
                     <label>Start Date</label>
-                    <input type="date">
+                    <input type="date" id="start-date">
                     <label>End Date</label>
-                    <input type="date">
-                    <button>CHECK-AVILABLITY</button>
+                    <input type="date" id="end-date">
+                    <button id="check-btn">CHECK-AVILABLITY</button>
                 </div>
                 
 
@@ -50,17 +51,6 @@
                 <div class="bookNowBtn">
                     <a href="../BookingPage/booking.html">book now</a>
                 </div>
-
-                    <!--<div class="Pricing">
-                        <select>
-                            <option><strong>Daily</strong></option>
-                            <option><strong>Weekly</strong></option>
-                            <option><strong>Monthly</strong></option>
-                        </select>
-                            <p>
-                                price
-                            </p>  
-                    </div>-->
             </section>
 
             <div class="vline"></div>
@@ -76,15 +66,14 @@
                     <p>The 2025 Mercedes-AMG GT sedan offers a sleek, high-performance alternative to the GT Coupe, with added practicality thanks to its four-door design. Though based on the E-Class rather than the SL roadster, it shares a similar aggressive styling. Available in GT43, GT53, and GT63 trims, it features a turbocharged inline-six in the lower models, while the GT63 and GT63 S boast a twin-turbo V8, delivering up to 630 hp. A plug-in hybrid variant pushes power to 831 hp. Despite limited rear headroom, the GT sedan blends luxury and performance in an exclusive market segment.</p>
                     </div>
                 </div>
+
                 <div class="Pricing">
-                    <select>
-                        <option><strong>Daily</strong></option>
-                        <option><strong>Weekly</strong></option>
-                        <option><strong>Monthly</strong></option>
+                    <select id="pricing-select">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
                     </select>
-                        <p>
-                            price
-                        </p>  
+                    <p id="price-display">$100</p>
                 </div>
             </section>
             
@@ -112,6 +101,8 @@
             <a href="#">Back to the Top ↑</a>
         </div>
     </footer>
+
+    <script src="../CarDetails/cardetails.js"></script>
     
 </body>
 </html>
