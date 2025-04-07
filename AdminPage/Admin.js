@@ -10,23 +10,16 @@ let currentEditingCarId = null;
 
 // Initialize the dashboard when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    // Check login status
-    if (localStorage.getItem('adminLoggedIn') !== 'true') {
-        window.location.href = '../LoginPage/login.html';
-    } else {
-        // Display admin name
-        const adminName = localStorage.getItem('adminName') || 'Admin';
-        document.getElementById('adminName').textContent = adminName;
-        document.getElementById('adminAvatar').textContent = adminName.charAt(0).toUpperCase();
-        
-        loadData();
-        setupEventListeners();
-        showSection('bookings');
-        initReports(); // Initialize reports section
-    }
+    loadData();
+    setupEventListeners();
+    showSection('bookings');
+    initReports(); // Initialize reports section
+    
+    // Display admin name (hardcoded since we removed login)
+    document.getElementById('adminName').textContent = 'Admin';
+    document.getElementById('adminAvatar').textContent = 'A';
 });
 
-// Logout functionality
 document.getElementById('logout').addEventListener('click', function(e) {
     e.preventDefault();
     localStorage.removeItem('adminLoggedIn');
@@ -36,14 +29,19 @@ document.getElementById('logout').addEventListener('click', function(e) {
 
 // Load sample data if none exists
 function loadData() {
+    // Clear all localStorage data before loading new data
+    localStorage.clear();
+
+    // Check if any data is saved in localStorage
     const savedData = localStorage.getItem('carRentalData');
     
     if (savedData) {
+        // If data exists, load it into the app
         Object.assign(data, JSON.parse(savedData));
     } else {
-        // Sample data
+        // Sample data with complete car details for all bookings
         data.bookings = [
-            {id: 1, userId: 1, carId: 1, dates: 'Jun 15-20, 2023', status: 'pending', total: 750},
+            {id: 1, userId: 1, carId: 1, dates: 'Jun 15-20, 2023', status: 'approved', total: 750},
             {id: 2, userId: 2, carId: 3, dates: 'Jun 18-25, 2023', status: 'approved', total: 1225},
             {id: 3, userId: 3, carId: 2, dates: 'Jul 1-10, 2023', status: 'rejected', total: 1800}
         ];
@@ -55,17 +53,18 @@ function loadData() {
         ];
         
         data.users = [
-            {id: 1, name: 'John Doe', email: 'john@example.com', type: 'buyer', status: 'active'},
-            {id: 2, name: 'Jane Smith', email: 'jane@example.com', type: 'seller', status: 'active'},
-            {id: 3, name: 'Mike Johnson', email: 'mike@example.com', type: 'buyer', status: 'suspended'}
+            {id: 1, name: 'Mohamed Sherif', email: 'mohsheri04@gmail.com', type: 'buyer', status: 'active'},
+            {id: 2, name: 'Ali Mohamed', email: 'alimohamed23@yahoo.com', type: 'seller', status: 'active'},
+            {id: 3, name: 'Abdelkader Adnan', email: 'abdoadnan@gmail.com', type: 'buyer', status: 'suspended'}
         ];
         
-        saveData();
+        saveData(); // Save the new data
     }
     
-    updateTables();
-    updateStats();
+    updateTables(); // Update UI with data
+    updateStats();  // Update stats
 }
+
 
 // Save data to localStorage
 function saveData() {
@@ -117,7 +116,7 @@ function updateTables() {
     updateReportTables(); // Update report tables too
 }
 
-// Update bookings table with edit button functionality
+// Update bookings table with updated button functionality
 function updateBookingsTable() {
     const tbody = document.querySelector('#bookings-table tbody');
     tbody.innerHTML = '';
@@ -134,14 +133,13 @@ function updateBookingsTable() {
             <td>${booking.dates}</td>
             <td><span class="status-${booking.status}">${booking.status}</span></td>
             <td class="actions">
-                <button class="btn" onclick="showBookingActions(${booking.id})">Edit</button>
                 <div id="booking-actions-${booking.id}" class="hidden" style="display: inline-block; margin-left: 5px;">
-                    ${booking.status === 'pending' ? `
+                    ${booking.status === 'pending' ? ` 
                         <button class="btn primary" onclick="updateBookingStatus(${booking.id}, 'approved')">Approve</button>
                         <button class="btn danger" onclick="updateBookingStatus(${booking.id}, 'rejected')">Reject</button>
                     ` : ''}
                     ${booking.status !== 'pending' ? `
-                        <button class="btn" onclick="updateBookingStatus(${booking.id}, 'pending')">Reset</button>
+                        <button class="btn" onclick="updateBookingStatus(${booking.id}, 'pending')">Edit</button>
                     ` : ''}
                 </div>
             </td>
@@ -149,6 +147,7 @@ function updateBookingsTable() {
         tbody.appendChild(row);
     });
 }
+
 
 // Show/hide booking action buttons
 function showBookingActions(bookingId) {
