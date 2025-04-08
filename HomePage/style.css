@@ -156,8 +156,11 @@ section {
     box-shadow: 0px 4px 15px rgba(212, 175, 55, 0.6);
 }
 
+
+
 .car-img img{
 width: 100%;
+max-height: 15em;
 border-radius: 10px;
 }
 
