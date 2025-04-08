@@ -361,7 +361,9 @@ section {
     min-height: 100vh;
     display: flex;
     align-items: center;
-    background: url(../images/background2.jpg) no-repeat center center/cover;
+
+    background: url(../images/background1.jpg) no-repeat center center/cover;
+
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -369,15 +371,14 @@ section {
 
 .browsebtn{
     
-    color:#ffffff;
+    color:#D4AF37;
     padding: 10px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
     font-weight: 1000;
-    font-size: larger;
-   
+    font-size: larger;   
     
 }
 #wel{

@@ -4,7 +4,7 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Car Listing</title>
-   <link rel="stylesheet" href="../CarListingPage/styles.css">
+   <link rel="stylesheet" href="carlist.css">
 </head>
 <body>
    <header>
@@ -30,49 +30,69 @@
        <select id="availabilityFilter" class="filter">
          <option value="">Filter by Availability</option>
          <option value="available">Available</option>
-         <option value="sold">Sold</option>
+         <option value="sold">Unavilable</option>
        </select>
      </div>
    </section>
    
    <section class="car-listings">
      <div class="car" data-name="Tesla Model 3" data-price="35000" data-type="sedan" data-availability="available">
-       <img src="https://via.placeholder.com/150" alt="Car Image">
+       <img src="../images/2024-tesla-model-3-long-range-rwd-132-66feb663ecf17.avif" alt="Car Image">
        <h2>Tesla Model 3</h2>
        <p class="price">$35,000</p>
-       <button class="view-details">
-         <img src="https://via.placeholder.com/20" alt="View Icon"> View Details
-       </button>
+       <button id="mybutton" action="../CarDetails/car-details.html" class="view-details">View Details</button>
+       <div class="car-details" style="display: none;">
+         <p>Car Model: Tesla Model 3</p>
+         <p>Year: 2024</p>
+         <p>Engine: Electric</p>
+         <p>Range: 350 miles</p>
+         <p>Color: Red</p>
+       </div>
      </div>
      
      <div class="car" data-name="Ford Mustang" data-price="45000" data-type="sedan" data-availability="sold">
-       <img src="https://via.placeholder.com/150" alt="Car Image">
+       <img src="../images/ford.jpeg" alt="Car Image">
        <h2>Ford Mustang</h2>
        <p class="price">$45,000</p>
-       <button class="view-details">
-         <img src="https://via.placeholder.com/20" alt="View Icon"> View Details
-       </button>
+       <button class="view-details">View Details</button>
+       <div class="car-details" style="display: none;">
+         <p>Car Model: Ford Mustang</p>
+         <p>Year: 2022</p>
+         <p>Engine: V8</p>
+         <p>Fuel Type: Gas</p>
+         <p>Color: Blue</p>
+       </div>
      </div>
      
      <div class="car" data-name="Chevy Tahoe" data-price="60000" data-type="suv" data-availability="available">
-       <img src="https://via.placeholder.com/150" alt="Car Image">
+       <img src="../images/chevy.jpeg" alt="Car Image">
        <h2>Chevy Tahoe</h2>
        <p class="price">$60,000</p>
-       <button class="view-details">
-         <img src="https://via.placeholder.com/20" alt="View Icon"> View Details
-       </button>
+       <button class="view-details">View Details</button>
+       <div class="car-details" style="display: none;">
+         <p>Car Model: Chevy Tahoe</p>
+         <p>Year: 2023</p>
+         <p>Engine: V8</p>
+         <p>Fuel Type: Gas</p>
+         <p>Color: White</p>
+       </div>
      </div>
      
      <div class="car" data-name="Toyota Tacoma" data-price="38000" data-type="truck" data-availability="sold">
-       <img src="https://via.placeholder.com/150" alt="Car Image">
+       <img src="../images/Toyota Tacoma.jpeg" alt="Car Image">
        <h2>Toyota Tacoma</h2>
        <p class="price">$38,000</p>
-       <button class="view-details">
-         <img src="https://via.placeholder.com/20" alt="View Icon"> View Details
-       </button>
+       <button class="view-details">View Details</button>
+       <div class="car-details" style="display: none;">
+         <p>Car Model: Toyota Tacoma</p>
+         <p>Year: 2021</p>
+         <p>Engine: V6</p>
+         <p>Fuel Type: Gas</p>
+         <p>Color: Black</p>
+       </div>
      </div>
    </section>
+
+   <script src="../CarlistingPage/carlisting.js"></script>
 </body>
 </html>
-
-       
