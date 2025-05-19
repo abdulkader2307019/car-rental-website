@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Rental Admin</title>
-    <link rel="stylesheet" href="../AdminPage/Admin.css">
+    <link rel="stylesheet" href="/css/Admin.css">
 </head>
 <body>
     <div class="dashboard">
@@ -105,13 +105,45 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Account Type</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th>phoneNumber</th>
+                                <th>age</th>
+                                <th>country</th>
+                                <th>Gender</th>
+                                <th>Booking counts</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Users will load here with suspend/activate buttons -->
+                            <% arr.forEach((element,index) => { %>
+                            <tr>
+                                <td>
+                                    <%= index + 1 %>
+                                </td>
+                                <td>
+                                    <%=element.firstName%> <%=element.lastName%>
+                                </td>
+                                <td>
+                                    <%= element.email %>
+                                </td>
+                                <td>
+                                    <%= element.phoneNumber %>
+                                </td>
+                                <td>
+                                    <%= element.age %>
+                                </td>
+                                <td>
+                                    <%= element.country %>
+                                </td>
+                                <td>
+                                    <%= element.gender %>
+                                </td>
+                                <td>
+                                    <%= element.bookings.length %>
+                                </td>
+
+                            </tr>
+                                
+                            <% }) %>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -207,6 +239,6 @@
             </section>
         </main>
     </div>
-    <script src="../AdminPage/Admin.js"></script>
+    <script src="/js/Admin.js"></script>
 </body>
 </html>

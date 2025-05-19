@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
     <div class="container">
@@ -19,25 +19,41 @@
                     <h2>Create Account</h2>
                     <p class="subtitle">Sign up to get started</p>
 
-                    <form id="signup-form">
+                    <form action="/user/add.html" method="post" id="signup-form">
                         <div class="input-group">
                             <div class="name-fields">
                                 <div class="input-field">
-                                    <input type="text" id="firstName" required placeholder=" ">
+                                    <input type="text" id="firstName" name="firstName" required placeholder=" ">
                                     <label for="firstName">First Name</label>
                                 </div>
                                 <div class="input-field">
-                                    <input type="text" id="lastName" required placeholder=" ">
+                                    <input type="text" id="lastName" name="lastName" placeholder=" ">
                                     <label for="lastName">Last Name</label>
                                 </div>
                             </div>
                             <div class="input-field">
-                                <input type="email" id="signupEmail" required placeholder=" ">
+                                <input type="email" id="signupEmail" name="email" required placeholder=" ">
                                 <label for="signupEmail">Email Address</label>
                             </div>
                             <div class="input-field">
-                                <input type="password" id="signupPassword" required placeholder=" ">
+                                <input type="password" id="signupPassword" name="passwordHash" required placeholder=" ">
                                 <label for="signupPassword">Password</label>
+                            </div>
+                            <div class="input-field">
+                                <input type="number" id="signupPhoneNumber" name="phoneNumber" required placeholder=" ">
+                                <label for="signupPhoneNumber">Telephone</label>
+                            </div>
+                            <div class="input-field">
+                                <input type="number" id="signupAge" name="age" required placeholder=" ">
+                                <label for="signupAge">Age</label>
+                            </div>
+                            <div class="input-field">
+                                <input type="text" id="signupCountry" name="country" required placeholder=" ">
+                                <label for="signupCountry">Country</label>
+                            </div>
+                            <div class="input-field">
+                                <input type="text" id="signupGender" name="gender" required placeholder=" ">
+                                <label for="signupGender">Gender</label>
                             </div>
                         </div>
 
@@ -108,6 +124,6 @@
             </div>
         </div>
     </div>
-    <script src="./login.js"></script>
+    <script src="../../Public/js/login.js"></script>
 </body>
 </html>
