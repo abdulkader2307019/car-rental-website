@@ -1,11 +1,28 @@
 const express = require("express");
 const app = express();
-const port = 3001;
 const mongoose = require("mongoose");
 app.use(express.static("public"));
 app.use(express.urlencoded({extended:true}));
 const User = require("./models/userSchema")
 app.set('view engine','ejs')
+require('dotenv').config();
+const port = process.env.PORT;
+const DB_URL = process.env.MONGODB_URI;
+
+
+//Auth & User
+//POST /api/register
+app.post('/api/register',(req,res)=>{
+
+
+});
+// POST /api/login
+
+// GET /api/user/profile
+
+// PUT /api/user/profile
+
+// GET /api/user/bookings
 
 
 app.get("/", (req, res) => {
@@ -39,7 +56,7 @@ app.post("/user/add.html",(req,res)=>{
 
 mongoose
   .connect(
-    "mongodb+srv://abdulkader2307019:sh121212@cluster0.cpspzvf.mongodb.net/all-data?retryWrites=true&w=majority&appName=Cluster0"
+    DB_URL
   )
   .then(() => {
     app.listen(port, () => {
