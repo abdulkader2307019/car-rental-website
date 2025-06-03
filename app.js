@@ -10,20 +10,6 @@ const port = process.env.PORT;
 const DB_URL = process.env.MONGODB_URI;
 
 
-//Auth & User
-//POST /api/register
-app.post('/api/register',(req,res)=>{
-
-
-});
-// POST /api/login
-
-// GET /api/user/profile
-
-// PUT /api/user/profile
-
-// GET /api/user/bookings
-
 
 app.get("/", (req, res) => {
 
