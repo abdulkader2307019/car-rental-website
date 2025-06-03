@@ -3,17 +3,20 @@ const app = express();
 const mongoose = require("mongoose");
 app.use(express.static("public"));
 app.use(express.urlencoded({extended:true}));
-const User = require("./models/userSchema")
+const User = require("./models/User")
 app.set('view engine','ejs')
 require('dotenv').config();
 const port = process.env.PORT;
 const DB_URL = process.env.MONGODB_URI;
 
 
+const discoutRoutes = require('./routes/discountRoutes');
+app.use(discoutRoutes);
+
+
 
 app.get("/", (req, res) => {
-
-  res.render("LoginPage/login.ejs", { root: __dirname });
+  res.render("booking", { root: __dirname });
 });
 
 app.get("/AdminPage/Admin.ejs",(req,res)=>{
