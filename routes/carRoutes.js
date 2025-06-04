@@ -6,5 +6,5 @@ const { protect, isAdmin } = require('../middleware/authMiddleware');
 
 router.post('/api/cars',protect,isAdmin,carController.addCar);
 router.put('/api/cars/:id',protect,isAdmin,carController.editCar);
-
+router.delete('/api/cars/:id',protect,isAdmin,carController.deleteCar);
 module.exports = router;
