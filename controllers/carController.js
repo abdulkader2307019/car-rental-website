@@ -30,4 +30,21 @@ const deleteCar = async (req, res) => {
   }
 };
 
-module.exports = {addCar,editCar,deleteCar};
+const getCars = async (req, res) => {
+  try {
+    const query = {};
+
+    if (req.query.type) query.type = req.query.type;
+    if (req.query.location) query.location = req.query.location;
+    if (req.query.availability) query.availability = req.query.availability === 'true';
+    if (req.query.priceMax) query.pricePerDay = { $lte: Number(req.query.priceMax) };
+
+    const cars = await Car.find(query); 
+    res.json(cars); 
+
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching cars' });
+  }
+};
+
+module.exports = {addCar,editCar,deleteCar,getCars};
