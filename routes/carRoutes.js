@@ -5,6 +5,6 @@ const carController = require('../controllers/carController');
 const { protect, isAdmin } = require('../middleware/authMiddleware');
 
 router.post('/api/cars',protect,isAdmin,carController.addCar);
-
+router.put('/api/cars/:id',protect,isAdmin,carController.editCar);
 
 module.exports = router;
