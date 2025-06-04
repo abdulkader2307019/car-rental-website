@@ -1,5 +1,6 @@
 const Car = require('../models/carSchema');
 
+//Add Car
 const addCar = async (req, res) => {
   try {
     const car = new Car(req.body);
@@ -10,6 +11,7 @@ const addCar = async (req, res) => {
   }
 };
 
+//Edit Car
 const editCar = async (req, res) => {
   try {
     const updatedCar = await Car.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -20,6 +22,7 @@ const editCar = async (req, res) => {
 }
 };
 
+//Delete Car
 const deleteCar = async (req, res) => {
   try {
     const deleted = await Car.findByIdAndDelete(req.params.id);
@@ -30,7 +33,19 @@ const deleteCar = async (req, res) => {
   }
 };
 
-const getCars = async (req, res) => {
+//Search Car By Id
+const getCarById = async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car) return res.status(404).json({ message: 'Car not found' });
+    res.json(car);
+  } catch (err) {
+    res.status(500).json({ message: 'Error retrieving car' });
+  }
+};
+
+//Filters for search
+const getCars = async (req, res) => { 
   try {
     const query = {};
 
@@ -47,4 +62,4 @@ const getCars = async (req, res) => {
   }
 };
 
-module.exports = {addCar,editCar,deleteCar,getCars};
+module.exports = {addCar,editCar,deleteCar,getCarById,getCars};
