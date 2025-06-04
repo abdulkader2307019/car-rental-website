@@ -4,8 +4,8 @@ const router = express.Router();
 const { protect, isAdmin } = require('../middleware/authMiddleware');
 
 const User = require('../models/User');
-const Car = require('../models/Car');
-const Booking = require('../models/Booking');
+const Car = require('../models/carSchema');
+const Booking = require('../models/bookingSchema');
 
 // Protect all routes, allow only admins
 router.use(protect, isAdmin);
