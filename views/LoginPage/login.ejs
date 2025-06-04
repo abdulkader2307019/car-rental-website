@@ -19,45 +19,33 @@
                     <h2>Create Account</h2>
                     <p class="subtitle">Sign up to get started</p>
 
-                    <form action="/user/add.html" method="post" id="signup-form">
+                    <form id="signup-form">
                         <div class="input-group">
                             <div class="name-fields">
                                 <div class="input-field">
-                                    <input type="text" id="firstName" name="firstName" required placeholder=" ">
+                                    <input type="text" id="firstName" required placeholder=" ">
                                     <label for="firstName">First Name</label>
+                                    <div class="error-message" id="firstNameError"></div>
                                 </div>
                                 <div class="input-field">
-                                    <input type="text" id="lastName" name="lastName" placeholder=" ">
+                                    <input type="text" id="lastName" required placeholder=" ">
                                     <label for="lastName">Last Name</label>
+                                    <div class="error-message" id="lastNameError"></div>
                                 </div>
                             </div>
                             <div class="input-field">
-                                <input type="email" id="signupEmail" name="email" required placeholder=" ">
+                                <input type="email" id="signupEmail" required placeholder=" ">
                                 <label for="signupEmail">Email Address</label>
+                                <div class="error-message" id="signupEmailError"></div>
                             </div>
                             <div class="input-field">
-                                <input type="password" id="signupPassword" name="passwordHash" required placeholder=" ">
+                                <input type="password" id="signupPassword" required placeholder=" ">
                                 <label for="signupPassword">Password</label>
-                            </div>
-                            <div class="input-field">
-                                <input type="number" id="signupPhoneNumber" name="phoneNumber" required placeholder=" ">
-                                <label for="signupPhoneNumber">Telephone</label>
-                            </div>
-                            <div class="input-field">
-                                <input type="number" id="signupAge" name="age" required placeholder=" ">
-                                <label for="signupAge">Age</label>
-                            </div>
-                            <div class="input-field">
-                                <input type="text" id="signupCountry" name="country" required placeholder=" ">
-                                <label for="signupCountry">Country</label>
-                            </div>
-                            <div class="input-field">
-                                <input type="text" id="signupGender" name="gender" required placeholder=" ">
-                                <label for="signupGender">Gender</label>
+                                <div class="error-message" id="signupPasswordError"></div>
                             </div>
                         </div>
 
-                        <button type="submit" class="auth-btn">Create Account</button>
+                        <button type="submit" class="auth-btn" id="signupButton">Create Account</button>
 
                         <div class="divider">
                             <span>or continue with</span>
@@ -89,17 +77,19 @@
                             <div class="input-field">
                                 <input type="email" id="loginEmail" required placeholder=" ">
                                 <label for="loginEmail">Email Address</label>
+                                <div class="error-message" id="loginEmailError"></div>
                             </div>
                             <div class="input-field">
                                 <input type="password" id="loginPassword" required placeholder=" ">
                                 <label for="loginPassword">Password</label>
+                                <div class="error-message" id="loginPasswordError"></div>
                             </div>
-                            <div class="forgot-password">
-                                <a href="#" class="forgot-link">Forgot Password?</a>
+                           <div class="forgot-password">
+                                <a href="#" class="forgot-link"></a>
                             </div>
                         </div>
 
-                        <button type="submit" class="auth-btn">Sign In</button>
+                        <button type="submit" class="auth-btn" id="loginButton">Sign In</button>
 
                         <div class="divider">
                             <span>or continue with</span>
@@ -124,6 +114,7 @@
             </div>
         </div>
     </div>
-    <script src="../../Public/js/login.js"></script>
-</body>
+   <script src="../../Public/js/login.js"></script></body>
 </html>
+
+
