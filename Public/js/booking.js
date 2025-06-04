@@ -50,3 +50,25 @@ form["pickup-date"].addEventListener("change",()=>{
         form["pickup-date"].value="";
     }
 });
+
+
+document.getElementById('applyDiscount').addEventListener('click', async () => {
+  const code = document.getElementById('discountCode').value;
+  const priceElement = document.getElementById('priceCalc');
+  const originalPrice = parseFloat(priceElement.textContent); // "100" -> 100
+
+  const res = await fetch('/api/discounts/apply', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code, originalPrice })
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    priceElement.textContent = data.discountedPrice.toFixed(2);
+    alert('Discount applied!');
+  } else {
+    alert(data.message || 'Failed to apply discount');
+  }
+});

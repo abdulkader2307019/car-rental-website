@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>booking</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-    
+
     <header>
         <a href="#" class="logo">Car Rental</a>
         <nav class="navigation">
-            <a href="../CarListingPage/carlisting.html" >Cars</a>
-            <a href="../LoginPage/login.html" >Login</a>
-            <a href="../AdminPage/Admin.html" >Admin</a> 
-            
+            <a href="../CarListingPage/carlisting.html">Cars</a>
+            <a href="../LoginPage/login.html">Login</a>
+            <a href="../AdminPage/Admin.html">Admin</a>
+
         </nav>
-        
+
     </header>
 
     <section class="bookingPage">
@@ -24,34 +26,36 @@
             <img src="../images/car1.jpg" alt="car1">
         </div>
         <div class="form">
-            <form action="/api/discounts" method="post" name="bookingForm">
-            <div >
-                <div class="labels">
+            <form id="bookingForm" action="/api/bookings" method="post">
+                <div>
                     <input type="text" id="pickup" name="pickup" placeholder="Pickup Location">
-                    <input type="date" id="pickupDate" name="pickup-date" >
-                    <input type="time" id="pickupTime" name="pickup-time" >
+                    <input type="date" id="pickupDate" name="pickup-date">
+                    <input type="time" id="pickupTime" name="pickup-time">
                 </div>
-                <div class="labels">
+
+                <div>
                     <input type="text" id="return" name="return" placeholder="Return Location">
-                    <input type="date" id="returnDate" name="return-date" >
-                    <input type="time" id="returnTime" name="return-time" >
+                    <input type="date" id="returnDate" name="return-date">
+                    <input type="time" id="returnTime" name="return-time">
                 </div>
-            </div>
-            <div class="priceANDbtn"> 
-                <select>
-                    <option>
-                    daily
-                </option>
-                    <option>
-                        weekly
-                    </option><option>
-                        annual
-                    </option>
-                </select>
-                <h1 id="priceCalc">100$</h1>
-                <button type="submit" name="bookingForm">Submit</button>
-            </div>
+
+                <div>
+                    <input type="text" id="discountCode" name="discount" placeholder="Discount Code">
+                    <button type="button" id="applyDiscount">Apply Discount</button>
+                </div>
+
+                <div class="priceANDbtn">
+                    <select id="plan">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+
+                    <h1 id="priceCalc">100</h1>
+                    <button type="submit">Book Now</button>
+                </div>
             </form>
+
         </div>
 
     </section>
@@ -64,13 +68,13 @@
         <hr>
         <div class="contacts">
             <a href="mailto:abdulkader2307019@miuegypt.edu.eg">
-                Email: abdulkader2307019@miuegypt.edu.eg                
+                Email: abdulkader2307019@miuegypt.edu.eg
             </a>
             <a href="tel:01150318798">
-                Call Us: 01150318798                
+                Call Us: 01150318798
             </a>
-            <a href="https://facebook.com">Facebook</a> 
-            <a href="https://twitter.com">Twitter</a> 
+            <a href="https://facebook.com">Facebook</a>
+            <a href="https://twitter.com">Twitter</a>
             <a href="https://instagram.com">Instagram</a>
 
         </div>
@@ -79,7 +83,8 @@
             <a href="#">Back to the Top ↑</a>
         </div>
     </footer>
-    
+
     <script src="js/booking.js"></script>
 </body>
+
 </html>
