@@ -1,68 +1,58 @@
-const express = require('express');
-const router = express.Router();
-
-const { protect, isAdmin } = require('../middleware/authMiddleware');
-
 const User = require('../models/User');
 const Car = require('../models/carSchema');
 const Booking = require('../models/bookingSchema');
 
-// Protect all routes: Only accessible by authenticated admins
-router.use(protect, isAdmin);
-
-/**
- * --- USER ROUTES ---
- */
+/** -------------------------------
+ * USERS
+ ----------------------------------*/
 
 // Get all users
-router.get('/users', async (req, res) => {
+exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select('-password');
     res.json({ success: true, users });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
-});
+};
 
-// Delete user by ID
-router.delete('/users/:id', async (req, res) => {
+// Delete a user
+exports.deleteUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'User deleted' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
-});
+};
 
-
-/**
- * --- CAR ROUTES ---
- */
+/** -------------------------------
+ * CARS
+ ----------------------------------*/
 
 // Get all cars
-router.get('/cars', async (req, res) => {
+exports.getAllCars = async (req, res) => {
   try {
     const cars = await Car.find();
     res.json({ success: true, cars });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
-});
+};
 
-// Create a new car
-router.post('/cars', async (req, res) => {
+// Add a new car
+exports.addCar = async (req, res) => {
   try {
-    const { make, model, year, dailyPrice, status } = req.body;
-    const newCar = new Car({ make, model, year, dailyPrice, status });
+    const newCar = new Car(req.body);
     await newCar.save();
     res.status(201).json({ success: true, car: newCar });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
-});
+};
 
-// Update car by ID
-router.put('/cars/:id', async (req, res) => {
+// Update a car
+exports.updateCar = async (req, res) => {
   try {
     const car = await Car.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!car) return res.status(404).json({ success: false, message: 'Car not found' });
@@ -70,60 +60,36 @@ router.put('/cars/:id', async (req, res) => {
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
-});
+};
 
-// Delete car by ID
-router.delete('/cars/:id', async (req, res) => {
+// Delete a car
+exports.deleteCar = async (req, res) => {
   try {
     await Car.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'Car deleted' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
-});
+};
 
+/** -------------------------------
+ * BOOKINGS
+ ----------------------------------*/
 
-/**
- * --- BOOKINGS ROUTES ---
- */
-
-// GET /api/bookings with optional filters (status, user, car)
-router.get('/bookings', async (req, res) => {
+// Get all bookings
+exports.getAllBookings = async (req, res) => {
   try {
-    const { status, user, car } = req.query;
-
-    const filter = {};
-    if (status) filter.status = status;
-    if (user) filter.user = user;
-    if (car) filter.car = car;
-
-    const bookings = await Booking.find(filter)
+    const bookings = await Booking.find()
       .populate('user', 'firstName lastName email')
-      .populate('car', 'make model dailyPrice');
-
+      .populate('car', 'make model');
     res.json({ success: true, bookings });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
-});
+};
 
-// PUT /api/bookings/:id/approve → Confirm booking
-router.put('/bookings/:id/approve', async (req, res) => {
-  try {
-    const booking = await Booking.findById(req.params.id);
-    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
-
-    booking.status = 'confirmed';
-    await booking.save();
-
-    res.json({ success: true, message: 'Booking approved', booking });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-// Update booking by ID (generic)
-router.put('/bookings/:id', async (req, res) => {
+// Update booking (e.g., approve or change status)
+exports.updateBooking = async (req, res) => {
   try {
     const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
@@ -131,16 +97,14 @@ router.put('/bookings/:id', async (req, res) => {
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
-});
+};
 
-// Delete booking by ID
-router.delete('/bookings/:id', async (req, res) => {
+// Delete booking
+exports.deleteBooking = async (req, res) => {
   try {
     await Booking.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'Booking deleted' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
-});
-
-module.exports = router;
+};
