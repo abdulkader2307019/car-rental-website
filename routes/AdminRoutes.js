@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const AdminController = require('../controllers/AdminController');
 
 const { protect, isAdmin } = require('../middleware/authMiddleware');
 
@@ -10,137 +11,34 @@ const Booking = require('../models/bookingSchema');
 // Protect all routes: Only accessible by authenticated admins
 router.use(protect, isAdmin);
 
-/**
- * --- USER ROUTES ---
- */
-
 // Get all users
-router.get('/users', async (req, res) => {
-  try {
-    const users = await User.find().select('-password');
-    res.json({ success: true, users });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
+router.get('/users',AdminController.getAllUsers);
 
 // Delete user by ID
-router.delete('/users/:id', async (req, res) => {
-  try {
-    await User.findByIdAndDelete(req.params.id);
-    res.json({ success: true, message: 'User deleted' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-
-/**
- * --- CAR ROUTES ---
- */
+router.delete('/users/:id', AdminController.deleteUser);
 
 // Get all cars
-router.get('/cars', async (req, res) => {
-  try {
-    const cars = await Car.find();
-    res.json({ success: true, cars });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
+router.get('/cars', AdminController.getAllCars);
 
 // Create a new car
-router.post('/cars', async (req, res) => {
-  try {
-    const { make, model, year, dailyPrice, status } = req.body;
-    const newCar = new Car({ make, model, year, dailyPrice, status });
-    await newCar.save();
-    res.status(201).json({ success: true, car: newCar });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
-  }
-});
+router.post('/cars',AdminController.addCar);
 
 // Update car by ID
-router.put('/cars/:id', async (req, res) => {
-  try {
-    const car = await Car.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!car) return res.status(404).json({ success: false, message: 'Car not found' });
-    res.json({ success: true, car });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
-  }
-});
+router.put('/cars/:id', AdminController);
 
 // Delete car by ID
-router.delete('/cars/:id', async (req, res) => {
-  try {
-    await Car.findByIdAndDelete(req.params.id);
-    res.json({ success: true, message: 'Car deleted' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
-
-
-/**
- * --- BOOKINGS ROUTES ---
- */
+router.delete('/cars/:id', AdminController.deleteCar);
 
 // GET /api/bookings with optional filters (status, user, car)
-router.get('/bookings', async (req, res) => {
-  try {
-    const { status, user, car } = req.query;
-
-    const filter = {};
-    if (status) filter.status = status;
-    if (user) filter.user = user;
-    if (car) filter.car = car;
-
-    const bookings = await Booking.find(filter)
-      .populate('user', 'firstName lastName email')
-      .populate('car', 'make model dailyPrice');
-
-    res.json({ success: true, bookings });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
+router.get('/bookings', AdminController.getAllBookings);
 
 // PUT /api/bookings/:id/approve → Confirm booking
-router.put('/bookings/:id/approve', async (req, res) => {
-  try {
-    const booking = await Booking.findById(req.params.id);
-    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
-
-    booking.status = 'confirmed';
-    await booking.save();
-
-    res.json({ success: true, message: 'Booking approved', booking });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
+router.put('/bookings/:id/approve', AdminController.approveBooking);
 
 // Update booking by ID (generic)
-router.put('/bookings/:id', async (req, res) => {
-  try {
-    const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
-    res.json({ success: true, booking });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
-  }
-});
+router.put('/bookings/:id', AdminController.updateBooking);
 
 // Delete booking by ID
-router.delete('/bookings/:id', async (req, res) => {
-  try {
-    await Booking.findByIdAndDelete(req.params.id);
-    res.json({ success: true, message: 'Booking deleted' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-});
+router.delete('/bookings/:id', AdminController.deleteBooking);
 
 module.exports = router;
