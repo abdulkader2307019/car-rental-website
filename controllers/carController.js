@@ -10,4 +10,14 @@ const addCar = async (req, res) => {
   }
 };
 
-module.exports = addCar;
+const editCar = async (req, res) => {
+  try {
+    const updatedCar = await Car.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedCar) return res.status(404).json({ message: 'Car not found' });
+    res.json({ message: 'Car updated', car: updatedCar });
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating car'});
+}
+};
+
+module.exports = {addCar,editCar};
