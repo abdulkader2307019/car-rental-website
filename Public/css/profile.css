@@ -1,3 +1,4 @@
+
 :root {
     --bg-color: #121212;
     --header-bg: #1E1E1E;
@@ -134,6 +135,7 @@ body {
     background-color: var(--header-bg);
     border-radius: 1rem;
     padding: 2rem;
+    margin-bottom: 2rem;
 }
 
 .comments-section h2 {
@@ -160,6 +162,36 @@ body {
     color: var(--text-color);
     opacity: 0.6;
     font-size: 0.9rem;
+}
+
+.comment-loading {
+    color: var(--text-color);
+    opacity: 0.7;
+    text-align: center;
+    padding: 1rem;
+}
+
+.actions-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+}
+
+.action-button {
+    background-color: var(--header-bg);
+    color: var(--accent-color);
+    border: 2px solid var(--accent-color);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
 }
 
 @keyframes pulse {
