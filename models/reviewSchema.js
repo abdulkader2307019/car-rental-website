@@ -1,17 +1,16 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// define the Schema (the structure of the review)
-const reviewSchema = new Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  car: { type: mongoose.Schema.Types.ObjectId, ref: 'Car' },
-  rating: Number,
-  comment: String,
-  createdAt: Date
-}, { timestamps: true });
+const reviewSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  car: { type: mongoose.Schema.Types.ObjectId, ref: 'Car', required: true },
+  rating: { type: Number, required: true, min: 1, max: 5 },
+  comment: { type: String, maxlength: 300 },
+  createdAt: { type: Date, default: Date.now }
+});
 
-// Create a model based on that schema
-const Review = mongoose.model("review", reviewSchema);
 
-// export the model
+const Review = mongoose.model("Review", reviewSchema);
+
+
 module.exports = Review;

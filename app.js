@@ -12,6 +12,8 @@
 
   const discoutRoutes = require('./routes/discountRoutes');
   app.use(discoutRoutes);
+  const reviewRoutes = require('./routes/reviewRoutes');
+  app.use(reviewRoutes);
 
 
 
