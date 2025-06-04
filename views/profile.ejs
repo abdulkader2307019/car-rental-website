@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Rental Profile</title>
-    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="/css/profile.css">
 </head>
 <body>
     <div class="container">
@@ -12,28 +13,29 @@
             <div class="profile-info">
                 <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200&h=200" 
                      alt="Profile" 
-                     class="profile-image">
+                     class="profile-image"
+                     id="profileImage">
                 <div class="profile-details">
-                    <h1>Mahmoud Reda</h1>
+                    <h1 id="profileName">Loading...</h1>
                     <p class="status"><span class="status-dot"></span>Online</p>
                 </div>
             </div>
             <div class="bio-info">
                 <div class="bio-item">
                     <span class="label">On-site</span>
-                    <span class="value">Cairo</span>
+                    <span class="value" id="profileLocation">Loading...</span>
                 </div>
                 <div class="bio-item">
                     <span class="label">Country</span>
-                    <span class="value">Egypt</span>
+                    <span class="value" id="profileCountry">Loading...</span>
                 </div>
                 <div class="bio-item">
                     <span class="label">Birthday</span>
-                    <span class="value">March 15, 1990</span>
+                    <span class="value" id="profileBirthday">Loading...</span>
                 </div>
                 <div class="bio-item">
                     <span class="label">Member Since</span>
-                    <span class="value">2021</span>
+                    <span class="value" id="profileMemberSince">Loading...</span>
                 </div>
             </div>
         </div>
@@ -63,22 +65,16 @@
 
         <div class="comments-section">
             <h2>Recent Comments</h2>
-            <div class="comment">
-                <div class="comment-header">
-                    <strong>Great experience!</strong>
-                    <span class="comment-date">2 days ago</span>
-                </div>
-                <p>The car was in perfect condition and the service was exceptional. Would definitely rent again!</p>
-            </div>
-            <div class="comment">
-                <div class="comment-header">
-                    <strong>Smooth rental process</strong>
-                    <span class="comment-date">1 week ago</span>
-                </div>
-                <p>Quick pickup and return. The staff was very professional and helpful.</p>
+            <div id="commentsContainer">
+                <!-- Comments will be loaded dynamically -->
+                <div class="comment-loading">Loading comments...</div>
             </div>
         </div>
+        
+        <div class="actions-section">
+            <button id="logoutButton" class="action-button">Logout</button>
+        </div>
     </div>
-    <script src="profile.js"></script>
+    <script src="../../Public/js/profile.js"></script>
 </body>
 </html>
