@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 
-const discountController = require("../controllers/discountConstroller")
+const discountController = require("../controllers/discountController")
 const {protect, isAdmin}= require("../middleware/authMiddleware");
+
 
 router.post('/api/discounts',protect,isAdmin,discountController.discount_post)
 

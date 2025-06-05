@@ -5,25 +5,49 @@
   app.use(express.urlencoded({extended:true}));
   const User = require("./models/User")
   app.set('view engine','ejs')
+
+  const path = require('path')
+  app.set("views", path.join(__dirname, "views"));
+
   require('dotenv').config();
   const port = process.env.PORT;
   const DB_URL = process.env.MONGODB_URI;
   app.use(express.json());
 
-  const discoutRoutes = require('./routes/discountRoutes');
-  app.use(discoutRoutes);
-  const reviewRoutes = require('./routes/reviewRoutes');
-  app.use(reviewRoutes);
-  const carRoutes = require('./routes/carRoutes');
-  app.use(carRoutes);
-  const AdminRoutes = require('./routes/AdminRoutes');
-  app.use(AdminRoutes);
-  const bookingRoutes=require ('./routes/bookingRoutes'); 
-  app.use(bookingRoutes);
+  
+   const discountRoutes = require('./routes/discountRoutes');
+   app.use(discountRoutes);
+   const reviewRoutes = require('./routes/reviewRoutes');
+   app.use(reviewRoutes);
+   const carRoutes = require('./routes/carRoutes');
+   app.use(carRoutes);
+  //const AdminRoutes = require('./routes/AdminRoutes');
+  // app.use(AdminRoutes);
+   const bookingRoutes=require ('./routes/bookingRoutes'); 
+   app.use(bookingRoutes);
 
   app.get("/", (req, res) => {
-    res.render("booking", { root: __dirname });
+    res.render("index", { root: __dirname });
   });
+
+  app.get("/carlisting", (req, res) => {
+    res.render("carlisting");
+  });
+
+  app.get("/LoginPage/login", (req, res) => {
+    res.render("LoginPage/login");
+  });
+
+  app.get("/AdminPage/Admin", (req, res) => {
+    res.render("AdminPage/Admin");
+  });
+  app.get("/profile", (req, res) => {
+    res.render("profile");
+  });
+  app.get("/car-details", (req, res) => {
+    res.render("car-details");
+  });
+  
 
   app.get("/AdminPage/Admin.ejs",(req,res)=>{
       User.find()

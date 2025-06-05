@@ -2,7 +2,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-exports.protect = async (req, res, next) => {
+const protect = (req, res, next) => {
   let token;
 
   // Check if auth header exists and has bearer token
@@ -25,7 +25,7 @@ exports.protect = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     // Get user from database
-    req.user = await User.findById(decoded.id).select('-password');
+    req.user = User.findById(decoded.id).select('-password');
     
     if (!req.user) {
       return res.status(401).json({ 
@@ -43,7 +43,7 @@ exports.protect = async (req, res, next) => {
   }
 };
 
-exports.isAdmin = (req, res, next) => {
+const isAdmin = (req, res, next) => {
   if (req.user && req.user.isAdmin === true) {
     next();
   } else {
@@ -53,3 +53,5 @@ exports.isAdmin = (req, res, next) => {
     });
   }
 };
+
+module.exports = {protect,isAdmin};
