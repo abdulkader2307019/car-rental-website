@@ -34,9 +34,16 @@ const createBooking= async (req, res) => {
   
     res.status(201).json(booking);
   };
+const viewBooking=async (req, res) => {
+    const bookings = await Booking.find({ user: req.user.id })
+      .populate('car')
+      .sort({ startDate: -1 });
+  
+    res.json(bookings);
+  };
+  
 
 
 
-
-module.exports=createBooking;
+module.exports={createBooking,viewBooking};
 
