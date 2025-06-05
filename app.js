@@ -47,6 +47,9 @@
   app.get("/car-details", (req, res) => {
     res.render("car-details");
   });
+    app.get("/booking", (req, res) => {
+    res.render("booking");
+  });
   
 
   app.get("/AdminPage/Admin.ejs",(req,res)=>{
