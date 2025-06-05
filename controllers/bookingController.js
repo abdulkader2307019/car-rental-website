@@ -41,9 +41,22 @@ const viewBooking=async (req, res) => {
   
     res.json(bookings);
   };
+  const cancelBooking= async (req, res) => {
+    const booking = await Booking.findById(req.params.id);
   
+    if (!booking) return res.status(404).json({ error: 'Booking not found' });
+    if (booking.user.toString() !== req.user.id) return res.status(403).json({ error: 'Unauthorized' });
+  
+    if (new Date(booking.startDate) <= new Date()) {
+      return res.status(400).json({ error: 'Cannot cancel ongoing or past bookings' });
+    }
+  
+    booking.status = 'cancelled';
+    await booking.save();
+    res.json({ message: 'Booking cancelled', booking });
+  };
 
 
 
-module.exports={createBooking,viewBooking};
+module.exports={createBooking,viewBooking,cancelBooking};
 
