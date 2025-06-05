@@ -18,6 +18,8 @@
   app.use(carRoutes);
   const AdminRoutes = require('./routes/AdminRoutes');
   app.use(AdminRoutes);
+  const bookingRoutes=require ('./routes/bookingRoutes'); 
+  app.use(bookingRoutes);
 
   app.get("/", (req, res) => {
     res.render("booking", { root: __dirname });
