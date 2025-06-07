@@ -3,10 +3,13 @@ const Schema = mongoose.Schema;
 
 // define the Schema (the structure of the car)
 const carSchema = new Schema({
-  name: String,
   brand: String,
+  model: String,
   type: String, // e.g., SUV, sedan
-  image: String,
+  image: {
+    data: Buffer,
+    contentType: String
+  },
   pricePerDay: Number,
   availability: Boolean,
   location: String,

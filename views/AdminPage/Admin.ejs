@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Rental Admin</title>
     <link rel="stylesheet" href="/css/Admin.css">
 </head>
+
 <body>
     <div class="dashboard">
         <!-- Side Navigation -->
@@ -56,27 +58,69 @@
             <section id="cars" class="content-section hidden">
                 <h2>Manage Cars</h2>
                 <div class="card">
-                    <form id="car-form">
+                    <form id="car-form" enctype="multipart/form-data">
                         <input type="hidden" id="car-id" value="">
+
                         <div class="form-row">
-                            <input type="text" id="car-make" placeholder="Make" required>
+                            <% var car_brands_list = ["Abarth", "Acura", "Alfa Romeo", "Aston Martin", "Audi", "Bentley", "BMW", "Bugatti", "Buick", "Cadillac", "Chevrolet", "Chrysler", "Citroën", "Dacia", "Daewoo", "Daihatsu", "Dodge", "Ferrari", "Fiat", "Ford", "Genesis", "GMC", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Koenigsegg", "Lamborghini", "Lancia", "Land Rover", "Lexus", "Lincoln", "Lotus", "Maserati", "Mazda", "McLaren", "Mercedes-Benz", "MG", "Mini", "Mitsubishi", "Nissan", "Opel", "Pagani", "Peugeot", "Polestar", "Porsche", "Ram", "Renault", "Rolls-Royce", "Saab", "Seat", "Skoda", "Smart", "Subaru", "Suzuki", "Tesla", "Toyota", "Vauxhall", "Volkswagen", "Volvo"]; %>
+                                <select id="car-brand" placeholder="Brand" required>
+                                <option value="">Select Brand</option>
+                                <% car_brands_list.forEach(element => { %>
+                                <option ><%= element %></option> 
+                                <% }) %>
+                            </select>
                             <input type="text" id="car-model" placeholder="Model" required>
                         </div>
+
                         <div class="form-row">
-                            <input type="text" id="car-year" placeholder="Year" required>
-                            <input type="text" id="car-price" placeholder="Daily Price" required>
-                        </div>
-                        <div class="form-row">
-                            <select id="car-status" style="width: 70%;">
-                                <option value="available">Available</option>
-                                <option value="unavailable">Unavailable</option>
+                            <select id="car-type" required>
+                                <option value="">Select Type</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Sedan">Sedan</option>
+                                <option value="Hatchback">Hatchback</option>
+                                <option value="Truck">Truck</option>
+                            </select>
+
+                            <select id="car-location" placeholder="Location" required>
+                                <option value="">Select Branch</option>
+                                <option value="Cairo">Cairo</option>
+                                <option value="Alex">Alex</option>
+                                <option value="Mansoura">Mansoura</option>
+                                <option value="Aswan">Aswan</option>
                             </select>
                         </div>
+
+                        <div class="form-row">
+                            <input type="number" id="car-price" placeholder="Daily Price" required>
+                            <select id="car-status" required>
+                                <option value="">Availability</option>
+                                <option value="true">Available</option>
+                                <option value="false">Unavailable</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <input type="number" id="car-seats" placeholder="Seats" required>
+                            <select id="car-fuel" placeholder="Fuel Type (e.g., Petrol)" required>
+                                <option value="true">Petrol</option>
+                                <option value="false">Electric</option>
+                            </select>
+                            <select id="car-transmission" placeholder="Transmission (e.g., Automatic)"
+                                required>
+                                <option value="true">Automatic</option>
+                                <option value="false">Manual</option>
+                            </select>
+                        </div>
+
+                        <input type="file" id="car-image" name="image" accept="image/*" required>
+
+
                         <div class="form-actions">
                             <button type="button" id="save-car" class="btn primary">Save Car</button>
                             <button type="button" id="clear-form" class="btn">Clear</button>
                         </div>
                     </form>
+
                     <table id="cars-table">
                         <thead>
                             <tr>
@@ -241,4 +285,5 @@
     </div>
     <script src="/js/Admin.js"></script>
 </body>
+
 </html>
