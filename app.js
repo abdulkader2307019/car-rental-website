@@ -19,6 +19,26 @@
   const AdminRoutes = require('./routes/AdminRoutes');
   app.use(AdminRoutes);
 
+   const multer = require('multer');
+   const storage = multer.memoryStorage();
+   const img = multer({ storage });
+
+   const Car = require('./models/carSchema')
+
+   app.post('/api/cars', img.single('image'), async (req, res) => {
+  const car = new Car({
+    brand: req.body.brand,
+    model: req.body.model,
+    image: {
+      data: req.file.buffer,
+      contentType: req.file.mimetype
+    }
+  });
+
+  await car.save();
+  res.status(201).json({ message: 'Car saved', car });
+});
+
   app.get("/", (req, res) => {
     res.render("booking", { root: __dirname });
   });

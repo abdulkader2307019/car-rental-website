@@ -151,7 +151,7 @@ tr:hover {
 }
 
 .form-row input {
-    flex: 1;
+    flex-grow: 1;
     width: 50%; /* Reduced width of input fields */
     padding: 5px; /* Reduced padding */
 }
