@@ -3,7 +3,7 @@
   const mongoose = require("mongoose");
   app.use(express.static("public"));
   app.use(express.urlencoded({extended:true}));
-  const User = require("./models/User")
+  //const User = require("./models/User")
   app.set('view engine','ejs')
   require('dotenv').config();
   const port = process.env.PORT;
@@ -16,8 +16,7 @@
   app.use(reviewRoutes);
   const carRoutes = require('./routes/carRoutes');
   app.use(carRoutes);
-  const AdminRoutes = require('./routes/AdminRoutes');
-  app.use(AdminRoutes);
+ 
 
    const multer = require('multer');
    const storage = multer.memoryStorage();
