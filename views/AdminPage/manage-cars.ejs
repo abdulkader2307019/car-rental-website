@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental Admin</title>
+    <link rel="stylesheet" href="/css/Admin.css">
+</head>
+
+<body>
+    <div class="dashboard">
+        <%- include('../partials/side-bar.ejs') %>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- /////////////header section////////////// -->
+                <%- include('../partials/header.ejs') %>
+                    <!-- Cars Section -->
+                    <section id="cars" class="content-section ">
+                        <h2>Manage Cars</h2>
+                        <div class="card">
+                            <form id="car-form" enctype="multipart/form-data">
+                                <input type="hidden" id="car-id" value="">
+
+                                <div class="form-row">
+                                    <% var car_brands_list=["Abarth", "Acura" , "Alfa Romeo" , "Aston Martin" , "Audi"
+                                        , "Bentley" , "BMW" , "Bugatti" , "Buick" , "Cadillac" , "Chevrolet"
+                                        , "Chrysler" , "Citroën" , "Dacia" , "Daewoo" , "Daihatsu" , "Dodge" , "Ferrari"
+                                        , "Fiat" , "Ford" , "Genesis" , "GMC" , "Honda" , "Hyundai" , "Infiniti"
+                                        , "Jaguar" , "Jeep" , "Kia" , "Koenigsegg" , "Lamborghini" , "Lancia"
+                                        , "Land Rover" , "Lexus" , "Lincoln" , "Lotus" , "Maserati" , "Mazda"
+                                        , "McLaren" , "Mercedes-Benz" , "MG" , "Mini" , "Mitsubishi" , "Nissan" , "Opel"
+                                        , "Pagani" , "Peugeot" , "Polestar" , "Porsche" , "Ram" , "Renault"
+                                        , "Rolls-Royce" , "Saab" , "Seat" , "Skoda" , "Smart" , "Subaru" , "Suzuki"
+                                        , "Tesla" , "Toyota" , "Vauxhall" , "Volkswagen" , "Volvo" ]; %>
+                                        <select id="car-brand" placeholder="Brand" required>
+                                            <option value="">Select Brand</option>
+                                            <% car_brands_list.forEach(element=> { %>
+                                                <option>
+                                                    <%= element %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                        <input type="text" id="car-model" placeholder="Model" required>
+                                </div>
+
+                                <div class="form-row">
+                                    <input type="text" id="car-year" placeholder="year" required>
+                                    <select id="car-type" required>
+                                        <option value="">Select Type</option>
+                                        <option value="SUV">SUV</option>
+                                        <option value="Sedan">Sedan</option>
+                                        <option value="Hatchback">Hatchback</option>
+                                        <option value="Truck">Truck</option>
+                                    </select>
+
+                                    <select id="car-location" placeholder="Location" required>
+                                        <option value="">Select Branch</option>
+                                        <option value="Cairo">Cairo</option>
+                                        <option value="Alex">Alex</option>
+                                        <option value="Mansoura">Mansoura</option>
+                                        <option value="Aswan">Aswan</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-row">
+                                    <input type="number" id="car-price" placeholder="Daily Price" required>
+                                    <select id="car-status" required>
+                                        <option value="">Availability</option>
+                                        <option value="true">Available</option>
+                                        <option value="false">Unavailable</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-row">
+                                    <input type="number" id="car-seats" placeholder="Seats" required>
+                                    <select id="car-fuel" placeholder="Fuel Type (e.g., Petrol)" required>
+                                        <option value="true">Petrol</option>
+                                        <option value="false">Electric</option>
+                                    </select>
+                                    <select id="car-transmission" placeholder="Transmission (e.g., Automatic)" required>
+                                        <option value="true">Automatic</option>
+                                        <option value="false">Manual</option>
+                                    </select>
+                                </div>
+
+                                <input type="file" id="car-image" name="image" accept="image/*" required>
+
+
+                                <div class="form-actions">
+                                    <button type="button" id="save-car" class="btn primary">Save Car</button>
+                                    <button type="button" id="clear-form" class="btn">Clear</button>
+                                </div>
+                            </form>
+
+                            <table id="cars-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Make & Model</th>
+                                        <th>Year</th>
+                                        <th>Type</th>
+                                        <th>Branch</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th># Seats</th>
+                                        <th>Fuel</th>
+                                        <th>Transmission</th>
+                                        <th>Image</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% cars.forEach((car,index)=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= index + 1%>
+                                            </td>
+                                            <td>
+                                                <%= car.brand +' '+ car.model %></td>
+                                    <td><%= car.year %></td>
+                                    <td><%= car.type %></td>
+                                    <td><%= car.location%></td>
+                                    <td><%= car.pricePerDay%></td>
+                                    <td><%= car.availability%></td>
+                                    <td><%= car.specs.seats%></td>
+                                    <td><%= car.specs.fuel%></td>
+                                    <td><%= car.specs.transmission%></td>
+                                    <td><%= ' Image'%>
+                                            </td>
+                                            <td>
+                                                <%= 'action' %>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+            </main>
+    </div>
+    <script src="/js/Admin.js"></script>
+</body>
+
+</html>

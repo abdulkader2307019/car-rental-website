@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental Admin</title>
+    <link rel="stylesheet" href="/css/Admin.css">
+</head>
+
+<body>
+    <div class="dashboard">
+        <%- include('../partials/side-bar.ejs') %>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- /////////////header section////////////// -->
+             <%- include('../partials/header.ejs') %>
+<!-- Bookings Section -->
+            <section id="bookings" class="content-section">
+                <h2>Manage Bookings</h2>
+                <div class="card">
+                    <table id="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Car</th>
+                                <th>Dates</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Bookings will load here with edit button -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            </main>
+    </div>
+    <!-- <script src="/js/Admin.js"></script> -->
+</body>
+
+</html>
