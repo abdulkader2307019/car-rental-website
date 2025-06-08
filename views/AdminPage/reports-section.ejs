@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental Admin</title>
+    <link rel="stylesheet" href="/css/Admin.css">
+</head>
+
+<body>
+    <div class="dashboard">
+        <%- include('../partials/side-bar.ejs') %>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- /////////////header section////////////// -->
+             <%- include('../partials/header.ejs') %>
+<!-- Reports Section -->
+            <section id="reports" class="content-section">
+                <h2>Reports</h2>
+                <div class="card">
+                    <div class="stats-grid">
+                        <div class="stat-card" data-target="bookings-details">
+                            <h3>Total Bookings</h3>
+                            <p id="total-bookings">0</p>
+                        </div>
+                        <div class="stat-card" data-target="active-rentals-details">
+                            <h3>Active Rentals</h3>
+                            <p id="active-rentals">0</p>
+                        </div>
+                        <div class="stat-card" data-target="revenue-details">
+                            <h3>Total Revenue</h3>
+                            <p id="total-revenue">$0</p>
+                        </div>
+                        <div class="stat-card" data-target="available-cars-details">
+                            <h3>Available Cars</h3>
+                            <p id="available-cars">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Report Details Tables -->
+                    <div id="bookings-details" class="report-details hidden">
+                        <h3>Booking Details</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Car</th>
+                                    <th>User</th>
+                                    <th>Dates</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookings-details-body"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="active-rentals-details" class="report-details hidden">
+                        <h3>Active Rental Details</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Car</th>
+                                    <th>User</th>
+                                    <th>Dates</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="active-rentals-details-body"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="revenue-details" class="report-details hidden">
+                        <h3>Revenue Details</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Car</th>
+                                    <th>Bookings Count</th>
+                                    <th>Total Revenue</th>
+                                    <th>Daily Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="revenue-details-body"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="available-cars-details" class="report-details hidden">
+                        <h3>Available Cars</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Make & Model</th>
+                                    <th>Year</th>
+                                    <th>Daily Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="available-cars-details-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+                        </main>
+    </div>
+    <!-- <script src="/js/Admin.js"></script> -->
+</body>
+
+</html>
