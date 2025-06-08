@@ -37,6 +37,10 @@ const { log } = require("console");
 
 app.post('/api/cars', img.single('image'), async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No image uploaded' });
+    }
+
     const car = new Car({
       brand: req.body.brand,
       model: req.body.model,
@@ -53,17 +57,18 @@ app.post('/api/cars', img.single('image'), async (req, res) => {
         fuel: req.body.fuel,
         transmission: req.body.transmission
       },
-      year:req.body.year
+      year: parseInt(req.body.year)
     });
-    if (!req.file) {
-  return res.status(400).json({ error: 'No image uploaded' });
-}
+
     await car.save();
     res.status(201).json({ message: 'Car added successfully', car });
+
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 
