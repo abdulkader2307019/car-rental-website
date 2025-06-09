@@ -3,9 +3,8 @@ const app = express();
 const mongoose = require("mongoose");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
-const User = require("./models/User")
 app.set('view engine', 'ejs')
-
+app.use(express.json());
 const path = require('path')
 app.set("views", path.join(__dirname, "views"));
 
@@ -15,17 +14,28 @@ const DB_URL = process.env.MONGODB_URI;
 app.use(express.json());
 
 
-const discountRoutes = require('./routes/discountRoutes');
-app.use(discountRoutes);
-const reviewRoutes = require('./routes/reviewRoutes');
-app.use(reviewRoutes);
-const carRoutes = require('./routes/carRoutes');
-app.use(carRoutes);
-//const AdminRoutes = require('./routes/AdminRoutes');
-// app.use(AdminRoutes);
-const bookingRoutes = require('./routes/bookingRoutes');
-app.use(bookingRoutes);
-
+// const discountRoutes = require('./routes/discountRoutes');
+// app.use(discountRoutes);
+// const reviewRoutes = require('./routes/reviewRoutes');
+// app.use(reviewRoutes);
+// const carRoutes = require('./routes/carRoutes');
+// app.use(carRoutes);
+// //const AdminRoutes = require('./routes/AdminRoutes');
+// // app.use(AdminRoutes);
+// const bookingRoutes = require('./routes/bookingRoutes');
+// app.use(bookingRoutes);
+// const authRoutes = require('./routes/authRoutes');
+// app.use(authRoutes);
+// app.post("/user/add.html", (req, res) => {
+//   const user = new User(req.body);
+//   user.save()
+//     .then(result => {
+//       res.redirect("/");
+//     })
+//     .catch(err => {
+//       console.log(err);
+//     })
+// })
 const multer = require('multer');
 const storage = multer.memoryStorage(); // store in memory, not disk
 const img = multer({ storage });
@@ -33,12 +43,46 @@ const img = multer({ storage });
 
 
 const Car = require('./models/carSchema');
+const User = require('./models/User');
+const Booking = require('./models/bookingSchema');
+
+
 const { log } = require("console");
+
+app.post('/api/auth/login', async (req, res) => {
+    const { email, password } = req.body;
+    console.log("Received body:", req.body);  
+    try {
+        const user = await User.findOne({ email });
+        if (!user) return res.status(400).json({ message: 'User not found' });
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) return res.status(400).json({ message: 'Invalid password' });
+
+        // Optional: create token
+        const token = jwt.sign({ userId: user._id }, 'yourSecretKey', { expiresIn: '1h' });
+
+        res.status(200).json({
+            message: 'Login successful',
+            token, // optional
+            user: {
+                id: user._id,
+                name: user.firstName + ' ' + user.lastName,
+                email: user.email,
+            }
+        });
+
+    } catch (err) {
+        console.error('Login error:', err);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
 
 app.post('/api/cars', img.single('image'), async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ error: 'No image uploaded' });
+      return res.status(400).json({ error: 'No image uploaded' , currentPage: 'cars' });
     }
 
     const car = new Car({
@@ -69,6 +113,44 @@ app.post('/api/cars', img.single('image'), async (req, res) => {
   }
 });
 
+app.post('/user/register', async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      password,
+      age,
+      country
+    } = req.body;
+
+    // Check for existing user
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).send('Email already registered');
+    }
+
+    // Create and save new user
+    const newUser = new User({
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      password, // will be hashed in pre-save hook
+      age: age || undefined,
+      country: country || undefined
+    });
+
+    await newUser.save();
+    
+    res.status(201).render('index');
+  } catch (err) {
+    console.error('Registration error:', err);
+    res.status(500).send('Internal server error');
+  }
+});
+
 
 
 
@@ -91,14 +173,20 @@ app.get("/LoginPage/login", (req, res) => {
 
 app.get('/AdminPage/manage-bookings',(req,res)=>{
 
-  res.render('AdminPage/manage-bookings')
+  Booking.find().then(result=>{
+    //console.log(result);    
+    res.render('AdminPage/manage-bookings',{bookings:result, currentPage: 'bookings' });
+  }).catch(err=>{
+    console.log(err);
+  })
+  // res.render('AdminPage/manage-bookings')
 
 });
 app.get('/AdminPage/manage-cars',(req,res)=>{
 
   Car.find().then(result=>{
     //console.log(result);    
-    res.render('AdminPage/manage-cars',{cars:result});
+    res.render('AdminPage/manage-cars',{cars:result, currentPage: 'cars' });
   }).catch(err=>{
     console.log(err);
   })
@@ -108,12 +196,26 @@ app.get('/AdminPage/manage-cars',(req,res)=>{
 });
 app.get('/AdminPage/manage-users',(req,res)=>{
 
-  res.render('AdminPage/manage-users')
+  User.find().then(result=>{
+    //console.log(result);    
+    res.render('AdminPage/manage-users',{users:result, currentPage: 'users' });
+  }).catch(err=>{
+    console.log(err);
+  })
+
+
+  // res.render('AdminPage/manage-users')
 
 });
 app.get('/AdminPage/reports-section',(req,res)=>{
 
-  res.render('AdminPage/reports-section')
+  User.find().then(result=>{
+    //console.log(result);    
+    res.render('AdminPage/reports-section',{users:result, currentPage: 'reports' });
+  }).catch(err=>{
+    console.log(err);
+  })
+  // res.render('AdminPage/reports-section')
 
 });
 
@@ -141,16 +243,16 @@ app.get("/booking", (req, res) => {
 
 // })
 
-app.post("/user/add.html", (req, res) => {
-  const user = new User(req.body);
-  user.save()
-    .then(result => {
-      res.redirect("/");
-    })
-    .catch(err => {
-      console.log(err);
-    })
-})
+// app.post("/user/add.html", (req, res) => {
+//   const user = new User(req.body);
+//   user.save()
+//     .then(result => {
+//       res.redirect("/");
+//     })
+//     .catch(err => {
+//       console.log(err);
+//     })
+// })
 
 
 mongoose

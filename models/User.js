@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true
   },
+  phoneNumber:{
+    type:String,
+    required:true,
+    trim:true
+  },
   password: {
     type: String,
     required: true
@@ -28,17 +33,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200&h=200'
   },
-  location: {
-    type: String,
-    default: 'Cairo'
-  },
   country: {
     type: String,
     default: 'Egypt'
   },
-  birthday: {
-    type: Date,
-    default: new Date('1990-03-15')
+  age: {
+    type: Number,
   },
   memberSince: {
     type: Date,

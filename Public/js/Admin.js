@@ -1,3 +1,4 @@
+
 document.getElementById('save-car').addEventListener('click', async () => {
     const form = document.getElementById('car-form');
     const formData = new FormData();
@@ -39,3 +40,17 @@ document.getElementById('save-car').addEventListener('click', async () => {
         alert("❌ Failed to save car. Please check your input or try again.");
     }
 });
+
+// document.addEventListener("DOMContentLoaded", () => {
+//     const navLinks = document.querySelectorAll(".side-nav .nav-links a");
+
+//     navLinks.forEach(link => {
+//         link.addEventListener("click", function () {
+//             // Remove 'active' from all links
+//             navLinks.forEach(l => l.classList.remove("active"));
+
+//             // Add 'active' to the clicked one
+//             this.classList.add("active");
+//         });
+//     });
+// });

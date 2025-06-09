@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
     <link rel="stylesheet" href="/css/login.css">
 </head>
+
 <body>
     <div class="container">
         <div class="left-side">
@@ -19,29 +21,47 @@
                     <h2>Create Account</h2>
                     <p class="subtitle">Sign up to get started</p>
 
-                    <form id="signup-form">
+                    <form id="signup-form" method="POST" action="/user/register">
                         <div class="input-group">
                             <div class="name-fields">
                                 <div class="input-field">
-                                    <input type="text" id="firstName" required placeholder=" ">
+                                    <input type="text" id="firstName" name="firstName" required placeholder=" ">
                                     <label for="firstName">First Name</label>
                                     <div class="error-message" id="firstNameError"></div>
                                 </div>
                                 <div class="input-field">
-                                    <input type="text" id="lastName" required placeholder=" ">
+                                    <input type="text" id="lastName" name="lastName" required placeholder=" ">
                                     <label for="lastName">Last Name</label>
                                     <div class="error-message" id="lastNameError"></div>
                                 </div>
                             </div>
+
                             <div class="input-field">
-                                <input type="email" id="signupEmail" required placeholder=" ">
+                                <input type="email" id="signupEmail" name="email" required placeholder=" ">
                                 <label for="signupEmail">Email Address</label>
                                 <div class="error-message" id="signupEmailError"></div>
                             </div>
+
                             <div class="input-field">
-                                <input type="password" id="signupPassword" required placeholder=" ">
+                                <input type="tel" id="signupPhoneNumber" name="phoneNumber" required placeholder=" ">
+                                <label for="signupPhoneNumber">Phone Number</label>
+                            </div>
+
+                            <div class="input-field">
+                                <input type="password" id="signupPassword" name="password" required placeholder=" ">
                                 <label for="signupPassword">Password</label>
                                 <div class="error-message" id="signupPasswordError"></div>
+                            </div>
+
+                            <!-- Optional fields -->
+                            <div class="input-field">
+                                <input type="number" id="age" name="age" placeholder=" ">
+                                <label for="age">Age</label>
+                            </div>
+
+                            <div class="input-field">
+                                <input type="text" id="country" name="country" placeholder=" " value="Egypt">
+                                <label for="country">Country</label>
                             </div>
                         </div>
 
@@ -66,6 +86,7 @@
                             Already have an account? <a href="#" onclick="switchForm('login')">Sign in</a>
                         </p>
                     </form>
+
                 </div>
 
                 <div id="loginPage" class="form-page">
@@ -84,7 +105,7 @@
                                 <label for="loginPassword">Password</label>
                                 <div class="error-message" id="loginPasswordError"></div>
                             </div>
-                           <div class="forgot-password">
+                            <div class="forgot-password">
                                 <a href="#" class="forgot-link"></a>
                             </div>
                         </div>
@@ -114,7 +135,7 @@
             </div>
         </div>
     </div>
-   <script src="../../Public/js/login.js"></script></body>
+    <script src="/js/login.js"></script>
+</body>
+
 </html>
-
-
