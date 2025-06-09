@@ -20,7 +20,8 @@
             <section id="bookings" class="content-section">
                 <h2>Manage Bookings</h2>
                 <div class="card">
-                    <table id="bookings-table">
+                    <% if (bookings.length  !== 0) { %>
+                     <table id="bookings-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -35,12 +36,16 @@
                             <!-- Bookings will load here with edit button -->
                         </tbody>
                     </table>
+                    <% } else { %>
+                     <h1>There is no Bookings to show</h1>
+                    <% } %>
+                    
                 </div>
             </section>
 
             </main>
     </div>
-    <!-- <script src="/js/Admin.js"></script> -->
+    <script src="/js/Admin.js"></script>
 </body>
 
 </html>

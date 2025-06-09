@@ -93,7 +93,11 @@
                                     <button type="button" id="clear-form" class="btn">Clear</button>
                                 </div>
                             </form>
-
+                            
+                        </div >
+                        <div class="card">
+                            <% if (cars.length !== 0) { %>
+                             
                             <table id="cars-table">
                                 <thead>
                                     <tr>
@@ -112,6 +116,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
                                     <% cars.forEach((car,index)=> { %>
                                         <tr>
                                             <td>
@@ -136,6 +141,9 @@
                                         <% }) %>
                                 </tbody>
                             </table>
+                            <% } else { %>
+                             <h1>NO Cars to show!</h1>
+                            <% } %>
                         </div>
                     </section>
             </main>
