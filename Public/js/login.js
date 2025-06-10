@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (errorElement) {
             errorElement.textContent = message;
         }
+        console.error('Form error:', message);
     };
     
     const clearErrors = () => {
@@ -61,10 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle successful authentication
     const handleAuthSuccess = (userData) => {
+        console.log('Auth success:', userData);
+        
         // Store token and user data
         localStorage.setItem('token', userData.token);
         localStorage.setItem('userId', userData.id);
-        localStorage.setItem('userName', ${userData.firstName} ${userData.lastName});
+        localStorage.setItem('userName', `${userData.firstName} ${userData.lastName}`);
         localStorage.setItem('userEmail', userData.email);
         
         // Redirect to profile page
@@ -72,125 +75,145 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Login form submission
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        clearErrors();
-        
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-        const loginButton = document.getElementById('loginButton');
-        
-        // Validate form
-        let isValid = true;
-        
-        if (!validateEmail(email)) {
-            showError('loginEmailError', 'Enter a valid email address');
-            isValid = false;
-        }
-        
-        if (!validatePassword(password)) {
-            showError('loginPasswordError', 'Password must be at least 6 characters');
-            isValid = false;
-        }
-        
-        if (!isValid) return;
-        
-        // Submit form
-        try {
-            setLoading(loginButton, true);
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearErrors();
             
-            const response = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            });
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const loginButton = document.getElementById('loginButton');
             
-            const data = await response.json();
+            console.log('Login attempt:', { email });
             
-            if (!response.ok) {
-                showError('loginEmailError', data.message || 'Login failed');
-                return;
+            // Validate form
+            let isValid = true;
+            
+            if (!validateEmail(email)) {
+                showError('loginEmailError', 'Enter a valid email address');
+                isValid = false;
             }
             
-            handleAuthSuccess(data);
-        } catch (error) {
-            console.error('Login error:', error);
-            showError('loginEmailError', 'An unexpected error occurred. Please try again.');
-        } finally {
-            setLoading(loginButton, false);
-        }
-    });
+            if (!validatePassword(password)) {
+                showError('loginPasswordError', 'Password must be at least 6 characters');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Submit form
+            try {
+                setLoading(loginButton, true);
+                
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                console.log('Login response:', data);
+                
+                if (!response.ok) {
+                    showError('loginEmailError', data.message || 'Login failed');
+                    return;
+                }
+                
+                handleAuthSuccess(data);
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('loginEmailError', 'Network error. Please check your connection and try again.');
+            } finally {
+                setLoading(loginButton, false);
+            }
+        });
+    }
 
     // Signup form submission
-    signupForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        clearErrors();
-        
-        const firstName = document.getElementById('firstName').value;
-        const lastName = document.getElementById('lastName').value;
-        const email = document.getElementById('signupEmail').value;
-        const password = document.getElementById('signupPassword').value;
-        const signupButton = document.getElementById('signupButton');
-        
-        // Validate form
-        let isValid = true;
-        
-        if (!firstName.trim()) {
-            showError('firstNameError', 'First name is required');
-            isValid = false;
-        }
-        
-        if (!lastName.trim()) {
-            showError('lastNameError', 'Last name is required');
-            isValid = false;
-        }
-        
-        if (!validateEmail(email)) {
-            showError('signupEmailError', 'Enter a valid email address');
-            isValid = false;
-        }
-        
-        if (!validatePassword(password)) {
-            showError('signupPasswordError', 'Password must be at least 6 characters');
-            isValid = false;
-        }
-        
-        if (!isValid) return;
-        
-        // Submit form
-        try {
-            setLoading(signupButton, true);
+    if (signupForm) {
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearErrors();
             
-            const response = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const phoneNumber = document.getElementById('signupPhoneNumber').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const age = document.getElementById('age').value;
+            const country = document.getElementById('country').value.trim();
+            const signupButton = document.getElementById('signupButton');
+            
+            console.log('Signup attempt:', { firstName, lastName, email, phoneNumber });
+            
+            // Validate form
+            let isValid = true;
+            
+            if (!firstName) {
+                showError('firstNameError', 'First name is required');
+                isValid = false;
+            }
+            
+            if (!lastName) {
+                showError('lastNameError', 'Last name is required');
+                isValid = false;
+            }
+            
+            if (!validateEmail(email)) {
+                showError('signupEmailError', 'Enter a valid email address');
+                isValid = false;
+            }
+            
+            if (!validatePassword(password)) {
+                showError('signupPasswordError', 'Password must be at least 6 characters');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Submit form
+            try {
+                setLoading(signupButton, true);
+                
+                const requestBody = {
                     firstName,
                     lastName,
                     email,
-                    password
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (!response.ok) {
-                showError('signupEmailError', data.message || 'Registration failed');
-                return;
+                    password,
+                    phoneNumber,
+                    age: age ? parseInt(age) : undefined,
+                    country: country || 'Egypt'
+                };
+                
+                console.log('Sending signup request:', requestBody);
+                
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                const data = await response.json();
+                console.log('Signup response:', data);
+                
+                if (!response.ok) {
+                    showError('signupEmailError', data.message || 'Registration failed');
+                    return;
+                }
+                
+                handleAuthSuccess(data);
+            } catch (error) {
+                console.error('Registration error:', error);
+                showError('signupEmailError', 'Network error. Please check your connection and try again.');
+            } finally {
+                setLoading(signupButton, false);
             }
-            
-            handleAuthSuccess(data);
-        } catch (error) {
-            console.error('Registration error:', error);
-            showError('signupEmailError', 'An unexpected error occurred. Please try again.');
-        } finally {
-            setLoading(signupButton, false);
-        }
-    });
+        });
+    }
 
     // Social login button handlers
     document.querySelectorAll('.social-btn.google').forEach(btn => {

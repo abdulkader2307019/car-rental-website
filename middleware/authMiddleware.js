@@ -1,44 +1,45 @@
-
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
   let token;
 
-  // Check if auth header exists and has bearer token
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
-  } else if (req.cookies && req.cookies.token) {
-    // Check if token exists in cookies
-    token = req.cookies.token;
-  }
-
-  if (!token) {
-    return res.status(401).json({ 
-      success: false, 
-      message: 'Not authorized to access this route' 
-    });
-  }
-
   try {
+    // Check if auth header exists and has bearer token
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies && req.cookies.token) {
+      // Check if token exists in cookies
+      token = req.cookies.token;
+    }
+
+    if (!token) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Not authorized to access this route - no token provided' 
+      });
+    }
+
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_key_for_development');
     
     // Get user from database
-    req.user = User.findById(decoded.id).select('-password');
+    const user = await User.findById(decoded.id).select('-password');
     
-    if (!req.user) {
+    if (!user) {
       return res.status(401).json({ 
         success: false, 
         message: 'User not found' 
       });
     }
     
+    req.user = user;
     next();
   } catch (error) {
+    console.error('Auth middleware error:', error);
     return res.status(401).json({ 
       success: false, 
-      message: 'Not authorized to access this route'
+      message: 'Not authorized to access this route - invalid token'
     });
   }
 };
@@ -54,4 +55,4 @@ const isAdmin = (req, res, next) => {
   }
 };
 
-module.exports = {protect,isAdmin};
+module.exports = { protect, isAdmin };
