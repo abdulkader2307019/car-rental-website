@@ -17,7 +17,8 @@ const carSchema = new Schema({
 }, { timestamps: true });
 
 // Create a model based on that schema
-const Car = mongoose.model("car", carSchema);
+const Car = mongoose.model("Car", carSchema);
+
 
 // export the model
 module.exports = Car;
