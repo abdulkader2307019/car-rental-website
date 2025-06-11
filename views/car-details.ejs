@@ -3,80 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car-rental</title>
+    <title>Car Details - <%= car.brand %> <%= car.model %></title>
     <link rel="stylesheet" href="/css/details-style.css">
-    
 </head>
 <body>
     <header>
-        <a href="index" class="logo">Car Rental</a>
+        <a href="/" class="logo">Car Rental</a>
         <nav class="navigation">
-            <a href="carlisting" >Cars</a>
-            <a href="LoginPage/login" >Login</a>
-            <a href="AdminPage/Admin" >Admin</a> 
+            <a href="/carlisting">Cars</a>
+            <a href="/LoginPage/login">Login</a>
+            <a href="/AdminPage/manage-bookings">Admin</a> 
         </nav>  
     </header>
+    
     <main>
         <section class="main">
             <section class="info-card">
-                <div class="title">Car-Details</div>
-                <div class="availability">
-                    <h3>Check Availability</h3>
-                    <input type="text" id="pickup" placeholder="Enter Pickup location">
-                    <input type="text" id="return" placeholder="Enter Return location">
-                    <label>Start Date</label>
-                    <input type="date" id="start-date">
-                    <label>End Date</label>
-                    <input type="date" id="end-date">
-                    <button id="check-btn">CHECK-AVILABLITY</button>
-                </div>
+                <div class="title"><%= car.brand %> <%= car.model %></div>
                 
+                <div class="availability">
+                    <h3>Availability Status</h3>
+                    <div class="status-indicator <%= car.availability ? 'available' : 'unavailable' %>">
+                        <span class="status-dot"></span>
+                        <%= car.availability ? 'Available for Rent' : 'Currently Unavailable' %>
+                    </div>
+                    <p class="location-info">Available at: <%= car.location %></p>
+                </div>
 
                 <div class="info">
                     <h2>Car Specifications</h2>
                     <hr>
                     <ul>
-                        <li>Model-Name: Mercedes-Amg-GT53</li>
-                        <li>Manufacure: Mercedes-Benz</li>
-                        <li>Type: Compact-Sedan</li>
-                        <li>Seats: 4</li>
-                        <li>Top-speed: 330 Km/h</li>
-                        <li>Horse-Power: 429 hp</li>
-                        <li>Fuel-Consumption : 12.4L /100Km</li>
-                        <li>Tourque: 520 Nm</li>
+                        <li>Brand: <%= car.brand %></li>
+                        <li>Model: <%= car.model %></li>
+                        <li>Year: <%= car.year || 'N/A' %></li>
+                        <li>Type: <%= car.type %></li>
+                        <li>Seats: <%= car.specs.seats %></li>
+                        <li>Fuel Type: <%= car.specs.fuel %></li>
+                        <li>Transmission: <%= car.specs.transmission %></li>
+                        <li>Location: <%= car.location %></li>
                     </ul>
                 </div>
 
-
+                <% if (car.availability) { %>
                 <div class="bookNowBtn">
-                    <a href="booking">book now</a>
+                    <a href="/booking/<%= car._id %>">Book Now</a>
                 </div>
+                <% } else { %>
+                <div class="unavailable-notice">
+                    <p>This car is currently unavailable for booking.</p>
+                </div>
+                <% } %>
             </section>
 
             <div class="vline"></div>
 
             <section class="car-image">
                 <div class="carimage">
-                    <div >
-                        <img src="/img/Mercedes-Amg-GT53.avif" alt="carimage"  >
+                    <div>
+                        <% if (car.image && car.image.data) { %>
+                            <img src="/api/cars/<%= car._id %>/image" alt="<%= car.brand %> <%= car.model %>">
+                        <% } else { %>
+                            <img src="/img/car1.jpg" alt="<%= car.brand %> <%= car.model %>">
+                        <% } %>
                     </div>
                     <div class="car-desc">
-                    <summary>Summary about Mercedes-Amg-GT53<hr></summary>
-                        
-                    <p>The 2025 Mercedes-AMG GT sedan offers a sleek, high-performance alternative to the GT Coupe, with added practicality thanks to its four-door design. Though based on the E-Class rather than the SL roadster, it shares a similar aggressive styling. Available in GT43, GT53, and GT63 trims, it features a turbocharged inline-six in the lower models, while the GT63 and GT63 S boast a twin-turbo V8, delivering up to 630 hp. A plug-in hybrid variant pushes power to 831 hp. Despite limited rear headroom, the GT sedan blends luxury and performance in an exclusive market segment.</p>
+                        <summary>About <%= car.brand %> <%= car.model %><hr></summary>
+                        <p>Experience the perfect blend of luxury and performance with the <%= car.brand %> <%= car.model %>. 
+                           This <%= car.type.toLowerCase() %> offers exceptional comfort with <%= car.specs.seats %> seats, 
+                           <%= car.specs.fuel %> engine, and <%= car.specs.transmission %> transmission. 
+                           Perfect for your next adventure or business trip.</p>
                     </div>
                 </div>
 
                 <div class="Pricing">
-                    <select id="pricing-select">
-                        <option value="daily">Daily</option>
-                        <option value="weekly">Weekly</option>
-                        <option value="monthly">Monthly</option>
-                    </select>
-                    <p id="price-display">$100</p>
+                    <div class="pricing-options">
+                        <div class="pricing-option" data-period="daily">
+                            <span class="period">Daily</span>
+                            <span class="price">$<%= car.pricePerDay %></span>
+                        </div>
+                        <div class="pricing-option" data-period="weekly">
+                            <span class="period">Weekly</span>
+                            <span class="price">$<%= (car.pricePerDay * 7 * 0.9).toFixed(0) %></span>
+                            <span class="discount">10% off</span>
+                        </div>
+                        <div class="pricing-option" data-period="monthly">
+                            <span class="period">Monthly</span>
+                            <span class="price">$<%= (car.pricePerDay * 30 * 0.8).toFixed(0) %></span>
+                            <span class="discount">20% off</span>
+                        </div>
+                    </div>
                 </div>
             </section>
-            
+        </section>
     </main>
 
     <footer>
@@ -94,7 +113,6 @@
             <a href="https://facebook.com">Facebook</a> 
             <a href="https://twitter.com">Twitter</a> 
             <a href="https://instagram.com">Instagram</a>
-
         </div>
         <hr>
         <div class="top">
@@ -102,7 +120,14 @@
         </div>
     </footer>
 
-    <script src="js/cardetails.js"></script>
-    
+    <script>
+        // Pass car data to JavaScript
+        window.carData = {
+            id: '<%= car._id %>',
+            pricePerDay: '<%= car.pricePerDay %>',
+            availability: '<%= car.availability %>'
+        };
+    </script>
+    <script src="/js/cardetails.js"></script>
 </body>
 </html>

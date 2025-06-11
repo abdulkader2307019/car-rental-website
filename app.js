@@ -22,16 +22,25 @@ const img = multer({ storage });
 const Car = require('./models/carSchema');
 const User = require('./models/User');
 const Booking = require('./models/bookingSchema');
+const Discount = require('./models/discountSchema');
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
+const carRoutes = require('./routes/carRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
+const discountRoutes = require('./routes/discountRoutes');
+// const adminRoutes = require('./routes/AdminRoutes');
 
 // Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/cars', carRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/discounts', discountRoutes);
+// app.use('/api/admin', adminRoutes);
 
-// Car management route
+// Car management route (legacy - keeping for backward compatibility)
 app.post('/api/cars', img.single('image'), async (req, res) => {
   try {
     if (!req.file) {
@@ -134,60 +143,123 @@ app.get("/", (req, res) => {
   res.render("index", { root: __dirname });
 });
 
-app.get("/carlisting", (req, res) => {
-  res.render("carlisting");
+app.get("/carlisting", async (req, res) => {
+  try {
+    const cars = await Car.find();
+    res.render("carlisting", { cars });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading cars');
+  }
+});
+
+app.get("/car-details/:id", async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car) {
+      return res.status(404).send('Car not found');
+    }
+    res.render("car-details", { car });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading car details');
+  }
+});
+
+app.get("/booking/:carId", async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.carId);
+    if (!car) {
+      return res.status(404).send('Car not found');
+    }
+    res.render("booking", { car });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading booking page');
+  }
 });
 
 app.get("/LoginPage/login", (req, res) => {
   res.render("LoginPage/login");
 });
 
-app.get('/AdminPage/manage-bookings', (req, res) => {
-  Booking.find().then(result => {
-    res.render('AdminPage/manage-bookings', { bookings: result, currentPage: 'bookings' });
-  }).catch(err => {
+app.get('/AdminPage/manage-bookings', async (req, res) => {
+  try {
+    const bookings = await Booking.find()
+      .populate('user', 'firstName lastName email')
+      .populate('car', 'brand model');
+    res.render('AdminPage/manage-bookings', { bookings, currentPage: 'bookings' });
+  } catch (err) {
     console.log(err);
     res.status(500).send('Error loading bookings');
-  });
+  }
 });
 
-app.get('/AdminPage/manage-cars', (req, res) => {
-  Car.find().then(result => {
-    res.render('AdminPage/manage-cars', { cars: result, currentPage: 'cars' });
-  }).catch(err => {
+app.get('/AdminPage/manage-cars', async (req, res) => {
+  try {
+    const cars = await Car.find();
+    res.render('AdminPage/manage-cars', { cars, currentPage: 'cars' });
+  } catch (err) {
     console.log(err);
     res.status(500).send('Error loading cars');
-  });
+  }
 });
 
-app.get('/AdminPage/manage-users', (req, res) => {
-  User.find().then(result => {
-    res.render('AdminPage/manage-users', { users: result, currentPage: 'users' });
-  }).catch(err => {
+app.get('/AdminPage/manage-users', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.render('AdminPage/manage-users', { users, currentPage: 'users' });
+  } catch (err) {
     console.log(err);
     res.status(500).send('Error loading users');
-  });
+  }
 });
 
-app.get('/AdminPage/reports-section', (req, res) => {
-  User.find().then(result => {
-    res.render('AdminPage/reports-section', { users: result, currentPage: 'reports' });
-  }).catch(err => {
+app.get('/AdminPage/manage-discounts', async (req, res) => {
+  try {
+    const discounts = await Discount.find();
+    res.render('AdminPage/manage-discounts', { discounts, currentPage: 'discounts' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading discounts');
+  }
+});
+
+app.get('/AdminPage/reports-section', async (req, res) => {
+  try {
+    const users = await User.find();
+    const cars = await Car.find();
+    const bookings = await Booking.find();
+    res.render('AdminPage/reports-section', { 
+      users, 
+      cars, 
+      bookings, 
+      currentPage: 'reports' 
+    });
+  } catch (err) {
     console.log(err);
     res.status(500).send('Error loading reports');
-  });
+  }
 });
 
 app.get("/profile", (req, res) => {
   res.render("profile");
 });
 
-app.get("/car-details", (req, res) => {
-  res.render("car-details");
-});
-
-app.get("/booking", (req, res) => {
-  res.render("booking");
+// API route to get car image
+app.get('/api/cars/:id/image', async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car || !car.image || !car.image.data) {
+      return res.status(404).send('Image not found');
+    }
+    
+    res.set('Content-Type', car.image.contentType);
+    res.send(car.image.data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error loading image');
+  }
 });
 
 // Error handling middleware

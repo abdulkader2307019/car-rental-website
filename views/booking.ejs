@@ -1,65 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>booking</title>
+    <title>Book <%= car.brand %> <%= car.model %></title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
-
 <body>
-
     <header>
-        <a href="#" class="logo">Car Rental</a>
+        <a href="/" class="logo">Car Rental</a>
         <nav class="navigation">
-            <a href="carlisting">Cars</a>
-            <a href="LoginPage/login">Login</a>
-            <a href="AdminPage/Admin">Admin</a>
-
+            <a href="/carlisting">Cars</a>
+            <a href="/LoginPage/login">Login</a>
+            <a href="/AdminPage/manage-bookings">Admin</a>
         </nav>
-
     </header>
 
     <section class="bookingPage">
         <div class="carPhoto">
-            <img src="img/car1.jpg" alt="car1">
+            <% if (car.image && car.image.data) { %>
+                <img src="/api/cars/<%= car._id %>/image" alt="<%= car.brand %> <%= car.model %>">
+            <% } else { %>
+                <img src="/img/car1.jpg" alt="<%= car.brand %> <%= car.model %>">
+            <% } %>
         </div>
+        
+        <div class="car-info">
+            <h2><%= car.brand %> <%= car.model %></h2>
+            <p>Type: <%= car.type %> | Seats: <%= car.specs.seats %> | Fuel: <%= car.specs.fuel %></p>
+            <p>Location: <%= car.location %></p>
+        </div>
+
         <div class="form">
-            <form id="bookingForm" action="/api/bookings" method="post">
-                <div>
-                    <input type="text" id="pickup" name="pickup" placeholder="Pickup Location">
-                    <input type="date" id="pickupDate" name="pickup-date">
-                    <input type="time" id="pickupTime" name="pickup-time">
+            <form id="bookingForm">
+                <input type="hidden" id="carId" value="<%= car._id %>">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pickup">Pickup Location</label>
+                        <input type="text" id="pickup" name="pickup" placeholder="Enter pickup location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pickupDate">Pickup Date</label>
+                        <input type="date" id="pickupDate" name="pickup-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pickupTime">Pickup Time</label>
+                        <input type="time" id="pickupTime" name="pickup-time" required>
+                    </div>
                 </div>
 
-                <div>
-                    <input type="text" id="return" name="return" placeholder="Return Location">
-                    <input type="date" id="returnDate" name="return-date">
-                    <input type="time" id="returnTime" name="return-time">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="return">Return Location</label>
+                        <input type="text" id="return" name="return" placeholder="Enter return location" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="returnDate">Return Date</label>
+                        <input type="date" id="returnDate" name="return-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="returnTime">Return Time</label>
+                        <input type="time" id="returnTime" name="return-time" required>
+                    </div>
                 </div>
 
-                <div>
-                    <input type="text" id="discountCode" name="discount" placeholder="Discount Code">
-                    <button type="button" id="applyDiscount">Apply Discount</button>
+                <div class="discount-section">
+                    <div class="form-group">
+                        <label for="discountCode">Discount Code (Optional)</label>
+                        <input type="text" id="discountCode" name="discount" placeholder="Enter discount code">
+                    </div>
+                    <button type="button" id="applyDiscount" class="btn-secondary">Apply Discount</button>
                 </div>
 
                 <div class="priceANDbtn">
-                    <select id="plan">
-                        <option value="daily">Daily</option>
-                        <option value="weekly">Weekly</option>
-                        <option value="monthly">Monthly</option>
-                    </select>
+                    <div class="rental-period">
+                        <label for="plan">Rental Period:</label>
+                        <select id="plan">
+                            <option value="daily">Daily - $<%= car.pricePerDay %></option>
+                            <option value="weekly">Weekly - $<%= (car.pricePerDay * 7 * 0.9).toFixed(0) %> (10% off)</option>
+                            <option value="monthly">Monthly - $<%= (car.pricePerDay * 30 * 0.8).toFixed(0) %> (20% off)</option>
+                        </select>
+                    </div>
 
-                    <h1 id="priceCalc">100</h1>
-                    <button type="submit">Book Now</button>
+                    <div class="price-display">
+                        <h3>Total Price: $<span id="priceCalc"><%= car.pricePerDay %></span></h3>
+                        <p id="priceBreakdown">Base price for 1 day</p>
+                    </div>
+
+                    <button type="submit" id="bookNowBtn" class="btn-primary">Book Now</button>
                 </div>
             </form>
-
         </div>
-
     </section>
-
 
     <footer>
         <div class="copyRights">
@@ -76,7 +109,6 @@
             <a href="https://facebook.com">Facebook</a>
             <a href="https://twitter.com">Twitter</a>
             <a href="https://instagram.com">Instagram</a>
-
         </div>
         <hr>
         <div class="top">
@@ -84,7 +116,15 @@
         </div>
     </footer>
 
+    <script>
+        // Pass car data to JavaScript
+        window.carData = {
+            id: '<%= car._id %>',
+            pricePerDay: '<%= car.pricePerDay %>',
+            brand: '<%= car.brand %>',
+            model: '<%= car.model %>'
+        };
+    </script>
     <script src="/js/booking.js"></script>
 </body>
-
 </html>
