@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check if user is already logged in
     if (localStorage.getItem('token')) {
-        window.location.href = '/profile';
+        window.location.href = '/';
     }
 
     // Form switching
@@ -69,9 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('userId', userData.id);
         localStorage.setItem('userName', `${userData.firstName} ${userData.lastName}`);
         localStorage.setItem('userEmail', userData.email);
+        localStorage.setItem('userFirstName', userData.firstName);
+        localStorage.setItem('userLastName', userData.lastName);
+        localStorage.setItem('isAdmin', userData.isAdmin || false);
         
-        // Redirect to profile page
-        window.location.href = '/profile';
+        // Redirect to home page
+        window.location.href = '/';
     };
 
     // Login form submission

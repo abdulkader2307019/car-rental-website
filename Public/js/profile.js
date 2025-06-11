@@ -1,9 +1,8 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     // Check if user is logged in
     const token = localStorage.getItem('token');
     if (!token) {
-        window.location.href = '/login';
+        window.location.href = '/LoginPage/login';
         return;
     }
 
@@ -25,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Animate counter function
     function animateCounter(element, target, duration = 2000) {
-        const start = parseInt(element.textContent);
+        const start = parseInt(element.textContent) || 0;
         const increment = (target - start) / (duration / 16);
         let current = start;
 
@@ -33,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             current += increment;
             element.textContent = Math.round(current);
 
-            if (current < target) {
+            if ((increment > 0 && current < target) || (increment < 0 && current > target)) {
                 requestAnimationFrame(animate);
             } else {
                 element.textContent = target;
@@ -45,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Format date function
     function formatDate(dateString) {
+        if (!dateString) return 'Not specified';
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('en-US', options);
     }
@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load profile data
     async function loadProfileData() {
         try {
+            console.log('Loading profile data...');
+            
             const response = await fetch('/api/profile', {
                 method: 'GET',
                 headers: {
@@ -60,58 +62,101 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            console.log('Profile response status:', response.status);
+
             if (!response.ok) {
                 if (response.status === 401) {
                     // Token expired or invalid
-                    localStorage.removeItem('token');
-                    window.location.href = '/login';
+                    console.log('Token expired, redirecting to login');
+                    localStorage.clear();
+                    window.location.href = '/LoginPage/login';
                     return;
                 }
-                throw new Error('Failed to load profile');
+                throw new Error(`Failed to load profile: ${response.status}`);
             }
 
-            const { data } = await response.json();
+            const result = await response.json();
+            console.log('Profile data received:', result);
+            
+            const data = result.data || result;
             
             // Update profile info
-            if (data.profileImage) {
+            if (data.profileImage && profileImage) {
                 profileImage.src = data.profileImage;
             }
-            profileName.textContent = `${data.firstName} ${data.lastName}`;
-            profileLocation.textContent = data.location || 'Not specified';
-            profileCountry.textContent = data.country || 'Not specified';
-            profileBirthday.textContent = data.birthday ? formatDate(data.birthday) : 'Not specified';
-            profileMemberSince.textContent = data.memberSince ? new Date(data.memberSince).getFullYear() : 'Not specified';
+            
+            if (profileName) {
+                profileName.textContent = `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'User';
+            }
+            
+            if (profileLocation) {
+                profileLocation.textContent = data.location || 'Not specified';
+            }
+            
+            if (profileCountry) {
+                profileCountry.textContent = data.country || 'Not specified';
+            }
+            
+            if (profileBirthday) {
+                profileBirthday.textContent = formatDate(data.birthday);
+            }
+            
+            if (profileMemberSince) {
+                const memberSince = data.memberSince || data.createdAt;
+                profileMemberSince.textContent = memberSince ? new Date(memberSince).getFullYear() : 'Not specified';
+            }
             
             // Update stats with animation
             if (data.stats) {
-                animateCounter(carsRented, data.stats.carsRented || 0);
-                animateCounter(milesOvercome, data.stats.milesOvercome || 0);
-                animateCounter(hoursOnRoad, data.stats.hoursOnRoad || 0);
-                animateCounter(citiesVisited, data.stats.citiesVisited || 0);
+                if (carsRented) animateCounter(carsRented, data.stats.carsRented || 0);
+                if (milesOvercome) animateCounter(milesOvercome, data.stats.milesOvercome || 0);
+                if (hoursOnRoad) animateCounter(hoursOnRoad, data.stats.hoursOnRoad || 0);
+                if (citiesVisited) animateCounter(citiesVisited, data.stats.citiesVisited || 0);
+            } else {
+                // Default stats if none exist
+                if (carsRented) animateCounter(carsRented, 0);
+                if (milesOvercome) animateCounter(milesOvercome, 0);
+                if (hoursOnRoad) animateCounter(hoursOnRoad, 0);
+                if (citiesVisited) animateCounter(citiesVisited, 0);
             }
             
             // Load comments
-            if (data.comments && data.comments.length > 0) {
-                commentsContainer.innerHTML = '';
-                
-                data.comments.forEach(comment => {
-                    const commentElement = document.createElement('div');
-                    commentElement.className = 'comment';
-                    commentElement.innerHTML = `
-                        <div class="comment-header">
-                            <strong>${comment.title || 'Comment'}</strong>
-                            <span class="comment-date">${formatDate(comment.date)}</span>
-                        </div>
-                        <p>${comment.text}</p>
-                    `;
-                    commentsContainer.appendChild(commentElement);
-                });
-            } else {
-                commentsContainer.innerHTML = '<p>No comments yet.</p>';
+            if (commentsContainer) {
+                if (data.comments && data.comments.length > 0) {
+                    commentsContainer.innerHTML = '';
+                    
+                    data.comments.forEach(comment => {
+                        const commentElement = document.createElement('div');
+                        commentElement.className = 'comment';
+                        commentElement.innerHTML = `
+                            <div class="comment-header">
+                                <strong>${comment.title || 'Comment'}</strong>
+                                <span class="comment-date">${formatDate(comment.date)}</span>
+                            </div>
+                            <p>${comment.text || 'No comment text'}</p>
+                        `;
+                        commentsContainer.appendChild(commentElement);
+                    });
+                } else {
+                    commentsContainer.innerHTML = '<p>No comments yet.</p>';
+                }
             }
+            
         } catch (error) {
             console.error('Error loading profile:', error);
-            alert('Failed to load profile data. Please try again later.');
+            
+            // Try to get user data from localStorage as fallback
+            const userFirstName = localStorage.getItem('userFirstName');
+            const userLastName = localStorage.getItem('userLastName');
+            const userEmail = localStorage.getItem('userEmail');
+            
+            if (userFirstName && userLastName && profileName) {
+                profileName.textContent = `${userFirstName} ${userLastName}`;
+            }
+            
+            if (commentsContainer) {
+                commentsContainer.innerHTML = '<p>Unable to load profile data. Please try refreshing the page.</p>';
+            }
         }
     }
 
@@ -130,11 +175,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Handle logout
-    logoutButton.addEventListener('click', () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userName');
-        localStorage.removeItem('userEmail');
-        window.location.href = '/login';
-    });
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            // Clear all stored data
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userFirstName');
+            localStorage.removeItem('userLastName');
+            localStorage.removeItem('isAdmin');
+            
+            // Redirect to home page
+            window.location.href = '/';
+        });
+    }
 });
