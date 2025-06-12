@@ -4,41 +4,26 @@ const AdminController = require('../controllers/AdminController');
 
 const { protect, isAdmin } = require('../middleware/authMiddleware');
 
-const User = require('../models/User');
-const Car = require('../models/carSchema');
-const Booking = require('../models/bookingSchema');
-
 // Protect all routes: Only accessible by authenticated admins
 router.use(protect, isAdmin);
 
-// Get all users
-router.get('/users',AdminController.getAllUsers);
-
-// Delete user by ID
+// User routes
+router.get('/users', AdminController.getAllUsers);
+router.put('/users/:id', AdminController.updateUser);
 router.delete('/users/:id', AdminController.deleteUser);
 
-// Get all cars
+// Car routes
 router.get('/cars', AdminController.getAllCars);
-
-// Create a new car
-router.post('/cars',AdminController.addCar);
-
-// Update car by ID
+router.post('/cars', AdminController.addCar);
 router.put('/cars/:id', AdminController.updateCar);
-
-// Delete car by ID
 router.delete('/cars/:id', AdminController.deleteCar);
 
-// GET /api/bookings with optional filters (status, user, car)
+// Booking routes
 router.get('/bookings', AdminController.getAllBookings);
-
-// PUT /api/bookings/:id/approve → Confirm booking
-//router.put('/bookings/:id/approve', AdminController.approveBooking);
-
-// Update booking by ID (generic)
 router.put('/bookings/:id', AdminController.updateBooking);
-
-// Delete booking by ID
 router.delete('/bookings/:id', AdminController.deleteBooking);
+
+// Reports route
+router.get('/dashboard-stats', AdminController.getDashboardStats);
 
 module.exports = router;

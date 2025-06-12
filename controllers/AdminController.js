@@ -16,11 +16,38 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+// Update a user
+exports.updateUser = async (req, res) => {
+  try {
+    const { firstName, lastName, email, phoneNumber, age, gender, country } = req.body;
+    
+    const user = await User.findByIdAndUpdate(
+      req.params.id, 
+      {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        age,
+        gender,
+        country
+      }, 
+      { new: true }
+    ).select('-password');
+    
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    res.json({ success: true, user });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
 // Delete a user
 exports.deleteUser = async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.params.id);
-    res.json({ success: true, message: 'User deleted' });
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    res.json({ success: true, message: 'User deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -81,7 +108,7 @@ exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.find()
       .populate('user', 'firstName lastName email')
-      .populate('car', 'make model');
+      .populate('car', 'brand model');
     res.json({ success: true, bookings });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -104,6 +131,47 @@ exports.deleteBooking = async (req, res) => {
   try {
     await Booking.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'Booking deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/** -------------------------------
+ * REPORTS
+ ----------------------------------*/
+
+// Get dashboard statistics
+exports.getDashboardStats = async (req, res) => {
+  try {
+    const totalBookings = await Booking.countDocuments();
+    const activeRentals = await Booking.countDocuments({ status: 'confirmed' });
+    const availableCars = await Car.countDocuments({ availability: true });
+    
+    // Calculate total revenue
+    const bookings = await Booking.find({ status: 'confirmed' });
+    const totalRevenue = bookings.reduce((sum, booking) => sum + (booking.totalPrice || 0), 0);
+    
+    // Get detailed data
+    const allBookings = await Booking.find()
+      .populate('user', 'firstName lastName email')
+      .populate('car', 'brand model pricePerDay')
+      .sort({ createdAt: -1 });
+    
+    const allCars = await Car.find();
+    
+    res.json({
+      success: true,
+      stats: {
+        totalBookings,
+        activeRentals,
+        totalRevenue,
+        availableCars
+      },
+      data: {
+        bookings: allBookings,
+        cars: allCars
+      }
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

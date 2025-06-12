@@ -41,6 +41,11 @@ const userSchema = new mongoose.Schema({
     type: Number,
     min: [1, 'Age must be a positive number']
   },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female', 'Other'],
+    default: 'Other'
+  },
   memberSince: {
     type: Date,
     default: Date.now
