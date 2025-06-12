@@ -15,10 +15,6 @@ require('dotenv').config();
 const port = process.env.PORT || 3000;
 const DB_URL = process.env.MONGODB_URI;
 
-const multer = require('multer');
-const storage = multer.memoryStorage();
-const img = multer({ storage });
-
 const Car = require('./models/carSchema');
 const User = require('./models/User');
 const Booking = require('./models/bookingSchema');
@@ -30,7 +26,6 @@ const profileRoutes = require('./routes/profileRoutes');
 const carRoutes = require('./routes/carRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const discountRoutes = require('./routes/discountRoutes');
-// const adminRoutes = require('./routes/AdminRoutes');
 
 // Use routes
 app.use('/api/auth', authRoutes);
@@ -38,42 +33,6 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/cars', carRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/discounts', discountRoutes);
-// app.use('/api/admin', adminRoutes);
-
-// Car management route (legacy - keeping for backward compatibility)
-app.post('/api/cars', img.single('image'), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No image uploaded', currentPage: 'cars' });
-    }
-
-    const car = new Car({
-      brand: req.body.brand,
-      model: req.body.model,
-      type: req.body.type,
-      location: req.body.location,
-      pricePerDay: Number(req.body.pricePerDay),
-      availability: req.body.availability === 'true',
-      image: {
-        data: req.file.buffer,
-        contentType: req.file.mimetype
-      },
-      specs: {
-        seats: Number(req.body.seats),
-        fuel: req.body.fuel,
-        transmission: req.body.transmission
-      },
-      year: parseInt(req.body.year)
-    });
-
-    await car.save();
-    res.status(201).json({ message: 'Car added successfully', car });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
 
 // Legacy registration route (for form submission)
 app.post('/user/register', async (req, res) => {
