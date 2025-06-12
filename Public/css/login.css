@@ -86,7 +86,7 @@ h2 {
     margin-bottom: 1rem;
 }
 
-.input-field input {
+.input-field input, .input-field select {
     width: 100%;
     padding: 1rem;
     background-color: #222831;
@@ -97,7 +97,7 @@ h2 {
     transition: all 0.3s;
 }
 
-.input-field input:focus {
+.input-field input:focus, .input-field select:focus {
     outline: none;
     border-color: #D4AF37;
     box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
@@ -115,6 +115,15 @@ h2 {
 
 .input-field input:focus + label,
 .input-field input:not(:placeholder-shown) + label {
+    top: -0.5rem;
+    left: 0.5rem;
+    font-size: 0.8rem;
+    background-color: #1E1E1E;
+    padding: 0 0.5rem;
+    color: #D4AF37;
+}
+
+.input-field select + label {
     top: -0.5rem;
     left: 0.5rem;
     font-size: 0.8rem;

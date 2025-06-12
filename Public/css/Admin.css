@@ -74,6 +74,17 @@ body {
     color: var(--gold);
 }
 
+.nav-links a.home-link {
+    border: 1px solid var(--gold);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.nav-links a.home-link:hover {
+    background: var(--gold);
+    color: var(--dark-bg);
+}
+
 .logout {
     color: var(--text);
     text-decoration: none;
@@ -100,6 +111,12 @@ header {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+#adminWelcome {
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 1.1rem;
 }
 
 .avatar {
