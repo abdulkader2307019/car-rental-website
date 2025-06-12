@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update welcome message
     const welcomeMessage = document.getElementById("wel");
     if (welcomeMessage && userFirstName) {
-        welcomeMessage.textContent = Welcome back to CarVoo!!, ${userFirstName}!;
+        welcomeMessage.textContent = `Welcome back to CarVoo!!, ${userFirstName}!`;
     }
     
     // Update navigation based on login status
