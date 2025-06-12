@@ -30,7 +30,7 @@ const profileRoutes = require('./routes/profileRoutes');
 const carRoutes = require('./routes/carRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const discountRoutes = require('./routes/discountRoutes');
-// const adminRoutes = require('./routes/AdminRoutes');
+const adminRoutes = require('./routes/AdminRoutes');
 
 // Use routes
 app.use('/api/auth', authRoutes);

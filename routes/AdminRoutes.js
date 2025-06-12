@@ -24,7 +24,7 @@ router.get('/cars', AdminController.getAllCars);
 router.post('/cars',AdminController.addCar);
 
 // Update car by ID
-router.put('/cars/:id', AdminController);
+router.put('/cars/:id', AdminController.updateCar);
 
 // Delete car by ID
 router.delete('/cars/:id', AdminController.deleteCar);
@@ -33,7 +33,7 @@ router.delete('/cars/:id', AdminController.deleteCar);
 router.get('/bookings', AdminController.getAllBookings);
 
 // PUT /api/bookings/:id/approve → Confirm booking
-router.put('/bookings/:id/approve', AdminController.approveBooking);
+//router.put('/bookings/:id/approve', AdminController.approveBooking);
 
 // Update booking by ID (generic)
 router.put('/bookings/:id', AdminController.updateBooking);
