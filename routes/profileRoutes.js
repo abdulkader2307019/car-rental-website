@@ -1,11 +1,26 @@
-
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Booking = require('../models/bookingSchema');
 const { protect } = require('../middleware/authMiddleware');
+const multer = require('multer');
+
+// Configure multer for profile image uploads
+const storage = multer.memoryStorage();
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed'), false);
+    }
+  }
+});
 
 // @route   GET /api/profile
-// @desc    Get current user profile
+// @desc    Get current user profile with booking history
 // @access  Private
 router.get('/', protect, async (req, res) => {
   try {
@@ -18,9 +33,17 @@ router.get('/', protect, async (req, res) => {
       });
     }
 
+    // Get user's booking history
+    const bookings = await Booking.find({ user: req.user._id })
+      .populate('car', 'brand model pricePerDay')
+      .sort({ createdAt: -1 });
+
     res.status(200).json({
       success: true,
-      data: user
+      data: {
+        ...user.toObject(),
+        bookingHistory: bookings
+      }
     });
   } catch (error) {
     console.error(error);
@@ -34,19 +57,22 @@ router.get('/', protect, async (req, res) => {
 // @route   PUT /api/profile
 // @desc    Update user profile
 // @access  Private
-router.put('/', protect, async (req, res) => {
+router.put('/', protect, upload.single('profileImage'), async (req, res) => {
   try {
-    const { firstName, lastName, location, country, birthday } = req.body;
+    const { firstName, lastName, country } = req.body;
     
     const updateData = {
       firstName: firstName || req.user.firstName,
       lastName: lastName || req.user.lastName,
-      location: location || req.user.location,
       country: country || req.user.country
     };
     
-    if (birthday) {
-      updateData.birthday = new Date(birthday);
+    // Handle profile image upload
+    if (req.file) {
+      updateData.profileImage = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype
+      };
     }
     
     const user = await User.findByIdAndUpdate(
@@ -75,84 +101,22 @@ router.put('/', protect, async (req, res) => {
   }
 });
 
-// @route   PUT /api/profile/stats
-// @desc    Update user stats
+// @route   GET /api/profile/image
+// @desc    Get user profile image
 // @access  Private
-router.put('/stats', protect, async (req, res) => {
+router.get('/image', protect, async (req, res) => {
   try {
-    const { carsRented, milesOvercome, hoursOnRoad, citiesVisited } = req.body;
+    const user = await User.findById(req.user._id);
     
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { 
-        $set: { 
-          'stats.carsRented': carsRented || req.user.stats.carsRented,
-          'stats.milesOvercome': milesOvercome || req.user.stats.milesOvercome,
-          'stats.hoursOnRoad': hoursOnRoad || req.user.stats.hoursOnRoad,
-          'stats.citiesVisited': citiesVisited || req.user.stats.citiesVisited
-        } 
-      },
-      { new: true }
-    ).select('-password');
-    
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
+    if (!user || !user.profileImage || !user.profileImage.data) {
+      return res.status(404).send('Profile image not found');
     }
     
-    res.status(200).json({
-      success: true,
-      data: user.stats
-    });
+    res.set('Content-Type', user.profileImage.contentType);
+    res.send(user.profileImage.data);
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
-});
-
-// @route   POST /api/profile/comments
-// @desc    Add a comment to user profile
-// @access  Private
-router.post('/comments', protect, async (req, res) => {
-  try {
-    const { text, title } = req.body;
-    
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { 
-        $push: { 
-          comments: { 
-            text, 
-            title,
-            date: new Date() 
-          } 
-        } 
-      },
-      { new: true }
-    ).select('-password');
-    
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
-    
-    res.status(200).json({
-      success: true,
-      data: user.comments
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
+    res.status(500).send('Error loading profile image');
   }
 });
 

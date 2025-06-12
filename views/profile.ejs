@@ -3,34 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Rental Profile</title>
+    <title>Profile - CarVoo!!</title>
     <link rel="stylesheet" href="/css/profile.css">
 </head>
 <body>
+    <header>
+        <a href="/" class="logo">CarVoo!!</a>
+        <nav class="navigation">
+            <a href="/carlisting">Cars</a>
+            <a href="/about">About Us</a>
+            <a href="/profile">Profile</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        </nav>
+    </header>
+
     <div class="container">
         <div class="profile-header">
             <div class="profile-info">
-                <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200&h=200" 
-                     alt="Profile" 
-                     class="profile-image"
-                     id="profileImage">
+                <div class="profile-image-container">
+                    <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200&h=200" 
+                         alt="Profile" 
+                         class="profile-image"
+                         id="profileImage">
+                    <button class="edit-image-btn" id="editImageBtn">📷</button>
+                    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                </div>
                 <div class="profile-details">
                     <h1 id="profileName">Loading...</h1>
                     <p class="status"><span class="status-dot"></span>Online</p>
+                    <button class="edit-profile-btn" id="editProfileBtn">Edit Profile</button>
                 </div>
             </div>
             <div class="bio-info">
                 <div class="bio-item">
-                    <span class="label">On-site</span>
-                    <span class="value" id="profileLocation">Loading...</span>
-                </div>
-                <div class="bio-item">
                     <span class="label">Country</span>
                     <span class="value" id="profileCountry">Loading...</span>
-                </div>
-                <div class="bio-item">
-                    <span class="label">Birthday</span>
-                    <span class="value" id="profileBirthday">Loading...</span>
                 </div>
                 <div class="bio-item">
                     <span class="label">Member Since</span>
@@ -39,41 +46,68 @@
             </div>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon">🚗</div>
-                <div class="stat-value" id="carsRented">0</div>
-                <div class="stat-label">Cars Rented</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">🛣️</div>
-                <div class="stat-value" id="milesOvercome">0</div>
-                <div class="stat-label">Miles Overcome</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">⏰</div>
-                <div class="stat-value" id="hoursOnRoad">0</div>
-                <div class="stat-label">Hours on Road</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">🌆</div>
-                <div class="stat-value" id="citiesVisited">0</div>
-                <div class="stat-label">Cities Visited</div>
+        <!-- Edit Profile Modal -->
+        <div id="editModal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Edit Profile</h3>
+                <form id="editProfileForm">
+                    <div class="form-group">
+                        <label for="editFirstName">First Name</label>
+                        <input type="text" id="editFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editLastName">Last Name</label>
+                        <input type="text" id="editLastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCountry">Country</label>
+                        <input type="text" id="editCountry">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn primary">Save Changes</button>
+                        <button type="button" id="cancelEdit" class="btn">Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
 
-        <div class="comments-section">
-            <h2>Recent Comments</h2>
-            <div id="commentsContainer">
-                <!-- Comments will be loaded dynamically -->
-                <div class="comment-loading">Loading comments...</div>
+        <!-- Booking History Section -->
+        <div class="history-section">
+            <h2>Booking History</h2>
+            <div id="bookingHistoryContainer">
+                <div class="loading">Loading booking history...</div>
             </div>
         </div>
-        
-        <div class="actions-section">
-            <button id="logoutButton" class="action-button">Logout</button>
+
+        <!-- Review Modal -->
+        <div id="reviewModal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Rate Your Experience</h3>
+                <form id="reviewForm">
+                    <input type="hidden" id="reviewCarId">
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <div class="star-rating" id="starRating">
+                            <span class="star" data-rating="1">⭐</span>
+                            <span class="star" data-rating="2">⭐</span>
+                            <span class="star" data-rating="3">⭐</span>
+                            <span class="star" data-rating="4">⭐</span>
+                            <span class="star" data-rating="5">⭐</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reviewComment">Comment (Optional)</label>
+                        <textarea id="reviewComment" rows="4" placeholder="Share your experience..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn primary">Submit Review</button>
+                        <button type="button" id="cancelReview" class="btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
+
     <script src="/js/profile.js"></script>
 </body>
 </html>
