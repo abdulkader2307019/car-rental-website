@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const carSchema = new Schema({
   brand: String,
   model: String,
+  year: Number,
   type: String, // e.g., SUV, sedan
   image: {
     data: Buffer,

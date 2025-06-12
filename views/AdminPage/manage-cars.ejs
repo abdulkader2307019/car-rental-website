@@ -110,7 +110,7 @@
                                         <th>Branch</th>
                                         <th>Price</th>
                                         <th>Status</th>
-                                        <th># Seats</th>
+                                        <th>Seats</th>
                                         <th>Fuel</th>
                                         <th>Transmission</th>
                                         <th>Image</th>
@@ -128,7 +128,7 @@
                                             <td>$<%= car.pricePerDay%></td>
                                             <td>
                                                 <span class="status <%= car.availability ? 'active' : 'expired' %>">
-                                                    <%= car.availability ? 'Available' : 'Not Available' %>
+                                                    <%= car.availability ? 'Available' : 'NotAvailable' %>
                                                 </span>
                                             </td>
                                             <td><%= car.specs.seats%></td>
