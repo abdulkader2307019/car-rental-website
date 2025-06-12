@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <title>Login - CarVoo!!</title>
     <link rel="stylesheet" href="/css/login.css">
 </head>
 
@@ -12,12 +12,38 @@
     <div class="container">
         <div class="left-side">
             <div class="overlay"></div>
-            <h1 id="leftSideText">Drive Your Dreams,<br>Rent Your Ride Today</h1>
+            <h1 id="leftSideText">Welcome Back,<br>Your Next Ride Awaits</h1>
         </div>
 
         <div class="right-side">
             <div class="form-container">
-                <div id="signupPage" class="form-page active">
+                <div id="loginPage" class="form-page active">
+                    <h2>Welcome Back</h2>
+                    <p class="subtitle">Sign in to continue</p>
+
+                    <form id="login-form">
+                        <div class="input-group">
+                            <div class="input-field">
+                                <input type="email" id="loginEmail" required placeholder=" ">
+                                <label for="loginEmail">Email Address</label>
+                                <div class="error-message" id="loginEmailError"></div>
+                            </div>
+                            <div class="input-field">
+                                <input type="password" id="loginPassword" required placeholder=" ">
+                                <label for="loginPassword">Password</label>
+                                <div class="error-message" id="loginPasswordError"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="auth-btn" id="loginButton">Sign In</button>
+
+                        <p class="switch-form">
+                            Don't have an account? <a href="#" onclick="switchForm('signup')">Sign up</a>
+                        </p>
+                    </form>
+                </div>
+
+                <div id="signupPage" class="form-page">
                     <h2>Create Account</h2>
                     <p class="subtitle">Sign up to get started</p>
 
@@ -53,7 +79,6 @@
                                 <div class="error-message" id="signupPasswordError"></div>
                             </div>
 
-                            <!-- Optional fields -->
                             <div class="input-field">
                                 <input type="number" id="age" name="age" placeholder=" ">
                                 <label for="age">Age</label>
@@ -67,68 +92,8 @@
 
                         <button type="submit" class="auth-btn" id="signupButton">Create Account</button>
 
-                        <div class="divider">
-                            <span>or continue with</span>
-                        </div>
-
-                        <div class="social-buttons">
-                            <button type="button" class="social-btn google">
-                                <img src="https://www.google.com/favicon.ico" alt="Google">
-                                Google
-                            </button>
-                            <button type="button" class="social-btn apple">
-                                <img src="https://www.apple.com/favicon.ico" alt="Apple">
-                                Apple
-                            </button>
-                        </div>
-
                         <p class="switch-form">
                             Already have an account? <a href="#" onclick="switchForm('login')">Sign in</a>
-                        </p>
-                    </form>
-
-                </div>
-
-                <div id="loginPage" class="form-page">
-                    <h2>Welcome Back</h2>
-                    <p class="subtitle">Sign in to continue</p>
-
-                    <form id="login-form">
-                        <div class="input-group">
-                            <div class="input-field">
-                                <input type="email" id="loginEmail" required placeholder=" ">
-                                <label for="loginEmail">Email Address</label>
-                                <div class="error-message" id="loginEmailError"></div>
-                            </div>
-                            <div class="input-field">
-                                <input type="password" id="loginPassword" required placeholder=" ">
-                                <label for="loginPassword">Password</label>
-                                <div class="error-message" id="loginPasswordError"></div>
-                            </div>
-                            <div class="forgot-password">
-                                <a href="#" class="forgot-link"></a>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="auth-btn" id="loginButton">Sign In</button>
-
-                        <div class="divider">
-                            <span>or continue with</span>
-                        </div>
-
-                        <div class="social-buttons">
-                            <button type="button" class="social-btn google">
-                                <img src="https://www.google.com/favicon.ico" alt="Google">
-                                Google
-                            </button>
-                            <button type="button" class="social-btn apple">
-                                <img src="https://www.apple.com/favicon.ico" alt="Apple">
-                                Apple
-                            </button>
-                        </div>
-
-                        <p class="switch-form">
-                            Don't have an account? <a href="#" onclick="switchForm('signup')">Sign up</a>
                         </p>
                     </form>
                 </div>

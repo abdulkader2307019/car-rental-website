@@ -30,8 +30,8 @@ const userSchema = new mongoose.Schema({
     minlength: [6, 'Password must be at least 6 characters']
   },
   profileImage: {
-    type: String,
-    default: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200&h=200'
+    data: Buffer,
+    contentType: String
   },
   country: {
     type: String,
@@ -48,33 +48,7 @@ const userSchema = new mongoose.Schema({
   isAdmin: {
     type: Boolean,
     default: false
-  },
-  stats: {
-    carsRented: {
-      type: Number,
-      default: 0
-    },
-    milesOvercome: {
-      type: Number,
-      default: 0
-    },
-    hoursOnRoad: {
-      type: Number,
-      default: 0
-    },
-    citiesVisited: {
-      type: Number,
-      default: 0
-    }
-  },
-  comments: [{
-    text: String,
-    title: String,
-    date: {
-      type: Date,
-      default: Date.now
-    }
-  }]
+  }
 }, { timestamps: true });
 
 // Pre-save hook to hash password

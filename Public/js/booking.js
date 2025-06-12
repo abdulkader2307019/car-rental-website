@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is logged in
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('Please log in to make a booking.');
+        window.location.href = '/LoginPage/login';
+        return;
+    }
+
     const form = document.getElementById('bookingForm');
     const planSelect = document.getElementById('plan');
     const priceDisplay = document.getElementById('priceCalc');
@@ -73,49 +81,51 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Discount functionality
-    applyDiscountBtn.addEventListener('click', async function() {
-        const code = discountCodeInput.value.trim();
-        
-        if (!code) {
-            alert('Please enter a discount code.');
-            return;
-        }
-
-        if (discountApplied) {
-            alert('A discount has already been applied to this booking.');
-            return;
-        }
-
-        try {
-            const response = await fetch('/api/discounts/apply', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    code: code,
-                    originalPrice: currentPrice
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                currentPrice = data.discountedPrice;
-                priceDisplay.textContent = currentPrice.toFixed(0);
-                priceBreakdown.textContent += ` - Discount applied: ${code}`;
-                discountApplied = true;
-                applyDiscountBtn.disabled = true;
-                applyDiscountBtn.textContent = 'Discount Applied';
-                alert('Discount applied successfully!');
-            } else {
-                alert(data.message || 'Failed to apply discount');
+    if (applyDiscountBtn) {
+        applyDiscountBtn.addEventListener('click', async function() {
+            const code = discountCodeInput.value.trim();
+            
+            if (!code) {
+                alert('Please enter a discount code.');
+                return;
             }
-        } catch (error) {
-            console.error('Error applying discount:', error);
-            alert('Error applying discount. Please try again.');
-        }
-    });
+
+            if (discountApplied) {
+                alert('A discount has already been applied to this booking.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/discounts/apply', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        originalPrice: currentPrice
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentPrice = data.discountedPrice;
+                    priceDisplay.textContent = currentPrice.toFixed(0);
+                    priceBreakdown.textContent += ` - Discount applied: ${code}`;
+                    discountApplied = true;
+                    applyDiscountBtn.disabled = true;
+                    applyDiscountBtn.textContent = 'Discount Applied';
+                    alert('Discount applied successfully!');
+                } else {
+                    alert(data.message || 'Failed to apply discount');
+                }
+            } catch (error) {
+                console.error('Error applying discount:', error);
+                alert('Error applying discount. Please try again.');
+            }
+        });
+    }
 
     // Form submission
     form.addEventListener('submit', async function(e) {
@@ -129,14 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!pickup || !returnLoc || !pickupDate || !returnDate) {
             alert('Please fill in all required fields.');
-            return;
-        }
-
-        // Check if user is logged in
-        const token = localStorage.getItem('token');
-        if (!token) {
-            alert('Please log in to make a booking.');
-            window.location.href = '/LoginPage/login';
             return;
         }
 
