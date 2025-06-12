@@ -146,10 +146,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const phoneNumber = document.getElementById('signupPhoneNumber').value.trim();
             const password = document.getElementById('signupPassword').value;
             const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
             const country = document.getElementById('country').value.trim();
             const signupButton = document.getElementById('signupButton');
             
-            console.log('Signup attempt:', { firstName, lastName, email, phoneNumber });
+            console.log('Signup attempt:', { firstName, lastName, email, phoneNumber, gender });
             
             // Validate form
             let isValid = true;
@@ -187,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     password,
                     phoneNumber,
                     age: age ? parseInt(age) : undefined,
+                    gender: gender || 'Other',
                     country: country || 'Egypt'
                 };
                 
