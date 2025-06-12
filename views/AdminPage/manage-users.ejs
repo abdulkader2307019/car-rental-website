@@ -27,25 +27,27 @@
                                             <th>#</th>
                                             <th>Name</th>
                                             <th>Email</th>
-                                            <th>phoneNumber</th>
-                                            <th>age</th>
-                                            <th>country</th>
+                                            <th>Phone Number</th>
+                                            <th>Age</th>
                                             <th>Gender</th>
-                                            
+                                            <th>Country</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <% users.forEach((user,index) => { %>
-                                            <tr>
+                                            <tr data-user-id="<%= user._id %>">
                                                 <td><%= index+1 %></td>
                                                 <td><%= user.firstName +' '+user.lastName %></td>
                                                 <td><%= user.email %></td>
-                                                <td><%= user.phoneNumber %></td>
-                                                <td><%= user.age %></td>                                       
-                                                <td><%= user.country %></td>
-                                                <td><%= user.gender %></td>
-
-                                                
+                                                <td><%= user.phoneNumber || 'N/A' %></td>
+                                                <td><%= user.age || 'N/A' %></td>                                       
+                                                <td><%= user.gender || 'N/A' %></td>
+                                                <td><%= user.country || 'N/A' %></td>
+                                                <td class="actions">
+                                                    <button class="btn primary edit-user" data-id="<%= user._id %>">Update</button>
+                                                    <button class="btn danger delete-user" data-id="<%= user._id %>">Delete</button>
+                                                </td>
                                             </tr>
                                          
                                         <% }) %>
@@ -59,7 +61,63 @@
                     </section>
             </main>
     </div>
+
+    <!-- Edit User Modal -->
+    <div id="edit-user-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Edit User</h3>
+            <form id="edit-user-form">
+                <input type="hidden" id="edit-user-id">
+                
+                <div class="form-group">
+                    <label for="edit-first-name">First Name</label>
+                    <input type="text" id="edit-first-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-last-name">Last Name</label>
+                    <input type="text" id="edit-last-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-email">Email</label>
+                    <input type="email" id="edit-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-phone">Phone Number</label>
+                    <input type="tel" id="edit-phone">
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-age">Age</label>
+                    <input type="number" id="edit-age" min="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-gender">Gender</label>
+                    <select id="edit-gender">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-country">Country</label>
+                    <input type="text" id="edit-country">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Update User</button>
+                    <button type="button" id="cancel-edit-user" class="btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="/js/Admin.js"></script>
+    <script src="/js/users.js"></script>
 </body>
 
 </html>

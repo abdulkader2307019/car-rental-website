@@ -38,7 +38,7 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/cars', carRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/discounts', discountRoutes);
-// app.use('/api/admin', adminRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Car management route (legacy - keeping for backward compatibility)
 app.post('/api/cars', img.single('image'), async (req, res) => {
@@ -85,10 +85,11 @@ app.post('/user/register', async (req, res) => {
       phoneNumber,
       password,
       age,
+      gender,
       country
     } = req.body;
 
-    console.log('Registration attempt:', { firstName, lastName, email, phoneNumber });
+    console.log('Registration attempt:', { firstName, lastName, email, phoneNumber, gender });
 
     // Check for existing user
     const existingUser = await User.findOne({ email });
@@ -107,6 +108,7 @@ app.post('/user/register', async (req, res) => {
       phoneNumber,
       password, // will be hashed in pre-save hook
       age: age || undefined,
+      gender: gender || 'Other',
       country: country || 'Egypt'
     });
 
