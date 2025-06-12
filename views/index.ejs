@@ -1,157 +1,80 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>CarVoo!! - Premium Car Rental</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    
-
 </head>
 <body>
-    
     <header>
-        <a href="/" class="logo">Car Rental</a>
+        <a href="/" class="logo">CarVoo!!</a>
         <nav id="navbar" class="navigation">
-            <a href="carlisting" >Cars</a>
-            <a href="LoginPage/login" >Login</a>
-            <a href="AdminPage/manage-bookings" >Admin</a> 
-            <a href="profile" >Profile</a> 
+            <a href="/carlisting">Cars</a>
+            <a href="/about">About Us</a>
+            <a href="/LoginPage/login">Login</a>
         </nav>
-        
     </header>
-<br>
+
     <section class="hero">
         <div class="browsebtn">
-        <h1 id="wel">Welcome to our website</h1>
-        <a href="carlisting">browse cars</a>
+            <h1 id="wel">Welcome to CarVoo!!</h1>
+            <p>Your premium car rental experience starts here</p>
+            <a href="/carlisting">Browse Cars</a>
         </div>
     </section>
 
     <section class="featuredCars">
+        <h2>Featured Premium Cars</h2>
         <div class="cards">
-            <div class="card">
-                <div class="car-img">
-                    <img src="img/car1.jpg" alt="car">
-                    <hr>
+            <% if (featuredCars && featuredCars.length > 0) { %>
+                <% featuredCars.forEach(car => { %>
+                    <div class="card">
+                        <div class="car-img">
+                            <% if (car.image && car.image.data) { %>
+                                <img src="/api/cars/<%= car._id %>/image" alt="<%= car.brand %> <%= car.model %>">
+                            <% } else { %>
+                                <img src="/img/car1.jpg" alt="<%= car.brand %> <%= car.model %>">
+                            <% } %>
+                            <hr>
+                        </div>
+                        
+                        <div class="details">
+                            <h2><%= car.brand %> <%= car.model %></h2>
+                            <a href="/car-details/<%= car._id %>">See Details</a>
+                        </div>
+                        <div>
+                            <p>$<%= car.pricePerDay %>/day - <%= car.type %> with <%= car.specs.seats %> seats</p>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="card">
+                    <div class="car-img">
+                        <img src="/img/car1.jpg" alt="Mercedes-AMG GT53">
+                        <hr>
+                    </div>
+                    <div class="details">
+                        <h2>Mercedes-AMG GT53</h2>
+                        <a href="/carlisting">Browse Cars</a>
+                    </div>
+                    <div>
+                        <p>Premium luxury sports sedan with exceptional performance</p>
+                    </div>
                 </div>
-                
-                <div class="details">
-                    <h2>Mercedes-Amg-GT53</h2>
-                    <a href="car-details">see</a>
-                    <br>
-                    
-                </div>
-                <div>
-                    <p>Mercedes-AMG GT sedan, sporty, luxury, 831 hp and aggressive styling.</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="car-img">
-                    <img src="img/car2.jpg" alt="car">
-                    <hr>
-                </div>
-                
-                <div class="details">
-                    <h2>Audi-RS7</h2>
-                    <a href="car-details">see</a>
-                    <br>
-                    
-                </div>
-                <div>
-                    <p>Audi-RS7sedan, sporty, luxury, 700 hp and aggressive styling.</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="car-img">
-                    <img src="img/car3.jpg" alt="car">
-                    <hr>
-                </div>
-                
-                <div class="details">
-                    <h2>Ford-Mustang</h2>
-                    <a href="car-details">see</a>
-                    <br>
-                    
-                </div>
-                <div>
-                    <p>Ford-Mustang sedan, sporty, 600 hp and aggressive styling.</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="car-img">
-                    <img src="img/car4.jpg" alt="car">
-                    <hr>
-                </div>
-                
-                <div class="details">
-                    <h2>Dodge-Challenger</h2>
-                    <a href="car-details">see</a>
-                    <br>
-                    
-                </div>
-                <div>
-                    <p>Dodge-Challenger sedan, sporty, luxury, 759 hp and aggressive styling.</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="car-img">
-                    <img src="img/car5.jpg" alt="car">
-                    <hr>
-                </div>
-                
-                <div class="details">
-                    <h2>Land-Rover</h2>
-                    <a href="car-details">see</a>
-                    <br>
-                    
-                </div>
-                <div>
-                    <p>LandRover-Defender, SUV , sporty, luxury, 831 hp and aggressive styling.</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="car-img">
-                    <img src="img/car6.jpg" alt="car">
-                    <hr>
-                </div>
-                
-                <div class="details">
-                    <h2>Mercedes-CLE200-Amg</h2>
-                    <a href="car-details">see</a>
-                    <br>
-                    
-                </div>
-                <div>
-                    <p>Mercedes-CLE200-AMG coupe, sporty, luxury, 457 hp and aggressive styling.</p>
-                </div>
-                
-            </div>
+            <% } %>
         </div>
     </section>
-<!-- 
-    <section class="CTA">
-        <div class="ctaText">
-            <h1>Don't wait!</h1>
-            <h3>Be a part of our trip</h3>
-        </div>
-        <div class="bookBtn">
-            <a href="car-details">rent Now</a>
-        </div>
-    </section> -->
 
-    
-    
     <footer>
         <div class="copyRights">
-            <p>&copy; 2025 YourWebsite.com. All rights reserved.</p>
+            <p>&copy; 2025 CarVoo!!. All rights reserved.</p>
         </div>
         <hr>
         <div class="contacts">
-            <a href="mailto:abdulkader2307019@miuegypt.edu.eg">
-                Email: abdulkader2307019@miuegypt.edu.eg                
+            <a href="mailto:support@carvoo.com">
+                Email: support@carvoo.com                
             </a>
             <a href="tel:01150318798">
                 Call Us: 01150318798                
@@ -159,17 +82,13 @@
             <a href="https://facebook.com">Facebook</a> 
             <a href="https://twitter.com">Twitter</a> 
             <a href="https://instagram.com">Instagram</a>
-
         </div>
         <hr>
         <div class="top">
-            <a href="index">Back to the Top ↑</a>
+            <a href="#top">Back to the Top ↑</a>
         </div>
     </footer>
 
     <script src="/js/index.js"></script>
-
 </body>
-
-
 </html>

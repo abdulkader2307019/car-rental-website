@@ -8,11 +8,11 @@
 </head>
 <body>
     <header>
-        <a href="/" class="logo">Car Rental</a>
+        <a href="/" class="logo">CarVoo!!</a>
         <nav class="navigation">
             <a href="/carlisting">Cars</a>
+            <a href="/about">About Us</a>
             <a href="/LoginPage/login">Login</a>
-            <a href="/AdminPage/manage-bookings">Admin</a> 
         </nav>  
     </header>
     
@@ -94,18 +94,45 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Reviews Section -->
+                <div class="reviews-section">
+                    <h3>Customer Reviews</h3>
+                    <% if (reviews && reviews.length > 0) { %>
+                        <div class="reviews-container">
+                            <% reviews.forEach(review => { %>
+                                <div class="review-card">
+                                    <div class="review-header">
+                                        <div class="reviewer-name"><%= review.user.firstName %> <%= review.user.lastName %></div>
+                                        <div class="review-rating">
+                                            <% for(let i = 1; i <= 5; i++) { %>
+                                                <span class="star <%= i <= review.rating ? 'filled' : '' %>">⭐</span>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <% if (review.comment) { %>
+                                        <div class="review-comment"><%= review.comment %></div>
+                                    <% } %>
+                                    <div class="review-date"><%= new Date(review.createdAt).toLocaleDateString() %></div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p class="no-reviews">No reviews yet. Be the first to review this car!</p>
+                    <% } %>
+                </div>
             </section>
         </section>
     </main>
 
     <footer>
         <div class="copyRights">
-            <p>&copy; 2025 YourWebsite.com. All rights reserved.</p>
+            <p>&copy; 2025 CarVoo!!. All rights reserved.</p>
         </div>
         <hr>
         <div class="contacts">
-            <a href="mailto:abdulkader2307019@miuegypt.edu.eg">
-                Email: abdulkader2307019@miuegypt.edu.eg                
+            <a href="mailto:support@carvoo.com">
+                Email: support@carvoo.com                
             </a>
             <a href="tel:01150318798">
                 Call Us: 01150318798                

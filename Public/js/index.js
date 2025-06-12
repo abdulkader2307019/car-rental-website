@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update welcome message
     const welcomeMessage = document.getElementById("wel");
     if (welcomeMessage && userFirstName) {
-        welcomeMessage.textContent = `Welcome back, ${userFirstName}!`;
+        welcomeMessage.textContent = Welcome back to CarVoo!!, ${userFirstName}!;
     }
     
     // Update navigation based on login status
@@ -17,9 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (token) {
             // User is logged in - show profile and logout, hide login
             navbar.innerHTML = `
-                <a href="carlisting">Cars</a>
-                <a href="profile">Profile</a>
-                ${isAdmin ? '<a href="AdminPage/manage-bookings">Admin</a>' : ''}
+                <a href="/carlisting">Cars</a>
+                <a href="/about">About Us</a>
+                <a href="/profile">Profile</a>
+                ${isAdmin ? '<a href="/AdminPage/manage-bookings">Admin</a>' : ''}
                 <a href="#" id="logoutBtn">Logout</a>
             `;
             
@@ -44,8 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // User is not logged in - show login
             navbar.innerHTML = `
-                <a href="carlisting">Cars</a>
-                <a href="LoginPage/login">Login</a>
+                <a href="/carlisting">Cars</a>
+                <a href="/about">About Us</a>
+                <a href="/LoginPage/login">Login</a>
             `;
         }
     }
