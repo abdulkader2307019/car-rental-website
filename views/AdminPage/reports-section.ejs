@@ -14,11 +14,12 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- /////////////header section////////////// -->
+            <!-- Header section -->
              <%- include('../partials/header.ejs') %>
-<!-- Reports Section -->
+
+            <!-- Reports Section -->
             <section id="reports" class="content-section">
-                <h2>Reports</h2>
+                <h2>Reports & Analytics</h2>
                 <div class="card">
                     <div class="stats-grid">
                         <div class="stat-card" data-target="bookings-details">
@@ -41,11 +42,11 @@
 
                     <!-- Report Details Tables -->
                     <div id="bookings-details" class="report-details hidden">
-                        <h3>Booking Details</h3>
+                        <h3>All Bookings</h3>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Booking ID</th>
                                     <th>Car</th>
                                     <th>User</th>
                                     <th>Dates</th>
@@ -58,11 +59,11 @@
                     </div>
 
                     <div id="active-rentals-details" class="report-details hidden">
-                        <h3>Active Rental Details</h3>
+                        <h3>Active Rentals</h3>
                         <table>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Booking ID</th>
                                     <th>Car</th>
                                     <th>User</th>
                                     <th>Dates</th>
@@ -74,7 +75,7 @@
                     </div>
 
                     <div id="revenue-details" class="report-details hidden">
-                        <h3>Revenue Details</h3>
+                        <h3>Revenue by Car</h3>
                         <table>
                             <thead>
                                 <tr>
@@ -93,7 +94,7 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Car ID</th>
                                     <th>Make & Model</th>
                                     <th>Year</th>
                                     <th>Daily Price</th>
@@ -104,8 +105,7 @@
                     </div>
                 </div>
             </section>
-
-                        </main>
+        </main>
     </div>
     <script src="/js/Admin.js"></script>
 </body>
