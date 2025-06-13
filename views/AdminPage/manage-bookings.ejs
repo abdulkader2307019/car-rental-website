@@ -1,51 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Rental Admin</title>
+    <title>Car Rental Admin - Manage Bookings</title>
     <link rel="stylesheet" href="/css/Admin.css">
 </head>
-
 <body>
     <div class="dashboard">
         <%- include('../partials/side-bar.ejs') %>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- /////////////header section////////////// -->
-             <%- include('../partials/header.ejs') %>
-<!-- Bookings Section -->
+            <%- include('../partials/header.ejs') %>
+
             <section id="bookings" class="content-section">
                 <h2>Manage Bookings</h2>
+                
                 <div class="card">
-                    <% if (bookings.length  !== 0) { %>
-                     <table id="bookings-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>User</th>
-                                <th>Car</th>
-                                <th>Dates</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Bookings will load here with edit button -->
-                        </tbody>
-                    </table>
+                    <div class="search-section">
+                        <input type="text" id="bookingSearch" placeholder="Search bookings..." class="search-input">
+                        <button id="searchBookings" class="btn primary">Search</button>
+                        <button id="clearBookingSearch" class="btn secondary">Clear</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <% if (bookings.length !== 0) { %>
+                        <table id="bookings-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Username</th>
+                                    <th>Car Brand-Model</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Pickup Location</th>
+                                    <th>Return Location</th>
+                                    <th>Status</th>
+                                    <th>Total Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% bookings.forEach((booking, index) => { %>
+                                    <tr data-booking-id="<%= booking._id %>">
+                                        <td><%= index + 1 %></td>
+                                        <td><%= booking.user ? `${booking.user.firstName} ${booking.user.lastName}` : 'N/A' %></td>
+                                        <td><%= booking.car ? `${booking.car.brand} ${booking.car.model}` : 'N/A' %></td>
+                                        <td><%= new Date(booking.startDate).toLocaleDateString() %></td>
+                                        <td><%= new Date(booking.endDate).toLocaleDateString() %></td>
+                                        <td><%= booking.locationPickup %></td>
+                                        <td><%= booking.locationDropoff %></td>
+                                        <td>
+                                            <span class="status status-<%= booking.status %>">
+                                                <%= booking.status.charAt(0).toUpperCase() + booking.status.slice(1) %>
+                                            </span>
+                                        </td>
+                                        <td>$<%= booking.totalPrice %></td>
+                                        <td class="actions">
+                                            <button class="btn primary edit-booking" data-id="<%= booking._id %>">Edit</button>
+                                            <button class="btn danger delete-booking" data-id="<%= booking._id %>">Delete</button>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
                     <% } else { %>
-                     <h1>There is no Bookings to show</h1>
+                        <h1>There are no bookings to show</h1>
                     <% } %>
-                    
                 </div>
             </section>
-
-            </main>
+        </main>
     </div>
-    <script src="/js/Admin.js"></script>
-</body>
 
+    <!-- Edit Booking Modal -->
+    <div id="edit-booking-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Edit Booking</h3>
+            <form id="edit-booking-form">
+                <input type="hidden" id="edit-booking-id">
+                
+                <div class="form-group">
+                    <label for="edit-booking-status">Status</label>
+                    <select id="edit-booking-status" required>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-booking-pickup">Pickup Location</label>
+                    <input type="text" id="edit-booking-pickup" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-booking-dropoff">Return Location</label>
+                    <input type="text" id="edit-booking-dropoff" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Update Booking</button>
+                    <button type="button" id="cancel-booking-edit" class="btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/Admin.js"></script>
+    <script src="/js/manage-bookings.js"></script>
+</body>
 </html>

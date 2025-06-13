@@ -5,11 +5,19 @@ const protect = async (req, res, next) => {
   let token;
 
   try {
-    // Check if auth header exists and has bearer token
+    // Check session first
+    if (req.session && req.session.userId) {
+      const user = await User.findById(req.session.userId).select('-password');
+      if (user) {
+        req.user = user;
+        return next();
+      }
+    }
+
+    // Fallback to JWT token
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
       token = req.headers.authorization.split(' ')[1];
     } else if (req.cookies && req.cookies.token) {
-      // Check if token exists in cookies
       token = req.cookies.token;
     }
 
@@ -20,10 +28,7 @@ const protect = async (req, res, next) => {
       });
     }
 
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_key_for_development');
-    
-    // Get user from database
     const user = await User.findById(decoded.id).select('-password');
     
     if (!user) {
@@ -34,6 +39,7 @@ const protect = async (req, res, next) => {
     }
     
     req.user = user;
+    req.session.userId = user._id;
     next();
   } catch (error) {
     console.error('Auth middleware error:', error);

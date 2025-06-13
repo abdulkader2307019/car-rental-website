@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-// Generate JWT token
 const generateToken = (userId) => {
   return jwt.sign(
     { id: userId }, 
@@ -13,16 +12,12 @@ const generateToken = (userId) => {
   );
 };
 
-// @route   POST /api/auth/register
-// @desc    Register a new user
-// @access  Public
 router.post('/register', async (req, res) => {
   try {
     console.log('Registration request received:', req.body);
     
-    const { firstName, lastName, email, password, phoneNumber, age, country } = req.body;
+    const { firstName, lastName, email, password, phoneNumber, age, country, gender } = req.body;
 
-    // Validate required fields
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({ 
         success: false,
@@ -30,7 +25,6 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Check if user already exists
     const userExists = await User.findOne({ email: email.toLowerCase() });
     if (userExists) {
       return res.status(400).json({ 
@@ -39,7 +33,6 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Create new user
     const user = await User.create({
       firstName: firstName.trim(),
       lastName: lastName.trim(),
@@ -47,13 +40,16 @@ router.post('/register', async (req, res) => {
       password,
       phoneNumber: phoneNumber || '',
       age: age ? parseInt(age) : undefined,
-      country: country || 'Egypt'
+      country: country || 'Egypt',
+      gender: gender || 'Other'
     });
 
     console.log('User created successfully:', user._id);
 
-    // Generate JWT token
     const token = generateToken(user._id);
+    
+    req.session.userId = user._id;
+    req.session.isAdmin = user.isAdmin || false;
 
     res.status(201).json({
       success: true,
@@ -75,16 +71,12 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// @route   POST /api/auth/login
-// @desc    Authenticate user & get token
-// @access  Public
 router.post('/login', async (req, res) => {
   try {
     console.log('Login request received:', { email: req.body.email });
     
     const { email, password } = req.body;
 
-    // Validate input
     if (!email || !password) {
       return res.status(400).json({ 
         success: false,
@@ -92,7 +84,6 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Check if user exists
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       console.log('User not found for email:', email);
@@ -102,7 +93,6 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Check if password matches
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       console.log('Password mismatch for user:', email);
@@ -114,8 +104,10 @@ router.post('/login', async (req, res) => {
 
     console.log('Login successful for user:', email);
 
-    // Generate JWT token
     const token = generateToken(user._id);
+    
+    req.session.userId = user._id;
+    req.session.isAdmin = user.isAdmin || false;
 
     res.status(200).json({
       success: true,
@@ -135,6 +127,22 @@ router.post('/login', async (req, res) => {
       error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
     });
   }
+});
+
+router.post('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: 'Could not log out'
+      });
+    }
+    res.clearCookie('connect.sid');
+    res.status(200).json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+  });
 });
 
 module.exports = router;

@@ -1,162 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Rental Admin</title>
+    <title>Car Rental Admin - Manage Cars</title>
     <link rel="stylesheet" href="/css/Admin.css">
 </head>
-
 <body>
     <div class="dashboard">
         <%- include('../partials/side-bar.ejs') %>
 
-            <!-- Main Content -->
-            <main class="main-content">
-                <!-- /////////////header section////////////// -->
-                <%- include('../partials/header.ejs') %>
-                    <!-- Cars Section -->
-                    <section id="cars" class="content-section ">
-                        <h2>Manage Cars</h2>
-                        <div class="card">
-                            <form id="car-form" enctype="multipart/form-data">
-                                <input type="hidden" id="car-id" value="">
+        <main class="main-content">
+            <%- include('../partials/header.ejs') %>
+            
+            <section id="cars" class="content-section">
+                <h2>Manage Cars</h2>
+                <div class="card">
+                    <form id="car-form" enctype="multipart/form-data">
+                        <input type="hidden" id="car-id" value="">
 
-                                <div class="form-row">
-                                    <% var car_brands_list=["Abarth", "Acura" , "Alfa Romeo" , "Aston Martin" , "Audi"
-                                        , "Bentley" , "BMW" , "Bugatti" , "Buick" , "Cadillac" , "Chevrolet"
-                                        , "Chrysler" , "Citroën" , "Dacia" , "Daewoo" , "Daihatsu" , "Dodge" , "Ferrari"
-                                        , "Fiat" , "Ford" , "Genesis" , "GMC" , "Honda" , "Hyundai" , "Infiniti"
-                                        , "Jaguar" , "Jeep" , "Kia" , "Koenigsegg" , "Lamborghini" , "Lancia"
-                                        , "Land Rover" , "Lexus" , "Lincoln" , "Lotus" , "Maserati" , "Mazda"
-                                        , "McLaren" , "Mercedes-Benz" , "MG" , "Mini" , "Mitsubishi" , "Nissan" , "Opel"
-                                        , "Pagani" , "Peugeot" , "Polestar" , "Porsche" , "Ram" , "Renault"
-                                        , "Rolls-Royce" , "Saab" , "Seat" , "Skoda" , "Smart" , "Subaru" , "Suzuki"
-                                        , "Tesla" , "Toyota" , "Vauxhall" , "Volkswagen" , "Volvo" ]; %>
-                                        <select id="car-brand" placeholder="Brand" required>
-                                            <option value="">Select Brand</option>
-                                            <% car_brands_list.forEach(element=> { %>
-                                                <option>
-                                                    <%= element %>
-                                                </option>
-                                                <% }) %>
-                                        </select>
-                                        <input type="text" id="car-model" placeholder="Model" required>
-                                </div>
-
-                                <div class="form-row">
-                                    <input type="number" id="car-year" placeholder="Year" min="1900" max="2030" required>
-                                    <select id="car-type" required>
-                                        <option value="">Select Type</option>
-                                        <option value="SUV">SUV</option>
-                                        <option value="Sedan">Sedan</option>
-                                        <option value="Hatchback">Hatchback</option>
-                                        <option value="Truck">Truck</option>
-                                    </select>
-
-                                    <select id="car-location" placeholder="Location" required>
-                                        <option value="">Select Branch</option>
-                                        <option value="Cairo">Cairo</option>
-                                        <option value="Alex">Alex</option>
-                                        <option value="Mansoura">Mansoura</option>
-                                        <option value="Aswan">Aswan</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-row">
-                                    <input type="number" id="car-price" placeholder="Daily Price" min="1" required>
-                                    <select id="car-status" required>
-                                        <option value="">Availability</option>
-                                        <option value="true">Available</option>
-                                        <option value="false">Unavailable</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-row">
-                                    <input type="number" id="car-seats" placeholder="Seats" min="1" max="12" required>
-                                    <select id="car-fuel" placeholder="Fuel Type" required>
-                                        <option value="">Select Fuel Type</option>
-                                        <option value="true">Petrol</option>
-                                        <option value="false">Electric</option>
-                                    </select>
-                                    <select id="car-transmission" placeholder="Transmission" required>
-                                        <option value="">Select Transmission</option>
-                                        <option value="true">Automatic</option>
-                                        <option value="false">Manual</option>
-                                    </select>
-                                </div>
-
-                                <input type="file" id="car-image" name="image" accept="image/*" required>
-
-                                <div class="form-actions">
-                                    <button type="button" id="save-car" class="btn primary">Save Car</button>
-                                    <button type="button" id="clear-form" class="btn">Clear</button>
-                                    <button type="button" id="cancel-edit" class="btn" style="display: none;">Cancel Edit</button>
-                                </div>
-                            </form>
-                            
-                        </div >
-                        <div class="card">
-                            <% if (cars.length !== 0) { %>
-                             
-                            <table id="cars-table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Make & Model</th>
-                                        <th>Year</th>
-                                        <th>Type</th>
-                                        <th>Branch</th>
-                                        <th>Price</th>
-                                        <th>Status</th>
-                                        <th>Seats</th>
-                                        <th>Fuel</th>
-                                        <th>Transmission</th>
-                                        <th>Image</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <% cars.forEach((car,index)=> { %>
-                                        <tr data-car-id="<%= car._id %>">
-                                            <td><%= index + 1%></td>
-                                            <td><%= car.brand +' '+ car.model %></td>
-                                            <td><%= car.year || 'N/A' %></td>
-                                            <td><%= car.type %></td>
-                                            <td><%= car.location%></td>
-                                            <td>$<%= car.pricePerDay%></td>
-                                            <td>
-                                                <span class="status <%= car.availability ? 'active' : 'expired' %>">
-                                                    <%= car.availability ? 'Available' : 'NotAvailable' %>
-                                                </span>
-                                            </td>
-                                            <td><%= car.specs.seats%></td>
-                                            <td><%= car.specs.fuel%></td>
-                                            <td><%= car.specs.transmission%></td>
-                                            <td>
-                                                <% if (car.image && car.image.data) { %>
-                                                    <img src="/api/cars/<%= car._id %>/image" alt="Car Image" class="car-thumbnail">
-                                                <% } else { %>
-                                                    <span>No Image</span>
-                                                <% } %>
-                                            </td>
-                                            <td class="actions">
-                                                <button class="btn primary edit-car" data-id="<%= car._id %>">Edit</button>
-                                                <button class="btn danger delete-car" data-id="<%= car._id %>">Delete</button>
-                                            </td>
-                                        </tr>
-                                        <% }) %>
-                                </tbody>
-                            </table>
-                            <% } else { %>
-                             <h1>NO Cars to show!</h1>
-                            <% } %>
+                        <div class="form-row">
+                            <% var car_brands_list=["Abarth", "Acura" , "Alfa Romeo" , "Aston Martin" , "Audi", "Bentley" , "BMW" , "Bugatti" , "Buick" , "Cadillac" , "Chevrolet", "Chrysler" , "Citroën" , "Dacia" , "Daewoo" , "Daihatsu" , "Dodge" , "Ferrari", "Fiat" , "Ford" , "Genesis" , "GMC" , "Honda" , "Hyundai" , "Infiniti", "Jaguar" , "Jeep" , "Kia" , "Koenigsegg" , "Lamborghini" , "Lancia", "Land Rover" , "Lexus" , "Lincoln" , "Lotus" , "Maserati" , "Mazda", "McLaren" , "Mercedes-Benz" , "MG" , "Mini" , "Mitsubishi" , "Nissan" , "Opel", "Pagani" , "Peugeot" , "Polestar" , "Porsche" , "Ram" , "Renault", "Rolls-Royce" , "Saab" , "Seat" , "Skoda" , "Smart" , "Subaru" , "Suzuki", "Tesla" , "Toyota" , "Vauxhall" , "Volkswagen" , "Volvo" ]; %>
+                            <select id="car-brand" placeholder="Brand" required>
+                                <option value="">Select Brand</option>
+                                <% car_brands_list.forEach(element=> { %>
+                                    <option><%= element %></option>
+                                <% }) %>
+                            </select>
+                            <input type="text" id="car-model" placeholder="Model" required>
                         </div>
-                    </section>
-            </main>
+
+                        <div class="form-row">
+                            <input type="number" id="car-year" placeholder="Year" min="1900" max="2030" required>
+                            <select id="car-type" required>
+                                <option value="">Select Type</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Sedan">Sedan</option>
+                                <option value="Hatchback">Hatchback</option>
+                                <option value="Truck">Truck</option>
+                            </select>
+                            <select id="car-location" placeholder="Location" required>
+                                <option value="">Select Branch</option>
+                                <option value="Cairo">Cairo</option>
+                                <option value="Alex">Alex</option>
+                                <option value="Mansoura">Mansoura</option>
+                                <option value="Aswan">Aswan</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <input type="number" id="car-price" placeholder="Daily Price" min="1" required>
+                            <select id="car-status" required>
+                                <option value="">Availability</option>
+                                <option value="true">Available</option>
+                                <option value="false">Unavailable</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <input type="number" id="car-seats" placeholder="Seats" min="1" max="12" required>
+                            <select id="car-fuel" placeholder="Fuel Type" required>
+                                <option value="">Select Fuel Type</option>
+                                <option value="true">Petrol</option>
+                                <option value="false">Electric</option>
+                            </select>
+                            <select id="car-transmission" placeholder="Transmission" required>
+                                <option value="">Select Transmission</option>
+                                <option value="true">Automatic</option>
+                                <option value="false">Manual</option>
+                            </select>
+                        </div>
+
+                        <input type="file" id="car-image" name="image" accept="image/*" required>
+
+                        <div class="form-actions">
+                            <button type="button" id="save-car" class="btn primary">Save Car</button>
+                            <button type="button" id="clear-form" class="btn">Clear</button>
+                            <button type="button" id="cancel-edit" class="btn" style="display: none;">Cancel Edit</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="search-section">
+                        <input type="text" id="carSearch" placeholder="Search cars by brand, model, year, type, or branch..." class="search-input">
+                        <button id="searchCars" class="btn primary">Search</button>
+                        <button id="clearCarSearch" class="btn secondary">Clear</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <% if (cars.length !== 0) { %>
+                        <table id="cars-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Make & Model</th>
+                                    <th>Year</th>
+                                    <th>Type</th>
+                                    <th>Branch</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Image</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% cars.forEach((car,index)=> { %>
+                                    <tr data-car-id="<%= car._id %>">
+                                        <td><%= index + 1%></td>
+                                        <td><%= car.brand +' '+ car.model %></td>
+                                        <td><%= car.year || 'N/A' %></td>
+                                        <td><%= car.type %></td>
+                                        <td><%= car.location%></td>
+                                        <td>$<%= car.pricePerDay%></td>
+                                        <td>
+                                            <span class="status <%= car.availability ? 'active' : 'expired' %>">
+                                                <%= car.availability ? 'Available' : 'NotAvailable' %>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <% if (car.image && car.image.data) { %>
+                                                <img src="/api/cars/<%= car._id %>/image" alt="Car Image" class="car-thumbnail">
+                                            <% } else { %>
+                                                <span>No Image</span>
+                                            <% } %>
+                                        </td>
+                                        <td class="actions">
+                                            <button class="btn primary edit-car" data-id="<%= car._id %>">Edit</button>
+                                            <button class="btn danger delete-car" data-id="<%= car._id %>">Delete</button>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    <% } else { %>
+                        <h1>NO Cars to show!</h1>
+                    <% } %>
+                </div>
+            </section>
+        </main>
     </div>
     <script src="/js/Admin.js"></script>
+    <script src="/js/manage-cars.js"></script>
 </body>
-
 </html>

@@ -1,12 +1,12 @@
-<!-- Side Navigation -->
 <nav class="side-nav">
     <h2 class="logo">Admin Dashboard</h2>
     <ul class="nav-links">
+        <li><a href="/" class="home-link">🏠 Home</a></li>
         <li><a href="/AdminPage/manage-bookings" class="<%= currentPage === 'bookings' ? 'active' : '' %>">Bookings</a></li>
         <li><a href="/AdminPage/manage-cars" class="<%= currentPage === 'cars' ? 'active' : '' %>">Cars</a></li>
         <li><a href="/AdminPage/manage-users" class="<%= currentPage === 'users' ? 'active' : '' %>">Users</a></li>
         <li><a href="/AdminPage/manage-discounts" class="<%= currentPage === 'discounts' ? 'active' : '' %>">Discounts</a></li>
         <li><a href="/AdminPage/reports-section" class="<%= currentPage === 'reports' ? 'active' : '' %>">Reports</a></li>
     </ul>
-    <a href="/LoginPage/login" class="logout" id="logout">Logout</a>
+    <a href="#" class="logout" id="logout">Logout</a>
 </nav>

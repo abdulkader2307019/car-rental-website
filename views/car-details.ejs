@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Details - <%= car.brand %> <%= car.model %></title>
     <link rel="stylesheet" href="/css/details-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <a href="/" class="logo">CarVoo!!</a>
-        <nav class="navigation">
+        <nav id="navbar" class="navigation">
             <a href="/carlisting">Cars</a>
             <a href="/about">About Us</a>
             <a href="/LoginPage/login">Login</a>
@@ -148,13 +149,13 @@
     </footer>
 
     <script>
-        // Pass car data to JavaScript
         window.carData = {
             id: '<%= car._id %>',
             pricePerDay: '<%= car.pricePerDay %>',
             availability: '<%= car.availability %>'
         };
     </script>
+    <script src="/js/index.js"></script>
     <script src="/js/cardetails.js"></script>
 </body>
 </html>

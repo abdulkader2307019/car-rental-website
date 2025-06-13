@@ -1,15 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Elements
     const signupForm = document.getElementById('signup-form');
     const loginForm = document.getElementById('login-form');
     const leftSideText = document.getElementById('leftSideText');
 
-    // Check if user is already logged in
     if (localStorage.getItem('token')) {
         window.location.href = '/';
     }
 
-    // Form switching
     window.switchForm = (page) => {
         const pages = {
             login: document.getElementById('loginPage'),
@@ -25,13 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 : 'Drive Your Dreams,<br>Rent Your Ride Today';
         }
 
-        // Clear all error messages
         document.querySelectorAll('.error-message').forEach(el => {
             el.textContent = '';
         });
     };
 
-    // Validation functions
     const validateEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase());
     const validatePassword = password => password.length >= 6;
     
@@ -49,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Button loading state
     const setLoading = (button, isLoading) => {
         if (isLoading) {
             button.classList.add('button-loading');
@@ -60,11 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Handle successful authentication
     const handleAuthSuccess = (userData) => {
         console.log('Auth success:', userData);
         
-        // Store token and user data
         localStorage.setItem('token', userData.token);
         localStorage.setItem('userId', userData.id);
         localStorage.setItem('userName', `${userData.firstName} ${userData.lastName}`);
@@ -73,11 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('userLastName', userData.lastName);
         localStorage.setItem('isAdmin', userData.isAdmin || false);
         
-        // Redirect to home page
         window.location.href = '/';
     };
 
-    // Login form submission
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -89,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             console.log('Login attempt:', { email });
             
-            // Validate form
             let isValid = true;
             
             if (!validateEmail(email)) {
@@ -104,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (!isValid) return;
             
-            // Submit form
             try {
                 setLoading(loginButton, true);
                 
@@ -134,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Signup form submission
     if (signupForm) {
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -151,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             console.log('Signup attempt:', { firstName, lastName, email, phoneNumber });
             
-            // Validate form
             let isValid = true;
             
             if (!firstName) {
@@ -176,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (!isValid) return;
             
-            // Submit form
             try {
                 setLoading(signupButton, true);
                 
@@ -187,7 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     password,
                     phoneNumber,
                     age: age ? parseInt(age) : undefined,
-                    country: country || 'Egypt'
+                    country: country || 'Egypt',
+                    gender: 'Other'
                 };
                 
                 console.log('Sending signup request:', requestBody);
@@ -218,7 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Social login button handlers
     document.querySelectorAll('.social-btn.google').forEach(btn => {
         btn.addEventListener('click', () => {
             alert('Google login is not implemented in this demo');

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// define the Schema (the structure of the booking)
+
 const bookingSchema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   car: { type: mongoose.Schema.Types.ObjectId, ref: 'Car' },
@@ -14,8 +14,8 @@ const bookingSchema = new Schema({
 }
 , { timestamps: true });
 
-// Create a model based on that schema
+
 const Booking = mongoose.model("booking", bookingSchema);
 
-// export the model
+
 module.exports = Booking;

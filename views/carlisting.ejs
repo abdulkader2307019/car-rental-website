@@ -3,82 +3,93 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Car Listing</title>
+   <title>Car Listing - CarVoo!!</title>
    <link rel="stylesheet" href="/css/carlist.css">
+   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
    <header>
-     <h1>Car Listing</h1>
+     <a href="/" class="logo">CarVoo!!</a>
+     <nav id="navbar" class="navigation">
+         <a href="/carlisting">Cars</a>
+         <a href="/about">About Us</a>
+         <a href="/LoginPage/login">Login</a>
+     </nav>
    </header>
    
-   <section class="search-filter-section">
-     <input type="text" id="searchBar" placeholder="Search by car name..." class="search-bar">
-     <button id="searchButton" class="search-button">Search</button>
+   <main>
+     <h1>Car Listing</h1>
      
-     <div class="filters">
-       <select id="priceFilter" class="filter">
-         <option value="">Filter by Price</option>
-         <option value="low">Low to High</option>
-         <option value="high">High to Low</option>
-       </select>
-       <select id="typeFilter" class="filter">
-         <option value="">Filter by Type</option>
-         <option value="SUV">SUV</option>
-         <option value="Sedan">Sedan</option>
-         <option value="Hatchback">Hatchback</option>
-         <option value="Truck">Truck</option>
-       </select>
-       <select id="locationFilter" class="filter">
-         <option value="">Filter by Location</option>
-         <option value="Cairo">Cairo</option>
-         <option value="Alex">Alex</option>
-         <option value="Mansoura">Mansoura</option>
-         <option value="Aswan">Aswan</option>
-       </select>
-       <select id="availabilityFilter" class="filter">
-         <option value="">Filter by Availability</option>
-         <option value="true">Available</option>
-         <option value="false">Unavailable</option>
-       </select>
-     </div>
-   </section>
-   
-   <section class="car-listings">
-     <% if (cars && cars.length > 0) { %>
-       <% cars.forEach(car => { %>
-         <div class="car" 
-              data-name="<%= car.brand %> <%= car.model %>" 
-              data-price="<%= car.pricePerDay %>" 
-              data-type="<%= car.type %>" 
-              data-location="<%= car.location %>"
-              data-availability="<%= car.availability %>">
-           
-           <% if (car.image && car.image.data) { %>
-             <img src="/api/cars/<%= car._id %>/image" alt="<%= car.brand %> <%= car.model %>">
-           <% } else { %>
-             <img src="/img/car1.jpg" alt="<%= car.brand %> <%= car.model %>">
-           <% } %>
-           
-           <h2><%= car.brand %> <%= car.model %></h2>
-           <p class="price">$<%= car.pricePerDay %>/day</p>
-           <p class="location">Location: <%= car.location %></p>
-           <p class="availability <%= car.availability ? 'available' : 'unavailable' %>">
-             <%= car.availability ? 'Available' : 'Unavailable' %>
-           </p>
-           
-           <button class="view-details" data-car-id="<%= car._id %>">
-             View Details
-           </button>
-         </div>
-       <% }) %>
-     <% } else { %>
-       <div class="no-cars">
-         <h2>No cars available at the moment</h2>
-         <p>Please check back later or adjust your search filters.</p>
+     <section class="search-filter-section">
+       <input type="text" id="searchBar" placeholder="Search by car name..." class="search-bar">
+       <button id="searchButton" class="search-button">Search</button>
+       
+       <div class="filters">
+         <select id="priceFilter" class="filter">
+           <option value="">Filter by Price</option>
+           <option value="low">Low to High</option>
+           <option value="high">High to Low</option>
+         </select>
+         <select id="typeFilter" class="filter">
+           <option value="">Filter by Type</option>
+           <option value="SUV">SUV</option>
+           <option value="Sedan">Sedan</option>
+           <option value="Hatchback">Hatchback</option>
+           <option value="Truck">Truck</option>
+         </select>
+         <select id="locationFilter" class="filter">
+           <option value="">Filter by Location</option>
+           <option value="Cairo">Cairo</option>
+           <option value="Alex">Alex</option>
+           <option value="Mansoura">Mansoura</option>
+           <option value="Aswan">Aswan</option>
+         </select>
+         <select id="availabilityFilter" class="filter">
+           <option value="">Filter by Availability</option>
+           <option value="true">Available</option>
+           <option value="false">Unavailable</option>
+         </select>
        </div>
-     <% } %>
-   </section>
+     </section>
+     
+     <section class="car-listings">
+       <% if (cars && cars.length > 0) { %>
+         <% cars.forEach(car => { %>
+           <div class="car" 
+                data-name="<%= car.brand %> <%= car.model %>" 
+                data-price="<%= car.pricePerDay %>" 
+                data-type="<%= car.type %>" 
+                data-location="<%= car.location %>"
+                data-availability="<%= car.availability %>">
+             
+             <% if (car.image && car.image.data) { %>
+               <img src="/api/cars/<%= car._id %>/image" alt="<%= car.brand %> <%= car.model %>">
+             <% } else { %>
+               <img src="/img/car1.jpg" alt="<%= car.brand %> <%= car.model %>">
+             <% } %>
+             
+             <h2><%= car.brand %> <%= car.model %></h2>
+             <p class="price">$<%= car.pricePerDay %>/day</p>
+             <p class="location">Location: <%= car.location %></p>
+             <p class="availability <%= car.availability ? 'available' : 'unavailable' %>">
+               <%= car.availability ? 'Available' : 'Unavailable' %>
+             </p>
+             
+             <button class="view-details" data-car-id="<%= car._id %>">
+               View Details
+             </button>
+           </div>
+         <% }) %>
+       <% } else { %>
+         <div class="no-cars">
+           <h2>No cars available at the moment</h2>
+           <p>Please check back later or adjust your search filters.</p>
+         </div>
+       <% } %>
+     </section>
+   </main>
 
+   <script src="/js/index.js"></script>
    <script src="/js/carlisting.js"></script>
 </body>
 </html>

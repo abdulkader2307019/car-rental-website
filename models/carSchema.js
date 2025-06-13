@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// define the Schema (the structure of the car)
+
 const carSchema = new Schema({
   brand: String,
   model: String,
   year: Number,
-  type: String, // e.g., SUV, sedan
+  type: String,
   image: {
     data: Buffer,
     contentType: String
@@ -17,9 +17,9 @@ const carSchema = new Schema({
   specs: { seats: Number, fuel: String, transmission: String }
 }, { timestamps: true });
 
-// Create a model based on that schema
+
 const Car = mongoose.model("Car", carSchema);
 
 
-// export the model
+
 module.exports = Car;
