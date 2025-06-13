@@ -43,8 +43,8 @@ const userSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ['Male', 'Female', 'Other'],
-    default: 'Other'
+    enum: ['male', 'female'],
+    lowercase: true
   },
   memberSince: {
     type: Date,

@@ -10,12 +10,12 @@ document.getElementById('save-car').addEventListener('click', async () => {
     const model = document.getElementById("car-model").value;
     const type = document.getElementById("car-type").value;
     const location = document.getElementById("car-location").value;
-    const pricePerDay = document.getElementById("car-price").value;
+    const pricePerDay = Number(document.getElementById("car-price").value);
     const availability = document.getElementById("car-status").value;
-    const seats = document.getElementById("car-seats").value;
+    const seats = Number(document.getElementById("car-seats").value);
     const fuel = document.getElementById("car-fuel").value;
     const transmission = document.getElementById("car-transmission").value;
-    const year = document.getElementById("car-year").value;
+    const year = parseInt(document.getElementById("car-year").value);
     const imageInput = document.getElementById("car-image");
 
     // Validate required fields
@@ -207,31 +207,182 @@ document.addEventListener('DOMContentLoaded', () => {
     const priceInput = document.getElementById('car-price');
     const seatsInput = document.getElementById('car-seats');
 
-    yearInput.addEventListener('input', (e) => {
-        const year = parseInt(e.target.value);
-        const currentYear = new Date().getFullYear();
-        if (year && (year < 1900 || year > currentYear + 5)) {
-            e.target.setCustomValidity(`Year must be between 1900 and ${currentYear + 5}`);
-        } else {
-            e.target.setCustomValidity('');
-        }
-    });
+    if (yearInput) {
+        yearInput.addEventListener('input', (e) => {
+            const year = parseInt(e.target.value);
+            const currentYear = new Date().getFullYear();
+            if (year && (year < 1900 || year > currentYear + 5)) {
+                e.target.setCustomValidity(`Year must be between 1900 and ${currentYear + 5}`);
+            } else {
+                e.target.setCustomValidity('');
+            }
+        });
+    }
 
-    priceInput.addEventListener('input', (e) => {
-        const price = parseFloat(e.target.value);
-        if (price && price <= 0) {
-            e.target.setCustomValidity('Price must be greater than 0');
-        } else {
-            e.target.setCustomValidity('');
-        }
-    });
+    if (priceInput) {
+        priceInput.addEventListener('input', (e) => {
+            const price = parseFloat(e.target.value);
+            if (price && price <= 0) {
+                e.target.setCustomValidity('Price must be greater than 0');
+            } else {
+                e.target.setCustomValidity('');
+            }
+        });
+    }
 
-    seatsInput.addEventListener('input', (e) => {
-        const seats = parseInt(e.target.value);
-        if (seats && (seats < 1 || seats > 12)) {
-            e.target.setCustomValidity('Seats must be between 1 and 12');
-        } else {
-            e.target.setCustomValidity('');
-        }
-    });
+    if (seatsInput) {
+        seatsInput.addEventListener('input', (e) => {
+            const seats = parseInt(e.target.value);
+            if (seats && (seats < 1 || seats > 12)) {
+                e.target.setCustomValidity('Seats must be between 1 and 12');
+            } else {
+                e.target.setCustomValidity('');
+            }
+        });
+    }
+
+    // Load dashboard stats for reports page
+    if (document.getElementById('total-bookings')) {
+        loadDashboardStats();
+    }
+
+    // Logout functionality
+    const logoutBtn = document.getElementById('logout');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = '/LoginPage/login';
+        });
+    }
 });
+
+// Dashboard stats functionality
+async function loadDashboardStats() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/admin/stats', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            const { stats, details } = result;
+
+            // Update stat cards
+            document.getElementById('total-bookings').textContent = stats.totalBookings;
+            document.getElementById('active-rentals').textContent = stats.activeRentals;
+            document.getElementById('total-revenue').textContent = `$${stats.totalRevenue}`;
+            document.getElementById('available-cars').textContent = stats.availableCars;
+
+            // Add click handlers for stat cards
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const target = this.getAttribute('data-target');
+                    showReportDetails(target, details);
+                });
+            });
+        }
+    } catch (error) {
+        console.error('Error loading dashboard stats:', error);
+    }
+}
+
+function showReportDetails(target, details) {
+    // Hide all report details
+    document.querySelectorAll('.report-details').forEach(detail => {
+        detail.classList.add('hidden');
+    });
+
+    // Show selected report details
+    const targetElement = document.getElementById(target);
+    if (targetElement) {
+        targetElement.classList.remove('hidden');
+
+        // Populate data based on target
+        switch(target) {
+            case 'bookings-details':
+                populateBookingsDetails(details.bookings);
+                break;
+            case 'active-rentals-details':
+                populateActiveRentalsDetails(details.activeRentals);
+                break;
+            case 'revenue-details':
+                populateRevenueDetails(details.revenueData);
+                break;
+            case 'available-cars-details':
+                populateAvailableCarsDetails(details.availableCars);
+                break;
+        }
+    }
+}
+
+function populateBookingsDetails(bookings) {
+    const tbody = document.getElementById('bookings-details-body');
+    tbody.innerHTML = '';
+
+    bookings.forEach(booking => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${booking._id.substring(0, 8)}...</td>
+            <td>${booking.car ? `${booking.car.brand} ${booking.car.model}` : 'N/A'}</td>
+            <td>${booking.user ? `${booking.user.firstName} ${booking.user.lastName}` : 'N/A'}</td>
+            <td>${new Date(booking.startDate).toLocaleDateString()} - ${new Date(booking.endDate).toLocaleDateString()}</td>
+            <td>${booking.status}</td>
+            <td>$${booking.totalPrice || 'N/A'}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function populateActiveRentalsDetails(activeRentals) {
+    const tbody = document.getElementById('active-rentals-details-body');
+    tbody.innerHTML = '';
+
+    activeRentals.forEach(rental => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${rental._id.substring(0, 8)}...</td>
+            <td>${rental.car ? `${rental.car.brand} ${rental.car.model}` : 'N/A'}</td>
+            <td>${rental.user ? `${rental.user.firstName} ${rental.user.lastName}` : 'N/A'}</td>
+            <td>${new Date(rental.startDate).toLocaleDateString()} - ${new Date(rental.endDate).toLocaleDateString()}</td>
+            <td>$${rental.totalPrice || 'N/A'}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function populateRevenueDetails(revenueData) {
+    const tbody = document.getElementById('revenue-details-body');
+    tbody.innerHTML = '';
+
+    revenueData.forEach(data => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${data.car}</td>
+            <td>${data.count}</td>
+            <td>$${data.revenue}</td>
+            <td>$${data.pricePerDay}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function populateAvailableCarsDetails(availableCars) {
+    const tbody = document.getElementById('available-cars-details-body');
+    tbody.innerHTML = '';
+
+    availableCars.forEach(car => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${car._id.substring(0, 8)}...</td>
+            <td>${car.brand} ${car.model}</td>
+            <td>${car.year || 'N/A'}</td>
+            <td>$${car.pricePerDay}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}

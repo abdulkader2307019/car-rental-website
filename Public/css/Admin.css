@@ -114,6 +114,30 @@ header {
     font-weight: bold;
 }
 
+/* Search Section */
+.search-section {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    flex: 1;
+    padding: 10px;
+    background: var(--gunmetal);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: 14px;
+}
+
+.search-bar:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+}
+
 /* Cards & Tables */
 .card {
     background: var(--card-bg);
@@ -174,7 +198,7 @@ tr:hover {
     color: var(--gold);
 }
 
-input, select {
+input, select, textarea {
     width: 100%;
     padding: 10px;
     background: var(--gunmetal);
@@ -183,7 +207,7 @@ input, select {
     color: var(--text);
 }
 
-input:focus, select:focus {
+input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--gold);
     box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
@@ -216,6 +240,17 @@ input:focus, select:focus {
 .btn.primary:hover {
     background: #c9a227;
     transform: translateY(-2px);
+}
+
+.btn.secondary {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+}
+
+.btn.secondary:hover {
+    background: var(--gold);
+    color: var(--card-bg);
 }
 
 .btn.danger {
@@ -404,6 +439,14 @@ input:focus, select:focus {
     .modal-content {
         margin: 20px;
         width: calc(100% - 40px);
+    }
+
+    .search-section {
+        flex-direction: column;
+    }
+
+    .search-bar {
+        margin-bottom: 10px;
     }
 }
 

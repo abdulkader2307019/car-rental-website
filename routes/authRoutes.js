@@ -20,13 +20,21 @@ router.post('/register', async (req, res) => {
   try {
     console.log('Registration request received:', req.body);
     
-    const { firstName, lastName, email, password, phoneNumber, age, country } = req.body;
+    const { firstName, lastName, email, password, phoneNumber, age, country, gender } = req.body;
 
     // Validate required fields
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({ 
         success: false,
         message: 'Please provide all required fields: firstName, lastName, email, password'
+      });
+    }
+
+    // Validate gender if provided
+    if (gender && !['male', 'female'].includes(gender.toLowerCase())) {
+      return res.status(400).json({
+        success: false,
+        message: 'Gender must be either male or female'
       });
     }
 
@@ -40,7 +48,7 @@ router.post('/register', async (req, res) => {
     }
 
     // Create new user
-    const user = await User.create({
+    const userData = {
       firstName: firstName.trim(),
       lastName: lastName.trim(),
       email: email.toLowerCase().trim(),
@@ -48,7 +56,13 @@ router.post('/register', async (req, res) => {
       phoneNumber: phoneNumber || '',
       age: age ? parseInt(age) : undefined,
       country: country || 'Egypt'
-    });
+    };
+
+    if (gender) {
+      userData.gender = gender.toLowerCase();
+    }
+
+    const user = await User.create(userData);
 
     console.log('User created successfully:', user._id);
 

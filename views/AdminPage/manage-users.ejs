@@ -14,11 +14,22 @@
 
             <!-- Main Content -->
             <main class="main-content">
-                <!-- /////////////header section////////////// -->
+                <!-- Header section -->
                 <%- include('../partials/header.ejs') %>
+                    
                     <!-- Users Section -->
                     <section id="users" class="content-section">
                         <h2>Manage Users</h2>
+                        
+                        <!-- Search Bar -->
+                        <div class="card">
+                            <div class="search-section">
+                                <input type="text" id="userSearchBar" placeholder="Search by name, email, or phone..." class="search-bar">
+                                <button id="userSearchButton" class="btn primary">Search</button>
+                                <button id="userClearSearch" class="btn secondary">Clear</button>
+                            </div>
+                        </div>
+
                         <div class="card">
                             <% if (users.length !== 0) { %>
                                 <table id="users-table">
@@ -27,39 +38,81 @@
                                             <th>#</th>
                                             <th>Name</th>
                                             <th>Email</th>
-                                            <th>phoneNumber</th>
-                                            <th>age</th>
-                                            <th>country</th>
+                                            <th>Phone Number</th>
+                                            <th>Age</th>
+                                            <th>Country</th>
                                             <th>Gender</th>
-                                            
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <% users.forEach((user,index) => { %>
-                                            <tr>
+                                            <tr data-user-id="<%= user._id %>">
                                                 <td><%= index+1 %></td>
                                                 <td><%= user.firstName +' '+user.lastName %></td>
                                                 <td><%= user.email %></td>
-                                                <td><%= user.phoneNumber %></td>
-                                                <td><%= user.age %></td>                                       
-                                                <td><%= user.country %></td>
-                                                <td><%= user.gender %></td>
-
-                                                
+                                                <td><%= user.phoneNumber || 'N/A' %></td>
+                                                <td><%= user.age || 'N/A' %></td>                                       
+                                                <td><%= user.country || 'N/A' %></td>
+                                                <td><%= user.gender ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1) : 'N/A' %></td>
+                                                <td class="actions">
+                                                    <button class="btn primary edit-user" data-id="<%= user._id %>">Edit</button>
+                                                    <button class="btn danger delete-user" data-id="<%= user._id %>">Delete</button>
+                                                </td>
                                             </tr>
-                                         
                                         <% }) %>
                                     </tbody>
                                 </table>
                                 <% } else { %>
                                     <h1>No users to show</h1>
-
-                                    <% } %>
+                                <% } %>
                         </div>
                     </section>
             </main>
     </div>
+
+    <!-- Edit User Modal -->
+    <div id="edit-user-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Edit User</h3>
+            <form id="edit-user-form">
+                <input type="hidden" id="edit-user-id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-user-first-name">First Name</label>
+                        <input type="text" id="edit-user-first-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-user-last-name">Last Name</label>
+                        <input type="text" id="edit-user-last-name" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-user-email">Email</label>
+                    <input type="email" id="edit-user-email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edit-user-gender">Gender</label>
+                    <select id="edit-user-gender">
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Update User</button>
+                    <button type="button" id="cancel-user-edit" class="btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="/js/Admin.js"></script>
+    <script src="/js/users.js"></script>
 </body>
 
 </html>
