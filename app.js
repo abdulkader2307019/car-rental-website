@@ -2,16 +2,20 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const path = require('path');
+const cookieParser = require('cookie-parser');
+const sessionMiddleware = require('./middleware/sessionMiddleware');
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
-app.set('view engine', 'ejs');
 app.use(express.json());
+app.use(cookieParser());
+app.use(sessionMiddleware);
+app.set('view engine', 'ejs');
 app.set("views", path.join(__dirname, "views"));
 
 require('dotenv').config();
 const port = process.env.PORT || 3000;
-const DB_URL = process.env.MONGODB_URI;
+const DB_URL = process.env.MONGODB_URI ;
 
 const Car = require('./models/carSchema');
 const User = require('./models/User');
@@ -98,7 +102,8 @@ app.get('/AdminPage/manage-bookings', async (req, res) => {
   try {
     const bookings = await Booking.find()
       .populate('user', 'firstName lastName email')
-      .populate('car', 'brand model');
+      .populate('car', 'brand model')
+      .sort({ createdAt: -1 });
     res.render('AdminPage/manage-bookings', { bookings, currentPage: 'bookings' });
   } catch (err) {
     console.log(err);
@@ -108,7 +113,7 @@ app.get('/AdminPage/manage-bookings', async (req, res) => {
 
 app.get('/AdminPage/manage-cars', async (req, res) => {
   try {
-    const cars = await Car.find();
+    const cars = await Car.find().sort({ createdAt: -1 });
     res.render('AdminPage/manage-cars', { cars, currentPage: 'cars' });
   } catch (err) {
     console.log(err);
@@ -118,7 +123,7 @@ app.get('/AdminPage/manage-cars', async (req, res) => {
 
 app.get('/AdminPage/manage-users', async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().sort({ createdAt: -1 });
     res.render('AdminPage/manage-users', { users, currentPage: 'users' });
   } catch (err) {
     console.log(err);
@@ -128,7 +133,7 @@ app.get('/AdminPage/manage-users', async (req, res) => {
 
 app.get('/AdminPage/manage-discounts', async (req, res) => {
   try {
-    const discounts = await Discount.find();
+    const discounts = await Discount.find().sort({ createdAt: -1 });
     res.render('AdminPage/manage-discounts', { discounts, currentPage: 'discounts' });
   } catch (err) {
     console.log(err);
@@ -140,7 +145,9 @@ app.get('/AdminPage/reports-section', async (req, res) => {
   try {
     const users = await User.find();
     const cars = await Car.find();
-    const bookings = await Booking.find();
+    const bookings = await Booking.find()
+      .populate('user', 'firstName lastName email')
+      .populate('car', 'brand model pricePerDay');
     res.render('AdminPage/reports-section', { 
       users, 
       cars, 

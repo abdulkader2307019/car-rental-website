@@ -1,113 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Rental Admin</title>
+    <title>Car Rental Admin - Reports</title>
     <link rel="stylesheet" href="/css/Admin.css">
 </head>
-
 <body>
     <div class="dashboard">
         <%- include('../partials/side-bar.ejs') %>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- /////////////header section////////////// -->
-             <%- include('../partials/header.ejs') %>
-<!-- Reports Section -->
+            <%- include('../partials/header.ejs') %>
+            
             <section id="reports" class="content-section">
                 <h2>Reports</h2>
                 <div class="card">
                     <div class="stats-grid">
                         <div class="stat-card" data-target="bookings-details">
                             <h3>Total Bookings</h3>
-                            <p id="total-bookings">0</p>
+                            <p id="total-bookings"><%= bookings.length %></p>
                         </div>
                         <div class="stat-card" data-target="active-rentals-details">
                             <h3>Active Rentals</h3>
-                            <p id="active-rentals">0</p>
+                            <p id="active-rentals"><%= bookings.filter(b => b.status === 'confirmed').length %></p>
                         </div>
                         <div class="stat-card" data-target="revenue-details">
                             <h3>Total Revenue</h3>
-                            <p id="total-revenue">$0</p>
+                            <p id="total-revenue">$<%= bookings.reduce((sum, b) => sum + (b.totalPrice || 0), 0) %></p>
                         </div>
                         <div class="stat-card" data-target="available-cars-details">
                             <h3>Available Cars</h3>
-                            <p id="available-cars">0</p>
+                            <p id="available-cars"><%= cars.filter(c => c.availability).length %></p>
                         </div>
                     </div>
 
-                    <!-- Report Details Tables -->
                     <div id="bookings-details" class="report-details hidden">
                         <h3>Booking Details</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Car</th>
-                                    <th>User</th>
-                                    <th>Dates</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="bookings-details-body"></tbody>
-                        </table>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Car</th>
+                                        <th>User</th>
+                                        <th>Dates</th>
+                                        <th>Status</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% bookings.forEach((booking, index) => { %>
+                                        <tr>
+                                            <td><%= index + 1 %></td>
+                                            <td><%= booking.car ? `${booking.car.brand} ${booking.car.model}` : 'N/A' %></td>
+                                            <td><%= booking.user ? `${booking.user.firstName} ${booking.user.lastName}` : 'N/A' %></td>
+                                            <td><%= new Date(booking.startDate).toLocaleDateString() %> - <%= new Date(booking.endDate).toLocaleDateString() %></td>
+                                            <td><%= booking.status %></td>
+                                            <td>$<%= booking.totalPrice || 0 %></td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div id="active-rentals-details" class="report-details hidden">
                         <h3>Active Rental Details</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Car</th>
-                                    <th>User</th>
-                                    <th>Dates</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="active-rentals-details-body"></tbody>
-                        </table>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Car</th>
+                                        <th>User</th>
+                                        <th>Dates</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% bookings.filter(b => b.status === 'confirmed').forEach((booking, index) => { %>
+                                        <tr>
+                                            <td><%= index + 1 %></td>
+                                            <td><%= booking.car ? `${booking.car.brand} ${booking.car.model}` : 'N/A' %></td>
+                                            <td><%= booking.user ? `${booking.user.firstName} ${booking.user.lastName}` : 'N/A' %></td>
+                                            <td><%= new Date(booking.startDate).toLocaleDateString() %> - <%= new Date(booking.endDate).toLocaleDateString() %></td>
+                                            <td>$<%= booking.totalPrice || 0 %></td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div id="revenue-details" class="report-details hidden">
                         <h3>Revenue Details</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Car</th>
-                                    <th>Bookings Count</th>
-                                    <th>Total Revenue</th>
-                                    <th>Daily Price</th>
-                                </tr>
-                            </thead>
-                            <tbody id="revenue-details-body"></tbody>
-                        </table>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Car</th>
+                                        <th>Bookings Count</th>
+                                        <th>Total Revenue</th>
+                                        <th>Daily Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% 
+                                    const carRevenue = {};
+                                    bookings.forEach(booking => {
+                                        if (booking.car) {
+                                            const carKey = `${booking.car.brand} ${booking.car.model}`;
+                                            if (!carRevenue[carKey]) {
+                                                carRevenue[carKey] = {
+                                                    count: 0,
+                                                    revenue: 0,
+                                                    dailyPrice: booking.car.pricePerDay || 0
+                                                };
+                                            }
+                                            carRevenue[carKey].count++;
+                                            carRevenue[carKey].revenue += booking.totalPrice || 0;
+                                        }
+                                    });
+                                    
+                                    Object.entries(carRevenue).forEach(([carName, data]) => { %>
+                                        <tr>
+                                            <td><%= carName %></td>
+                                            <td><%= data.count %></td>
+                                            <td>$<%= data.revenue %></td>
+                                            <td>$<%= data.dailyPrice %></td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div id="available-cars-details" class="report-details hidden">
                         <h3>Available Cars</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Make & Model</th>
-                                    <th>Year</th>
-                                    <th>Daily Price</th>
-                                </tr>
-                            </thead>
-                            <tbody id="available-cars-details-body"></tbody>
-                        </table>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Make & Model</th>
+                                        <th>Year</th>
+                                        <th>Daily Price</th>
+                                        <th>Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% cars.filter(c => c.availability).forEach((car, index) => { %>
+                                        <tr>
+                                            <td><%= index + 1 %></td>
+                                            <td><%= car.brand %> <%= car.model %></td>
+                                            <td><%= car.year || 'N/A' %></td>
+                                            <td>$<%= car.pricePerDay %></td>
+                                            <td><%= car.location %></td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </section>
-
-                        </main>
+        </main>
     </div>
     <script src="/js/Admin.js"></script>
+    <script src="/js/reports.js"></script>
 </body>
-
 </html>
