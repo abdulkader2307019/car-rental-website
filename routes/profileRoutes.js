@@ -5,11 +5,10 @@ const Booking = require('../models/bookingSchema');
 const { protect } = require('../middleware/authMiddleware');
 const multer = require('multer');
 
-// Configure multer for profile image uploads
 const storage = multer.memoryStorage();
 const upload = multer({ 
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
       cb(null, true);
@@ -19,9 +18,6 @@ const upload = multer({
   }
 });
 
-// @route   GET /api/profile
-// @desc    Get current user profile with booking history
-// @access  Private
 router.get('/', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-password');
@@ -33,7 +29,6 @@ router.get('/', protect, async (req, res) => {
       });
     }
 
-    // Get user's booking history
     const bookings = await Booking.find({ user: req.user._id })
       .populate('car', 'brand model pricePerDay')
       .sort({ createdAt: -1 });
@@ -54,20 +49,20 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// @route   PUT /api/profile
-// @desc    Update user profile
-// @access  Private
 router.put('/', protect, upload.single('profileImage'), async (req, res) => {
   try {
-    const { firstName, lastName, country } = req.body;
+    const { firstName, lastName, email, phoneNumber, age, country, gender } = req.body;
     
-    const updateData = {
-      firstName: firstName || req.user.firstName,
-      lastName: lastName || req.user.lastName,
-      country: country || req.user.country
-    };
+    const updateData = {};
     
-    // Handle profile image upload
+    if (firstName) updateData.firstName = firstName;
+    if (lastName) updateData.lastName = lastName;
+    if (email) updateData.email = email;
+    if (phoneNumber) updateData.phoneNumber = phoneNumber;
+    if (age) updateData.age = parseInt(age);
+    if (country) updateData.country = country;
+    if (gender) updateData.gender = gender;
+    
     if (req.file) {
       updateData.profileImage = {
         data: req.file.buffer,
@@ -101,9 +96,6 @@ router.put('/', protect, upload.single('profileImage'), async (req, res) => {
   }
 });
 
-// @route   GET /api/profile/image
-// @desc    Get user profile image
-// @access  Private
 router.get('/image', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);

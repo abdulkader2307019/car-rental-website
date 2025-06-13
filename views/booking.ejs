@@ -4,123 +4,179 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book <%= car.brand %> <%= car.model %></title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/booking.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <a href="/" class="logo">Car Rental</a>
+        <a href="/" class="logo">CarVoo!!</a>
         <nav class="navigation">
             <a href="/carlisting">Cars</a>
-            <a href="/LoginPage/login">Login</a>
-            <a href="/AdminPage/manage-bookings">Admin</a>
+            <a href="/about">About Us</a>
+            <a href="/profile">Profile</a>
         </nav>
     </header>
 
-    <section class="bookingPage">
-        <div class="carPhoto">
+    <div class="booking-container">
+        <!-- Car Display Section -->
+        <div class="car-display">
             <% if (car.image && car.image.data) { %>
-                <img src="/api/cars/<%= car._id %>/image" alt="<%= car.brand %> <%= car.model %>">
+                <img src="/api/cars/<%= car._id %>/image" alt="<%= car.brand %> <%= car.model %>" class="car-image">
             <% } else { %>
-                <img src="/img/car1.jpg" alt="<%= car.brand %> <%= car.model %>">
+                <img src="/img/car1.jpg" alt="<%= car.brand %> <%= car.model %>" class="car-image">
             <% } %>
-        </div>
-        
-        <div class="car-info">
-            <h2><%= car.brand %> <%= car.model %></h2>
-            <p>Type: <%= car.type %> | Seats: <%= car.specs.seats %> | Fuel: <%= car.specs.fuel %></p>
-            <p>Location: <%= car.location %></p>
+            
+            <div class="car-info">
+                <h2><%= car.brand %> <%= car.model %></h2>
+                <div class="car-specs">
+                    <div class="spec-item">Type: <%= car.type %></div>
+                    <div class="spec-item">Seats: <%= car.specs.seats %></div>
+                    <div class="spec-item">Fuel: <%= car.specs.fuel %></div>
+                    <div class="spec-item">Transmission: <%= car.specs.transmission %></div>
+                    <div class="spec-item">Location: <%= car.location %></div>
+                    <div class="spec-item">Daily Rate: $<%= car.pricePerDay %></div>
+                </div>
+            </div>
         </div>
 
-        <div class="form">
+        <!-- Booking Form Section -->
+        <div class="booking-form">
+            <h3>Complete Your Booking</h3>
+            
             <form id="bookingForm">
                 <input type="hidden" id="carId" value="<%= car._id %>">
                 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="pickup">Pickup Location</label>
-                        <input type="text" id="pickup" name="pickup" placeholder="Enter pickup location" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="pickupDate">Pickup Date</label>
-                        <input type="date" id="pickupDate" name="pickup-date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="pickupTime">Pickup Time</label>
-                        <input type="time" id="pickupTime" name="pickup-time" required>
+                <!-- Pickup Details -->
+                <div class="form-section">
+                    <h4>Pickup Details</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pickupLocation">Pickup Location</label>
+                            <select id="pickupLocation" name="pickup-location" required>
+                                <option value="">Select pickup location</option>
+                                <option value="Cairo Downtown">Cairo Downtown</option>
+                                <option value="Cairo Airport">Cairo Airport</option>
+                                <option value="Alexandria Center">Alexandria Center</option>
+                                <option value="Alexandria Port">Alexandria Port</option>
+                                <option value="Mansoura Station">Mansoura Station</option>
+                                <option value="Mansoura University">Mansoura University</option>
+                                <option value="Aswan Airport">Aswan Airport</option>
+                                <option value="Aswan Hotel District">Aswan Hotel District</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pickupDate">Pickup Date</label>
+                            <input type="date" id="pickupDate" name="pickup-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pickupTime">Pickup Time</label>
+                            <input type="time" id="pickupTime" name="pickup-time" required>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="return">Return Location</label>
-                        <input type="text" id="return" name="return" placeholder="Enter return location" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="returnDate">Return Date</label>
-                        <input type="date" id="returnDate" name="return-date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="returnTime">Return Time</label>
-                        <input type="time" id="returnTime" name="return-time" required>
+                <!-- Return Details -->
+                <div class="form-section">
+                    <h4>Return Details</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="returnLocation">Return Location</label>
+                            <select id="returnLocation" name="return-location" required>
+                                <option value="">Select return location</option>
+                                <option value="Cairo Downtown">Cairo Downtown</option>
+                                <option value="Cairo Airport">Cairo Airport</option>
+                                <option value="Alexandria Center">Alexandria Center</option>
+                                <option value="Alexandria Port">Alexandria Port</option>
+                                <option value="Mansoura Station">Mansoura Station</option>
+                                <option value="Mansoura University">Mansoura University</option>
+                                <option value="Aswan Airport">Aswan Airport</option>
+                                <option value="Aswan Hotel District">Aswan Hotel District</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnDate">Return Date</label>
+                            <input type="date" id="returnDate" name="return-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="returnTime">Return Time</label>
+                            <input type="time" id="returnTime" name="return-time" required>
+                        </div>
                     </div>
                 </div>
 
-                <div class="discount-section">
+                <!-- Rental Period -->
+                <div class="form-section">
+                    <h4>Rental Period</h4>
                     <div class="form-group">
-                        <label for="discountCode">Discount Code (Optional)</label>
-                        <input type="text" id="discountCode" name="discount" placeholder="Enter discount code">
-                    </div>
-                    <button type="button" id="applyDiscount" class="btn-secondary">Apply Discount</button>
-                </div>
-
-                <div class="priceANDbtn">
-                    <div class="rental-period">
-                        <label for="plan">Rental Period:</label>
+                        <label for="plan">Select Plan</label>
                         <select id="plan">
                             <option value="daily">Daily - $<%= car.pricePerDay %></option>
                             <option value="weekly">Weekly - $<%= (car.pricePerDay * 7 * 0.9).toFixed(0) %> (10% off)</option>
                             <option value="monthly">Monthly - $<%= (car.pricePerDay * 30 * 0.8).toFixed(0) %> (20% off)</option>
                         </select>
                     </div>
-
-                    <div class="price-display">
-                        <h3>Total Price: $<span id="priceCalc"><%= car.pricePerDay %></span></h3>
-                        <p id="priceBreakdown">Base price for 1 day</p>
-                    </div>
-
-                    <button type="submit" id="bookNowBtn" class="btn-primary">Book Now</button>
                 </div>
+
+                <!-- Discount Section -->
+                <div class="form-section">
+                    <h4>Discount Code (Optional)</h4>
+                    <div class="discount-section">
+                        <div class="form-group">
+                            <input type="text" id="discountCode" name="discount" placeholder="Enter discount code">
+                        </div>
+                        <button type="button" id="applyDiscount" class="btn-secondary">Apply</button>
+                    </div>
+                </div>
+
+                <!-- Pricing Summary -->
+                <div class="pricing-summary">
+                    <h4>Booking Summary</h4>
+                    <div class="price-breakdown">
+                        <span>Base Price:</span>
+                        <span id="basePrice">$<%= car.pricePerDay %></span>
+                    </div>
+                    <div class="price-breakdown">
+                        <span>Duration:</span>
+                        <span id="duration">1 day(s)</span>
+                    </div>
+                    <div class="price-breakdown" id="discountRow" style="display: none;">
+                        <span>Discount:</span>
+                        <span id="discountAmount">-$0</span>
+                    </div>
+                    <div class="total-price">
+                        <span>Total Price:</span>
+                        <span id="totalPrice">$<%= car.pricePerDay %></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Book Now</button>
             </form>
         </div>
-    </section>
+    </div>
 
-    <footer>
-        <div class="copyRights">
-            <p>&copy; 2025 YourWebsite.com. All rights reserved.</p>
+    <!-- Receipt Modal -->
+    <div id="receiptModal" class="receipt-modal hidden">
+        <div class="receipt-content">
+            <div class="receipt-header">
+                <h3>Booking Receipt</h3>
+                <p>Please review your booking details</p>
+            </div>
+            
+            <div class="receipt-details" id="receiptDetails">
+                <!-- Receipt details will be populated here -->
+            </div>
+            
+            <div class="receipt-actions">
+                <button id="confirmBooking" class="btn-confirm">Confirm Booking</button>
+                <button id="cancelBooking" class="btn-cancel">Cancel</button>
+            </div>
         </div>
-        <hr>
-        <div class="contacts">
-            <a href="mailto:abdulkader2307019@miuegypt.edu.eg">
-                Email: abdulkader2307019@miuegypt.edu.eg
-            </a>
-            <a href="tel:01150318798">
-                Call Us: 01150318798
-            </a>
-            <a href="https://facebook.com">Facebook</a>
-            <a href="https://twitter.com">Twitter</a>
-            <a href="https://instagram.com">Instagram</a>
-        </div>
-        <hr>
-        <div class="top">
-            <a href="#">Back to the Top ↑</a>
-        </div>
-    </footer>
+    </div>
 
     <script>
-        // Pass car data to JavaScript
         window.carData = {
             id: '<%= car._id %>',
-            pricePerDay: '<%= car.pricePerDay %>',
+            pricePerDay: <%= car.pricePerDay %>,
             brand: '<%= car.brand %>',
             model: '<%= car.model %>'
         };

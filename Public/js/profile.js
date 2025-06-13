@@ -1,12 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if user is logged in
     const token = localStorage.getItem('token');
     if (!token) {
         window.location.href = '/LoginPage/login';
         return;
     }
 
-    // DOM Elements
     const profileImage = document.getElementById('profileImage');
     const profileName = document.getElementById('profileName');
     const profileCountry = document.getElementById('profileCountry');
@@ -20,14 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentRating = 0;
 
-    // Format date function
     function formatDate(dateString) {
         if (!dateString) return 'Not specified';
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString('en-US', options);
     }
 
-    // Load profile data
     async function loadProfileData() {
         try {
             console.log('Loading profile data...');
@@ -52,9 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             const data = result.data || result;
             
-            // Update profile info
             if (data.profileImage && data.profileImage.data) {
-                profileImage.src = '/api/profile/image';
+                profileImage.src = '/api/profile/image?' + new Date().getTime();
+            } else {
+                profileImage.src = '/img/44.jpg';
             }
             
             if (profileName) {
@@ -70,18 +67,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 profileMemberSince.textContent = memberSince ? new Date(memberSince).getFullYear() : 'Not specified';
             }
             
-            // Load booking history
             loadBookingHistory(data.bookingHistory || []);
             
         } catch (error) {
             console.error('Error loading profile:', error);
             
-            // Try to get user data from localStorage as fallback
             const userFirstName = localStorage.getItem('userFirstName');
             const userLastName = localStorage.getItem('userLastName');
             
             if (userFirstName && userLastName && profileName) {
                 profileName.textContent = `${userFirstName} ${userLastName}`;
+            }
+            
+            if (profileImage) {
+                profileImage.src = '/img/44.jpg';
             }
             
             if (bookingHistoryContainer) {
@@ -90,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Load booking history
     function loadBookingHistory(bookings) {
         if (!bookingHistoryContainer) return;
 
@@ -140,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
             bookingHistoryContainer.appendChild(bookingCard);
         });
 
-        // Add event listeners for review buttons
         document.querySelectorAll('.review-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const carId = e.target.getAttribute('data-car-id');
@@ -149,24 +146,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Edit profile functionality
     editProfileBtn.addEventListener('click', () => {
-        // Populate form with current data
         document.getElementById('editFirstName').value = localStorage.getItem('userFirstName') || '';
         document.getElementById('editLastName').value = localStorage.getItem('userLastName') || '';
+        document.getElementById('editEmail').value = localStorage.getItem('userEmail') || '';
+        document.getElementById('editPhoneNumber').value = '';
+        document.getElementById('editAge').value = '';
         document.getElementById('editCountry').value = profileCountry.textContent !== 'Not specified' ? profileCountry.textContent : '';
+        document.getElementById('editGender').value = '';
         
         editModal.classList.remove('hidden');
     });
 
-    // Handle profile form submission
     document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const formData = new FormData();
         formData.append('firstName', document.getElementById('editFirstName').value);
         formData.append('lastName', document.getElementById('editLastName').value);
+        formData.append('email', document.getElementById('editEmail').value);
+        formData.append('phoneNumber', document.getElementById('editPhoneNumber').value);
+        formData.append('age', document.getElementById('editAge').value);
         formData.append('country', document.getElementById('editCountry').value);
+        formData.append('gender', document.getElementById('editGender').value);
 
         try {
             const response = await fetch('/api/profile', {
@@ -180,11 +182,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (result.success) {
-                // Update localStorage
                 localStorage.setItem('userFirstName', result.data.firstName);
                 localStorage.setItem('userLastName', result.data.lastName);
+                localStorage.setItem('userEmail', result.data.email);
                 
-                // Update UI
                 profileName.textContent = `${result.data.firstName} ${result.data.lastName}`;
                 profileCountry.textContent = result.data.country || 'Not specified';
                 
@@ -199,7 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle profile image upload
     editImageBtn.addEventListener('click', () => {
         imageInput.click();
     });
@@ -223,8 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (result.success) {
-                // Update profile image
-                profileImage.src = '/api/profile/image?' + new Date().getTime(); // Add timestamp to force refresh
+                profileImage.src = '/api/profile/image?' + new Date().getTime();
                 alert('Profile image updated successfully!');
             } else {
                 alert(result.message || 'Failed to update profile image');
@@ -235,7 +234,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Review modal functionality
     function openReviewModal(carId) {
         document.getElementById('reviewCarId').value = carId;
         currentRating = 0;
@@ -244,7 +242,6 @@ document.addEventListener('DOMContentLoaded', () => {
         reviewModal.classList.remove('hidden');
     }
 
-    // Star rating functionality
     document.querySelectorAll('.star').forEach(star => {
         star.addEventListener('click', (e) => {
             currentRating = parseInt(e.target.getAttribute('data-rating'));
@@ -272,7 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Handle review form submission
     document.getElementById('reviewForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -303,7 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (result.success) {
                 alert('Review submitted successfully!');
                 reviewModal.classList.add('hidden');
-                // Reload profile to update booking history
                 loadProfileData();
             } else {
                 alert(result.message || 'Failed to submit review');
@@ -314,7 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Modal close functionality
     document.getElementById('cancelEdit').addEventListener('click', () => {
         editModal.classList.add('hidden');
     });
@@ -323,7 +317,6 @@ document.addEventListener('DOMContentLoaded', () => {
         reviewModal.classList.add('hidden');
     });
 
-    // Close modals when clicking outside
     [editModal, reviewModal].forEach(modal => {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
@@ -332,13 +325,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Handle logout
     document.getElementById('logoutBtn').addEventListener('click', (e) => {
         e.preventDefault();
         localStorage.clear();
         window.location.href = '/';
     });
 
-    // Load profile data when page loads
     loadProfileData();
 });

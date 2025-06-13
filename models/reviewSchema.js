@@ -11,11 +11,6 @@ const reviewSchema = new mongoose.Schema({
     ref: 'Car', 
     required: true 
   },
-  booking: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'booking', 
-    required: true 
-  },
   rating: { 
     type: Number, 
     required: true, 
