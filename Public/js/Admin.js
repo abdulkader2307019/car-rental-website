@@ -211,13 +211,17 @@ if (saveCarBtn) {
 
             if (result.success) {
                 alert(result.message || (editingCarId ? 'Car updated successfully!' : 'Car saved successfully!'));
-                location.reload();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 100);
             } else {
                 alert(result.message || 'Failed to save car. Please try again.');
             }
         } catch (err) {
             console.error("Failed to save car:", err);
-            alert("Failed to save car. Please check your connection and try again.");
+            if (!result || !result.success) {
+                alert("Failed to save car. Please check your connection and try again.");
+            }
         }
     });
 }
