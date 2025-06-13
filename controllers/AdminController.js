@@ -64,13 +64,17 @@ exports.getAllCars = async (req, res) => {
     let query = {};
     
     if (search) {
+      // Check if search term is a valid year
+      const yearSearch = parseInt(search);
+      const isYearSearch = !isNaN(yearSearch) && yearSearch >= 1900 && yearSearch <= new Date().getFullYear() + 5;
+      
       query = {
         $or: [
           { brand: { $regex: search, $options: 'i' } },
           { model: { $regex: search, $options: 'i' } },
           { type: { $regex: search, $options: 'i' } },
           { location: { $regex: search, $options: 'i' } },
-          { year: { $regex: search, $options: 'i' } }
+          ...(isYearSearch ? [{ year: yearSearch }] : [])
         ]
       };
     }
