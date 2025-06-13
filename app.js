@@ -1,14 +1,12 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const path = require('path');
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
-app.set('view engine', 'ejs')
+app.set('view engine', 'ejs');
 app.use(express.json());
-const path = require('path')
 app.set("views", path.join(__dirname, "views"));
 
 require('dotenv').config();
@@ -21,7 +19,6 @@ const Booking = require('./models/bookingSchema');
 const Discount = require('./models/discountSchema');
 const Review = require('./models/reviewSchema');
 
-// Import routes
 const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const carRoutes = require('./routes/carRoutes');
@@ -29,7 +26,6 @@ const bookingRoutes = require('./routes/bookingRoutes');
 const discountRoutes = require('./routes/discountRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 
-// Use routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/cars', carRoutes);
@@ -37,10 +33,8 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/discounts', discountRoutes);
 app.use('/api/reviews', reviewRoutes);
 
-// View routes
 app.get("/", async (req, res) => {
   try {
-    // Get 8 most expensive cars for featured section
     const featuredCars = await Car.find({ availability: true })
       .sort({ pricePerDay: -1 })
       .limit(8);
@@ -72,7 +66,6 @@ app.get("/car-details/:id", async (req, res) => {
       return res.status(404).send('Car not found');
     }
     
-    // Get reviews for this car
     const reviews = await Review.find({ car: req.params.id })
       .populate('user', 'firstName lastName')
       .sort({ createdAt: -1 });
@@ -164,7 +157,6 @@ app.get("/profile", (req, res) => {
   res.render("profile");
 });
 
-// API route to get car image
 app.get('/api/cars/:id/image', async (req, res) => {
   try {
     const car = await Car.findById(req.params.id);
@@ -180,7 +172,6 @@ app.get('/api/cars/:id/image', async (req, res) => {
   }
 });
 
-// Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Global error handler:', err);
   res.status(500).json({ 

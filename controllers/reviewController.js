@@ -2,12 +2,10 @@ const Review = require('../models/reviewSchema');
 const Booking = require('../models/bookingSchema');
 const Car = require('../models/carSchema');
 
-// POST /api/reviews
 const review_post = async (req, res) => {
     try {
         const { carId, rating, comment } = req.body;
 
-        // Validate input
         if (!carId || !rating) {
             return res.status(400).json({ 
                 success: false,
@@ -30,7 +28,6 @@ const review_post = async (req, res) => {
             });
         }
 
-        // Check if user has booked this car
         const hasBooked = await Booking.exists({
             user: req.user.id,
             car: carId,
@@ -44,7 +41,6 @@ const review_post = async (req, res) => {
             });
         }
 
-        // Prevent duplicate reviews
         const existingReview = await Review.findOne({ user: req.user.id, car: carId });
         if (existingReview) {
             return res.status(409).json({ 
@@ -53,7 +49,6 @@ const review_post = async (req, res) => {
             });
         }
 
-        // Save review
         const review = new Review({
             user: req.user.id,
             car: carId,
@@ -78,7 +73,6 @@ const review_post = async (req, res) => {
     }
 };
 
-// GET /api/reviews/car/:carId
 const car_review_get = async (req, res) => {
     try {
         const { carId } = req.params;
@@ -100,7 +94,6 @@ const car_review_get = async (req, res) => {
     }
 };
 
-// DELETE /api/reviews/:id (admin only)
 const admin_review_delete = async (req, res) => {
     try {
         const { id } = req.params;

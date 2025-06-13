@@ -1,0 +1,340 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #121212;
+    color: #EDEDED;
+    line-height: 1.6;
+    padding-top: 80px;
+}
+
+header {
+    background-color: #1E1E1E;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5%;
+}
+
+.logo {
+    text-decoration: none;
+    color: #fffffe;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.8em;    
+}
+
+.navigation a {
+    color: #EDEDED;
+    text-decoration: none;
+    font-size: 1.1em;
+    font-weight: 500;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.navigation a:hover {
+    color: #D4AF37;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+}
+
+.booking-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+.car-display {
+    background-color: #1E1E1E;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    border: 2px solid #D4AF37;
+}
+
+.car-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.car-info h2 {
+    color: #D4AF37;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.car-specs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.spec-item {
+    background-color: #222831;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.booking-form {
+    background-color: #1E1E1E;
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 2px solid #D4AF37;
+}
+
+.booking-form h3 {
+    color: #D4AF37;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section h4 {
+    color: #D4AF37;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    color: #EDEDED;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.75rem;
+    background-color: #222831;
+    border: 1px solid #D4AF37;
+    border-radius: 0.5rem;
+    color: #EDEDED;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #D4AF37;
+    box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+}
+
+.discount-section {
+    display: flex;
+    gap: 1rem;
+    align-items: end;
+    margin-bottom: 1.5rem;
+}
+
+.discount-section .form-group {
+    flex: 1;
+}
+
+.btn-secondary {
+    padding: 0.75rem 1rem;
+    background-color: transparent;
+    border: 1px solid #D4AF37;
+    color: #D4AF37;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-secondary:hover {
+    background-color: #D4AF37;
+    color: #121212;
+}
+
+.pricing-summary {
+    background-color: #222831;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.pricing-summary h4 {
+    color: #D4AF37;
+    margin-bottom: 1rem;
+}
+
+.price-breakdown {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.total-price {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #D4AF37;
+    border-top: 1px solid #D4AF37;
+    padding-top: 0.5rem;
+    margin-top: 1rem;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 1rem;
+    background-color: #D4AF37;
+    color: #121212;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #C19B26;
+    transform: translateY(-2px);
+}
+
+.receipt-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.receipt-modal.hidden {
+    display: none;
+}
+
+.receipt-content {
+    background-color: #1E1E1E;
+    border-radius: 1rem;
+    padding: 2rem;
+    border: 2px solid #D4AF37;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.receipt-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.receipt-header h3 {
+    color: #D4AF37;
+    margin-bottom: 0.5rem;
+}
+
+.receipt-details {
+    margin-bottom: 2rem;
+}
+
+.receipt-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #222831;
+}
+
+.receipt-item:last-child {
+    border-bottom: none;
+    font-weight: bold;
+    color: #D4AF37;
+    border-top: 1px solid #D4AF37;
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+.receipt-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-confirm {
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-confirm:hover {
+    background-color: #45a049;
+}
+
+.btn-cancel {
+    background-color: #F44336;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background-color: #da190b;
+}
+
+@media (max-width: 768px) {
+    .booking-container {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .discount-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .receipt-actions {
+        flex-direction: column;
+    }
+}
