@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const totalPrice = basePrice * days;
             
-            document.getElementById('basePrice').textContent = `$${basePrice.toFixed(0)}`;
+            //document.getElementById('basePrice').textContent = `$${basePrice.toFixed(0)}`;
             document.getElementById('duration').textContent = `${days} day(s)${discountText}`;
             document.getElementById('totalPrice').textContent = `$${totalPrice.toFixed(0)}`;
         } else {

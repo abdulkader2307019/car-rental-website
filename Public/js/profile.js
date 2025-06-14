@@ -14,9 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const editImageBtn = document.getElementById('editImageBtn');
     const imageInput = document.getElementById('imageInput');
     const editModal = document.getElementById('editModal');
-    const reviewModal = document.getElementById('reviewModal');
-
-    let currentRating = 0;
 
     function formatDate(dateString) {
         if (!dateString) return 'Not specified';
@@ -56,17 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = result.data;
-            
-            // Load profile image
-            if (data.profileImage && data.profileImage.data) {
-                profileImage.src = '/api/profile/image?' + new Date().getTime();
-                profileImage.onerror = function() {
-                    console.log('Failed to load profile image, using default');
-                    this.src = '/img/44.jpg';
-                };
-            } else {
-                profileImage.src = '/img/44.jpg';
-            }
             
             // Update profile information
             if (profileName) {
@@ -140,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const bookingCard = document.createElement('div');
             bookingCard.className = 'booking-card';
             
-            const canReview = booking.status === 'confirmed' && new Date(booking.endDate) < new Date();
             const statusClass = `status-${booking.status}`;
             const statusText = booking.status.charAt(0).toUpperCase() + booking.status.slice(1);
             
@@ -151,8 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             bookingCard.innerHTML = `
                 <div class="booking-header">
-                    <div class="car-name">${carBrand} ${carModel}</div>
-                    <div class="booking-status ${statusClass}">${statusText}</div>
+                    <div class="car-name">${booking.car?.brand || 'Unknown'} ${booking.car?.model || 'Car'}</div>
                 </div>
                 <div class="booking-details">
                     <div class="detail-item">
@@ -180,63 +164,48 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="detail-value">${formatDate(booking.createdAt)}</span>
                     </div>
                 </div>
-                ${canReview && carId ? `
-                    <div class="booking-actions">
-                        <button class="btn primary review-btn" data-car-id="${carId}">Rate Experience</button>
-                    </div>
-                ` : ''}
             `;
             
             bookingHistoryContainer.appendChild(bookingCard);
         });
-
-        // Add event listeners for review buttons
-        document.querySelectorAll('.review-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const carId = e.target.getAttribute('data-car-id');
-                openReviewModal(carId);
-            });
-        });
     }
 
-    if (editProfileBtn) {
-        editProfileBtn.addEventListener('click', async () => {
-            try {
-                // Load current profile data for editing
-                const response = await fetch('/api/profile', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    const data = result.data;
-                    
-                    document.getElementById('editFirstName').value = data.firstName || '';
-                    document.getElementById('editLastName').value = data.lastName || '';
-                    document.getElementById('editEmail').value = data.email || '';
-                    document.getElementById('editPhoneNumber').value = data.phoneNumber || '';
-                    document.getElementById('editAge').value = data.age || '';
-                    document.getElementById('editCountry').value = data.country || '';
-                    document.getElementById('editGender').value = data.gender || '';
-                } else {
-                    // Fallback to localStorage
-                    document.getElementById('editFirstName').value = localStorage.getItem('userFirstName') || '';
-                    document.getElementById('editLastName').value = localStorage.getItem('userLastName') || '';
-                    document.getElementById('editEmail').value = localStorage.getItem('userEmail') || '';
+    editProfileBtn.addEventListener('click', async () => {
+        try {
+            // Load current profile data for editing
+            const response = await fetch('/api/profile', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
-            } catch (error) {
-                console.error('Error loading profile for editing:', error);
-                // Use localStorage as fallback
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                const data = result.data;
+                
+                document.getElementById('editFirstName').value = data.firstName || '';
+                document.getElementById('editLastName').value = data.lastName || '';
+                document.getElementById('editEmail').value = data.email || '';
+                document.getElementById('editPhoneNumber').value = data.phoneNumber || '';
+                document.getElementById('editAge').value = data.age || '';
+                document.getElementById('editCountry').value = data.country || '';
+                document.getElementById('editGender').value = data.gender || '';
+            } else {
+                // Fallback to localStorage
                 document.getElementById('editFirstName').value = localStorage.getItem('userFirstName') || '';
                 document.getElementById('editLastName').value = localStorage.getItem('userLastName') || '';
                 document.getElementById('editEmail').value = localStorage.getItem('userEmail') || '';
             }
-            
-            editModal.classList.remove('hidden');
-        });
-    }
+        } catch (error) {
+            console.error('Error loading profile for editing:', error);
+            // Use localStorage as fallback
+            document.getElementById('editFirstName').value = localStorage.getItem('userFirstName') || '';
+            document.getElementById('editLastName').value = localStorage.getItem('userLastName') || '';
+            document.getElementById('editEmail').value = localStorage.getItem('userEmail') || '';
+        }
+        
+        editModal.classList.remove('hidden');
+    });
 
     const editProfileForm = document.getElementById('editProfileForm');
     if (editProfileForm) {
@@ -320,122 +289,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const result = await response.json();
 
-                if (result.success) {
-                    profileImage.src = '/api/profile/image?' + new Date().getTime();
-                    alert('Profile image updated successfully!');
-                } else {
-                    alert(result.message || 'Failed to update profile image');
-                }
-            } catch (error) {
-                console.error('Error updating profile image:', error);
-                alert('Error updating profile image. Please try again.');
+            if (result.success) {
+                profileImage.src = '/api/profile/image?' + new Date().getTime();
+                alert('Profile image updated successfully!');
+            } else {
+                alert(result.message || 'Failed to update profile image');
             }
-        });
-    }
-
-    function openReviewModal(carId) {
-        document.getElementById('reviewCarId').value = carId;
-        currentRating = 0;
-        updateStarDisplay();
-        document.getElementById('reviewComment').value = '';
-        reviewModal.classList.remove('hidden');
-    }
-
-    document.querySelectorAll('.star').forEach(star => {
-        star.addEventListener('click', (e) => {
-            currentRating = parseInt(e.target.getAttribute('data-rating'));
-            updateStarDisplay();
-        });
-
-        star.addEventListener('mouseover', (e) => {
-            const hoverRating = parseInt(e.target.getAttribute('data-rating'));
-            updateStarDisplay(hoverRating);
-        });
+        } catch (error) {
+            console.error('Error updating profile image:', error);
+            alert('Error updating profile image. Please try again.');
+        }
     });
 
-    const starRating = document.getElementById('starRating');
-    if (starRating) {
-        starRating.addEventListener('mouseleave', () => {
-            updateStarDisplay();
-        });
-    }
-
-    function updateStarDisplay(hoverRating = null) {
-        const rating = hoverRating || currentRating;
-        document.querySelectorAll('.star').forEach((star, index) => {
-            if (index < rating) {
-                star.classList.add('active');
-            } else {
-                star.classList.remove('active');
-            }
-        });
-    }
-
-    const reviewForm = document.getElementById('reviewForm');
-    if (reviewForm) {
-        reviewForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            if (currentRating === 0) {
-                alert('Please select a rating');
-                return;
-            }
-
-            const carId = document.getElementById('reviewCarId').value;
-            const comment = document.getElementById('reviewComment').value;
-
-            try {
-                const response = await fetch('/api/reviews', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        carId,
-                        rating: currentRating,
-                        comment
-                    })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    alert('Review submitted successfully!');
-                    reviewModal.classList.add('hidden');
-                    loadProfileData();
-                } else {
-                    alert(result.message || 'Failed to submit review');
-                }
-            } catch (error) {
-                console.error('Error submitting review:', error);
-                alert('Error submitting review. Please try again.');
-            }
-        });
-    }
-
-    const cancelEdit = document.getElementById('cancelEdit');
-    if (cancelEdit) {
-        cancelEdit.addEventListener('click', () => {
-            editModal.classList.add('hidden');
-        });
-    }
-
-    const cancelReview = document.getElementById('cancelReview');
-    if (cancelReview) {
-        cancelReview.addEventListener('click', () => {
-            reviewModal.classList.add('hidden');
-        });
-    }
-
-    [editModal, reviewModal].forEach(modal => {
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.classList.add('hidden');
-                }
-            });
-        }
+    document.getElementById('cancelEdit').addEventListener('click', () => {
+        editModal.classList.add('hidden');
     });
 
     const logoutBtn = document.getElementById('logoutBtn');
