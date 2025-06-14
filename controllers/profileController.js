@@ -24,7 +24,7 @@ const getProfile = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error(error);
+    console.error('Profile error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -71,7 +71,7 @@ const updateProfile = async (req, res) => {
       data: user
     });
   } catch (error) {
-    console.error(error);
+    console.error('Update profile error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -90,7 +90,7 @@ const getProfileImage = async (req, res) => {
     res.set('Content-Type', user.profileImage.contentType);
     res.send(user.profileImage.data);
   } catch (error) {
-    console.error(error);
+    console.error('Profile image error:', error);
     res.status(500).send('Error loading profile image');
   }
 };
