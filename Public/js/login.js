@@ -204,15 +204,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    document.querySelectorAll('.social-btn.google').forEach(btn => {
-        btn.addEventListener('click', () => {
-            alert('Google login is not implemented in this demo');
-        });
-    });
-
-    document.querySelectorAll('.social-btn.apple').forEach(btn => {
-        btn.addEventListener('click', () => {
-            alert('Apple login is not implemented in this demo');
-        });
-    });
+   
 });
