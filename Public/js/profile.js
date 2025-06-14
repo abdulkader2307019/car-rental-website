@@ -111,8 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
             bookingCard.innerHTML = `
                 <div class="booking-header">
                     <div class="car-name">${booking.car?.brand || 'Unknown'} ${booking.car?.model || 'Car'}</div>
-                    <div class="booking-status ${statusClass}">${statusText}</div>
-                </div>
+                        <div class="booking-status ${statusClass}">${statusText}</div>
+                    </div>
                 <div class="booking-details">
                     <div class="detail-item">
                         <span class="detail-label">Start Date</span>
@@ -134,10 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="detail-label">Return Location</span>
                         <span class="detail-value">${booking.locationDropoff || 'N/A'}</span>
                     </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Status</span>
-                        <span class="detail-value ${statusClass}">${statusText}</span>
-                    </div>
+                    
                 </div>
             `;
             

@@ -64,19 +64,20 @@ const createBooking = async (req, res) => {
 
 const confirmBooking = async (req, res) => {
   try {
-    const { id } = req.params;
+    const booking = await Booking.findById(req.params.id);
     
-    const booking = await Booking.findById(id);
-    if (!booking) {
-      return res.status(404).json({ 
-        success: false,
-        error: 'Booking not found' 
+    
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ 
+        success: false, 
+        error: 'Admin access required' 
       });
     }
 
-    if (booking.user.toString() !== req.user.id) {
+    
+    if (booking.user.toString() !== req.user.id && !req.user.isAdmin) {
       return res.status(403).json({ 
-        success: false,
+        success: false, 
         error: 'Unauthorized' 
       });
     }
@@ -84,21 +85,13 @@ const confirmBooking = async (req, res) => {
     booking.status = 'confirmed';
     await booking.save();
 
-    await Car.findByIdAndUpdate(booking.car, { availability: false });
-
-    const populatedBooking = await Booking.findById(booking._id)
-      .populate('car', 'brand model pricePerDay')
-      .populate('user', 'firstName lastName email');
-
     res.json({ 
       success: true, 
-      message: 'Booking confirmed successfully', 
-      booking: populatedBooking 
+      message: 'Booking confirmed successfully' 
     });
   } catch (error) {
-    console.error('Confirm booking error:', error);
     res.status(500).json({ 
-      success: false,
+      success: false, 
       error: 'Failed to confirm booking' 
     });
   }

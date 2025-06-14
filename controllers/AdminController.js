@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const Car = require('../models/carSchema');
 const Booking = require('../models/bookingSchema');
+const Discount = require('../models/discountSchema')
 
 exports.getAllUsers = async (req, res) => {
   try {
