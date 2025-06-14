@@ -55,7 +55,7 @@ Before running this application, make sure you have the following installed:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/carvoo-car-rental.git
+git clone https://github.com/abdulkader2307019/car-rental-website.git
 cd carvoo-car-rental
 ```
 
@@ -69,13 +69,13 @@ Create a `.env` file in the root directory and add the following variables:
 
 ```env
 # Database Configuration
-MONGODB_URI=mongodb://localhost:27017/carvoo
+MONGODB_URI=mongodb://localhost:3000
 
 # JWT Configuration
-JWT_SECRET=your_super_secure_jwt_secret_key_here
+JWT_SECRET=2004
 
 # Session Configuration
-SESSION_SECRET=your_super_secure_session_secret_here
+SESSION_SECRET=2009
 
 # Server Configuration
 PORT=3000
@@ -160,8 +160,8 @@ The application will be available at `http://localhost:3000`
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `MONGODB_URI` | MongoDB connection string | `mongodb://localhost:27017/carvoo` |
-| `JWT_SECRET` | Secret key for JWT tokens | Required |
-| `SESSION_SECRET` | Secret key for sessions | Required |
+| `JWT_SECRET` | 2004 | Required |
+| `SESSION_SECRET` | 2009 | Required |
 | `PORT` | Server port | `3000` |
 | `NODE_ENV` | Environment mode | `development` |
 
@@ -294,45 +294,6 @@ We welcome contributions to CarVoo!! Please follow these guidelines:
 - Ensure responsive design for all new UI components
 - Write unit tests for new features
 
-### Commit Message Format
-```
-type(scope): description
-
-[optional body]
-
-[optional footer]
-```
-
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-```
-MIT License
-
-Copyright (c) 2025 CarVoo!!
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
 ## 🙏 Acknowledgments
 
 - **Express.js Community** - For the robust web framework
@@ -342,9 +303,6 @@ SOFTWARE.
 - **Poppins Font Family** - For the modern typography
 - **Unsplash** - For high-quality stock images used in the application
 
-## 📞 Support
-
-For support, email support@carvoo.com or create an issue in the GitHub repository.
 
 ## 🔮 Future Enhancements
 
