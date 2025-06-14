@@ -168,77 +168,10 @@ const cancelBooking = async (req, res) => {
   }
 };
 
-const getAllBookings = async (req, res) => {
-  try {
-    const bookings = await Booking.find()
-      .populate('user', 'firstName lastName email')
-      .populate('car', 'brand model')
-      .sort({ createdAt: -1 });
-
-    res.json({ success: true, bookings });
-  } catch (error) {
-    console.error('Get all bookings error:', error);
-    res.status(500).json({ 
-      success: false,
-      error: 'Failed to fetch bookings' 
-    });
-  }
-};
-
-const updateBooking = async (req, res) => {
-  try {
-    const booking = await Booking.findByIdAndUpdate(
-      req.params.id, 
-      req.body, 
-      { new: true }
-    ).populate('user car');
-    
-    if (!booking) {
-      return res.status(404).json({ 
-        success: false,
-        error: 'Booking not found' 
-      });
-    }
-    
-    res.json({ success: true, booking });
-  } catch (error) {
-    console.error('Update booking error:', error);
-    res.status(500).json({ 
-      success: false,
-      error: 'Failed to update booking' 
-    });
-  }
-};
-
-const deleteBooking = async (req, res) => {
-  try {
-    const booking = await Booking.findByIdAndDelete(req.params.id);
-    if (!booking) {
-      return res.status(404).json({ 
-        success: false,
-        error: 'Booking not found' 
-      });
-    }
-    
-    res.json({ 
-      success: true, 
-      message: 'Booking deleted successfully' 
-    });
-  } catch (error) {
-    console.error('Delete booking error:', error);
-    res.status(500).json({ 
-      success: false,
-      error: 'Failed to delete booking' 
-    });
-  }
-};
 
 module.exports = {
   createBooking,
   confirmBooking,
   viewBooking,
-  cancelBooking,
-  getAllBookings,
-  updateBooking,
-  deleteBooking
+  cancelBooking
 };
