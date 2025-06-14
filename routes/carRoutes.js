@@ -16,5 +16,6 @@ router.get('/:id', carController.getCarById);
 router.post('/', protect, isAdmin, upload.single('image'), carController.addCar);
 router.put('/:id', protect, isAdmin, upload.single('image'), carController.editCar);
 router.delete('/:id', protect, isAdmin, carController.deleteCar);
+router.get('/:id/image', carController.getCarImage);
 
 module.exports = router;

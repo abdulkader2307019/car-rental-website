@@ -165,4 +165,19 @@ const getCars = async (req, res) => {
   }
 };
 
-module.exports = { addCar, editCar, deleteCar, getCarById, getCars };
+const getCarImage = async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car || !car.image || !car.image.data) {
+      return res.status(404).send('Image not found');
+    }
+    
+    res.set('Content-Type', car.image.contentType);
+    res.send(car.image.data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error loading image');
+  }
+}
+
+module.exports = { addCar, editCar, deleteCar, getCarById, getCars,getCarImage};
