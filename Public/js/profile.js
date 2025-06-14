@@ -33,11 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            console.log('Profile response status:', response.status);
-
             if (!response.ok) {
                 if (response.status === 401) {
-                    console.log('Unauthorized, clearing storage and redirecting');
                     localStorage.clear();
                     window.location.href = '/LoginPage/login';
                     return;
@@ -69,26 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             // Load booking history
-            console.log('Loading booking history:', data.bookingHistory);
             loadBookingHistory(data.bookingHistory || []);
             
         } catch (error) {
             console.error('Error loading profile:', error);
             
-            // Show error message in booking history container
-            if (bookingHistoryContainer) {
-                bookingHistoryContainer.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: #F94C10;">
-                        <h3>Unable to load profile data</h3>
-                        <p>Error: ${error.message}</p>
-                        <button onclick="location.reload()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #D4AF37; color: #121212; border: none; border-radius: 0.5rem; cursor: pointer;">
-                            Retry
-                        </button>
-                    </div>
-                `;
-            }
-            
-            // Fallback to localStorage data for basic info
+            // Fallback to localStorage data
             const userFirstName = localStorage.getItem('userFirstName');
             const userLastName = localStorage.getItem('userLastName');
             
@@ -99,6 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (profileImage) {
                 profileImage.src = '/img/44.jpg';
             }
+            
+            if (bookingHistoryContainer) {
+                bookingHistoryContainer.innerHTML = '<p>Unable to load profile data. Please try refreshing the page.</p>';
+            }
         }
     }
 
@@ -108,15 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Loading booking history:', bookings);
 
         if (!bookings || bookings.length === 0) {
-            bookingHistoryContainer.innerHTML = `
-                <div style="text-align: center; padding: 2rem; color: #EDEDED; opacity: 0.7;">
-                    <h3>No Booking History</h3>
-                    <p>You haven't made any bookings yet.</p>
-                    <a href="/carlisting" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: #D4AF37; color: #121212; text-decoration: none; border-radius: 0.5rem;">
-                        Browse Cars
-                    </a>
-                </div>
-            `;
+            bookingHistoryContainer.innerHTML = '<p>No booking history found.</p>';
             return;
         }
 
@@ -129,14 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const statusClass = `status-${booking.status}`;
             const statusText = booking.status.charAt(0).toUpperCase() + booking.status.slice(1);
             
-            // Handle car data safely
-            const carBrand = booking.car?.brand || 'Unknown';
-            const carModel = booking.car?.model || 'Car';
-            const carId = booking.car?._id || '';
-            
             bookingCard.innerHTML = `
                 <div class="booking-header">
                     <div class="car-name">${booking.car?.brand || 'Unknown'} ${booking.car?.model || 'Car'}</div>
+                    <div class="booking-status ${statusClass}">${statusText}</div>
                 </div>
                 <div class="booking-details">
                     <div class="detail-item">
@@ -160,8 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="detail-value">${booking.locationDropoff || 'N/A'}</span>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Booking Date</span>
-                        <span class="detail-value">${formatDate(booking.createdAt)}</span>
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value ${statusClass}">${statusText}</span>
                     </div>
                 </div>
             `;
@@ -207,87 +182,81 @@ document.addEventListener('DOMContentLoaded', () => {
         editModal.classList.remove('hidden');
     });
 
-    const editProfileForm = document.getElementById('editProfileForm');
-    if (editProfileForm) {
-        editProfileForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData();
-            formData.append('firstName', document.getElementById('editFirstName').value);
-            formData.append('lastName', document.getElementById('editLastName').value);
-            formData.append('email', document.getElementById('editEmail').value);
-            formData.append('phoneNumber', document.getElementById('editPhoneNumber').value);
-            formData.append('age', document.getElementById('editAge').value);
-            formData.append('country', document.getElementById('editCountry').value);
-            formData.append('gender', document.getElementById('editGender').value);
+    document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('firstName', document.getElementById('editFirstName').value);
+        formData.append('lastName', document.getElementById('editLastName').value);
+        formData.append('email', document.getElementById('editEmail').value);
+        formData.append('phoneNumber', document.getElementById('editPhoneNumber').value);
+        formData.append('age', document.getElementById('editAge').value);
+        formData.append('country', document.getElementById('editCountry').value);
+        formData.append('gender', document.getElementById('editGender').value);
 
-            try {
-                const response = await fetch('/api/profile', {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: formData
-                });
+        try {
+            const response = await fetch('/api/profile', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
 
-                const result = await response.json();
+            const result = await response.json();
 
-                if (result.success) {
-                    localStorage.setItem('userFirstName', result.data.firstName);
-                    localStorage.setItem('userLastName', result.data.lastName);
-                    localStorage.setItem('userEmail', result.data.email);
-                    
-                    profileName.textContent = `${result.data.firstName} ${result.data.lastName}`;
-                    profileCountry.textContent = result.data.country || 'Not specified';
-                    
-                    editModal.classList.add('hidden');
-                    alert('Profile updated successfully!');
-                } else {
-                    alert(result.message || 'Failed to update profile');
-                }
-            } catch (error) {
-                console.error('Error updating profile:', error);
-                alert('Error updating profile. Please try again.');
+            if (result.success) {
+                localStorage.setItem('userFirstName', result.data.firstName);
+                localStorage.setItem('userLastName', result.data.lastName);
+                localStorage.setItem('userEmail', result.data.email);
+                
+                profileName.textContent = `${result.data.firstName} ${result.data.lastName}`;
+                profileCountry.textContent = result.data.country || 'Not specified';
+                
+                editModal.classList.add('hidden');
+                alert('Profile updated successfully!');
+            } else {
+                alert(result.message || 'Failed to update profile');
             }
-        });
-    }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            alert('Error updating profile. Please try again.');
+        }
+    });
 
-    if (editImageBtn) {
-        editImageBtn.addEventListener('click', () => {
-            imageInput.click();
-        });
-    }
+    editImageBtn.addEventListener('click', () => {
+        imageInput.click();
+    });
 
-    if (imageInput) {
-        imageInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+    imageInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                alert('Please select a valid image file.');
-                return;
-            }
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('Please select a valid image file.');
+            return;
+        }
 
-            // Validate file size (5MB limit)
-            if (file.size > 5 * 1024 * 1024) {
-                alert('Image size must be less than 5MB.');
-                return;
-            }
+        // Validate file size (5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Image size must be less than 5MB.');
+            return;
+        }
 
-            const formData = new FormData();
-            formData.append('profileImage', file);
+        const formData = new FormData();
+        formData.append('profileImage', file);
 
-            try {
-                const response = await fetch('/api/profile', {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: formData
-                });
+        try {
+            const response = await fetch('/api/profile', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
 
-                const result = await response.json();
+            const result = await response.json();
 
             if (result.success) {
                 profileImage.src = '/api/profile/image?' + new Date().getTime();
@@ -305,17 +274,11 @@ document.addEventListener('DOMContentLoaded', () => {
         editModal.classList.add('hidden');
     });
 
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.clear();
-            window.location.href = '/';
-        });
-    }
-
-
-    
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.clear();
+        window.location.href = '/';
+    });
 
     // Load profile data on page load
     loadProfileData();
