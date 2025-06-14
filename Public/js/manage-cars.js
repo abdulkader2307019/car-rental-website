@@ -4,24 +4,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearBtn = document.getElementById('clearCarSearch');
 
     async function loadCars(search = '') {
-        try {
-            const token = localStorage.getItem('token');
-            const url = search ? `/api/admin/cars?search=${encodeURIComponent(search)}` : '/api/admin/cars';
-            
-            const response = await fetch(url, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                updateCarsTable(result.cars);
+    try {
+        const token = localStorage.getItem('token');
+        const url = search 
+            ? `/api/admin/cars?search=${encodeURIComponent(search)}` 
+            : '/api/admin/cars';
+        
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/json'
             }
-        } catch (error) {
-            console.error('Error loading cars:', error);
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const result = await response.json();
+        if (result.success) {
+            updateCarsTable(result.cars);
+        } else {
+            console.error('API error:', result.message);
+        }
+    } catch (error) {
+        console.error('Error loading cars:', error);
+        alert('Failed to load cars. Please try again.');
     }
+}
 
     function updateCarsTable(cars) {
         const tbody = document.querySelector('#cars-table tbody');

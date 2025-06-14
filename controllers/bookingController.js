@@ -1,6 +1,6 @@
 const Booking = require("../models/bookingSchema");
 const Car = require("../models/carSchema");
-
+const mongoose = require("mongoose");
 const createBooking = async (req, res) => {
   try {
     const { carId, startDate, endDate, locationPickup, locationDropoff } = req.body;
@@ -33,26 +33,49 @@ const createBooking = async (req, res) => {
 
     const totalPrice = days * car.pricePerDay;
 
-    const booking = await Booking.create({
-      user: req.user.id,
-      car: carId,
-      startDate,
-      endDate,
-      locationPickup,
-      locationDropoff,
-      totalPrice,
-      status: 'pending'
-    });
+    // Start a transaction to ensure both operations succeed or fail together
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
-    const populatedBooking = await Booking.findById(booking._id)
-      .populate('car', 'brand model pricePerDay')
-      .populate('user', 'firstName lastName email');
+    try {
+      // Create the booking
+      const booking = await Booking.create([{
+        user: req.user.id,
+        car: carId,
+        startDate,
+        endDate,
+        locationPickup,
+        locationDropoff,
+        totalPrice,
+        status: 'pending'
+      }], { session });
 
-    res.status(201).json({ 
-      success: true, 
-      booking: populatedBooking,
-      message: 'Booking created successfully'
-    });
+      // Update car availability to false
+      await Car.findByIdAndUpdate(
+        carId,
+        { availability: false },
+        { session }
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      const populatedBooking = await Booking.findById(booking[0]._id)
+        .populate('car', 'brand model pricePerDay')
+        .populate('user', 'firstName lastName email');
+
+      res.status(201).json({ 
+        success: true, 
+        booking: populatedBooking,
+        message: 'Booking created successfully'
+      });
+
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error; // This will be caught by the outer catch block
+    }
+
   } catch (error) {
     console.error('Booking creation error:', error);
     res.status(500).json({ 
@@ -65,22 +88,6 @@ const createBooking = async (req, res) => {
 const confirmBooking = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
-    
-    
-    if (!req.user.isAdmin) {
-      return res.status(403).json({ 
-        success: false, 
-        error: 'Admin access required' 
-      });
-    }
-
-    
-    if (booking.user.toString() !== req.user.id && !req.user.isAdmin) {
-      return res.status(403).json({ 
-        success: false, 
-        error: 'Unauthorized' 
-      });
-    }
 
     booking.status = 'confirmed';
     await booking.save();

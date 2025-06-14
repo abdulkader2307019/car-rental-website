@@ -136,6 +136,33 @@ exports.manage_get_bookings = async (req, res) => {
   }
 }
 
+exports.getAllCars = async (req, res) => {
+  try {
+    const { search } = req.query;
+    let query = {};
+    
+    if (search) {
+      query = {
+        $or: [
+          { brand: { $regex: search, $options: 'i' } },
+          { model: { $regex: search, $options: 'i' } },
+          { location: { $regex: search, $options: 'i' } },
+          { type: { $regex: search, $options: 'i' } }
+        ]
+      };
+    }
+    
+    const cars = await Car.find(query).sort({ createdAt: -1 });
+    res.json({ success: true, cars });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to fetch cars',
+      error: error.message 
+    });
+  }
+};
+
 exports.manage_get_cars = async (req, res) => {
   try {
     const cars = await Car.find().sort({ createdAt: -1 });
