@@ -58,65 +58,6 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-exports.getAllCars = async (req, res) => {
-  try {
-    const { search } = req.query;
-    let query = {};
-    
-    if (search) {
-      // Check if search term is a valid year
-      const yearSearch = parseInt(search);
-      const isYearSearch = !isNaN(yearSearch) && yearSearch >= 1900 && yearSearch <= new Date().getFullYear() + 5;
-      
-      query = {
-        $or: [
-          { brand: { $regex: search, $options: 'i' } },
-          { model: { $regex: search, $options: 'i' } },
-          { type: { $regex: search, $options: 'i' } },
-          { location: { $regex: search, $options: 'i' } },
-          ...(isYearSearch ? [{ year: yearSearch }] : [])
-        ]
-      };
-    }
-    
-    const cars = await Car.find(query).sort({ createdAt: -1 });
-    res.json({ success: true, cars });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-exports.addCar = async (req, res) => {
-  try {
-    const newCar = new Car(req.body);
-    await newCar.save();
-    res.status(201).json({ success: true, car: newCar, message: 'Car added successfully' });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
-  }
-};
-
-exports.updateCar = async (req, res) => {
-  try {
-    const car = await Car.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!car) return res.status(404).json({ success: false, message: 'Car not found' });
-    res.json({ success: true, car, message: 'Car updated successfully' });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
-  }
-};
-
-exports.deleteCar = async (req, res) => {
-  try {
-    const car = await Car.findByIdAndDelete(req.params.id);
-    if (!car) return res.status(404).json({ success: false, message: 'Car not found' });
-    
-    res.json({ success: true, message: 'Car deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
 exports.getAllBookings = async (req, res) => {
   try {
     const { search } = req.query;
@@ -178,5 +119,67 @@ exports.deleteBooking = async (req, res) => {
     res.json({ success: true, message: 'Booking deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.manage_get_bookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find()
+      .populate('user', 'firstName lastName email')
+      .populate('car', 'brand model pricePerDay')
+      .sort({ createdAt: -1 });
+    res.render('AdminPage/manage-bookings', { bookings, currentPage: 'bookings' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading bookings');
+  }
+}
+
+exports.manage_get_cars = async (req, res) => {
+  try {
+    const cars = await Car.find().sort({ createdAt: -1 });
+    res.render('AdminPage/manage-cars', { cars, currentPage: 'cars' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading cars');
+  }
+};
+
+exports.manage_get_users = async (req, res) => {
+  try {
+    const users = await User.find().sort({ createdAt: -1 });
+    res.render('AdminPage/manage-users', { users, currentPage: 'users' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading users');
+  }
+}
+
+exports.manage_get_discounts = async (req, res) => {
+  try {
+    const discounts = await Discount.find().sort({ createdAt: -1 });
+    res.render('AdminPage/manage-discounts', { discounts, currentPage: 'discounts' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading discounts');
+  }
+};
+
+exports.manage_get_reports = async (req, res) => {
+  try {
+    const users = await User.find();
+    const cars = await Car.find();
+    const bookings = await Booking.find()
+      .populate('user', 'firstName lastName email')
+      .populate('car', 'brand model pricePerDay');
+    res.render('AdminPage/reports-section', { 
+      users, 
+      cars, 
+      bookings, 
+      currentPage: 'reports' 
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error loading reports');
   }
 };

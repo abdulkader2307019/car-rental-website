@@ -98,32 +98,6 @@
                     </div>
                 </section>
             </section>
-            <!-- Reviews Section -->
-                <div class="reviews-section">
-                        <h3>Customer Reviews</h3>
-                        <% if (reviews && reviews.length > 0) { %>
-                            <div class="reviews-container">
-                                <% reviews.forEach(review => { %>
-                                    <div class="review-card">
-                                        <div class="review-header">
-                                            <div class="reviewer-name"><%= review.user.firstName %> <%= review.user.lastName %></div>
-                                            <div class="review-rating">
-                                                <% for(let i = 1; i <= 5; i++) { %>
-                                                    <span class="star <%= i <= review.rating ? 'filled' : '' %>">⭐</span>
-                                                <% } %>
-                                            </div>
-                                        </div>
-                                        <% if (review.comment) { %>
-                                            <div class="review-comment"><%= review.comment %></div>
-                                        <% } %>
-                                        <div class="review-date"><%= new Date(review.createdAt).toLocaleDateString() %></div>
-                                    </div>
-                                <% }) %>
-                            </div>
-                        <% } else { %>
-                            <p class="no-reviews">No reviews yet. Be the first to review this car!</p>
-                        <% } %>
-                    </div>
             </section>
         
     </main>
