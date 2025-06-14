@@ -18,112 +18,114 @@
     </header>
     
     <main>
-        <section class="main">
-            <section class="info-card">
-                <div class="title"><%= car.brand %> <%= car.model %></div>
-                
-                <div class="availability">
-                    <h3>Availability Status</h3>
-                    <div class="status-indicator <%= car.availability ? 'available' : 'unavailable' %>">
-                        <span class="status-dot"></span>
-                        <%= car.availability ? 'Available for Rent' : 'Currently Unavailable' %>
+        <div class="main-parent">
+            <section class="main">
+                <section class="info-card">
+                    <div class="title"><%= car.brand %> <%= car.model %></div>
+                    
+                    <div class="availability">
+                        <h3>Availability Status</h3>
+                        <div class="status-indicator <%= car.availability ? 'available' : 'unavailable' %>">
+                            <span class="status-dot"></span>
+                            <%= car.availability ? 'Available for Rent' : 'Currently Unavailable' %>
+                        </div>
+                        <p class="location-info">Available at: <%= car.location %></p>
                     </div>
-                    <p class="location-info">Available at: <%= car.location %></p>
-                </div>
-
-                <div class="info">
-                    <h2>Car Specifications</h2>
-                    <hr>
-                    <ul>
-                        <li>Brand: <%= car.brand %></li>
-                        <li>Model: <%= car.model %></li>
-                        <li>Year: <%= car.year || 'N/A' %></li>
-                        <li>Type: <%= car.type %></li>
-                        <li>Seats: <%= car.specs.seats %></li>
-                        <li>Fuel Type: <%= car.specs.fuel %></li>
-                        <li>Transmission: <%= car.specs.transmission %></li>
-                        <li>Location: <%= car.location %></li>
-                    </ul>
-                </div>
-
-                <% if (car.availability) { %>
-                <div class="bookNowBtn">
-                    <a href="/booking/<%= car._id %>">Book Now</a>
-                </div>
-                <% } else { %>
-                <div class="unavailable-notice">
-                    <p>This car is currently unavailable for booking.</p>
-                </div>
-                <% } %>
+    
+                    <div class="info">
+                        <h2>Car Specifications</h2>
+                        <hr>
+                        <ul>
+                            <li>Brand: <%= car.brand %></li>
+                            <li>Model: <%= car.model %></li>
+                            <li>Year: <%= car.year || 'N/A' %></li>
+                            <li>Type: <%= car.type %></li>
+                            <li>Seats: <%= car.specs.seats %></li>
+                            <li>Fuel Type: <%= car.specs.fuel %></li>
+                            <li>Transmission: <%= car.specs.transmission %></li>
+                            <li>Location: <%= car.location %></li>
+                        </ul>
+                    </div>
+    
+                    <% if (car.availability) { %>
+                    <div class="bookNowBtn">
+                        <a href="/booking/<%= car._id %>">Book Now</a>
+                    </div>
+                    <% } else { %>
+                    <div class="unavailable-notice">
+                        <p>This car is currently unavailable for booking.</p>
+                    </div>
+                    <% } %>
+                </section>
+    
+                <div class="vline"></div>
+    
+                <section class="car-image">
+                    <div class="carimage">
+                        <div>
+                            <% if (car.image && car.image.data) { %>
+                                <img src="/api/cars/<%= car._id %>/image" alt="<%= car.brand %> <%= car.model %>">
+                            <% } else { %>
+                                <img src="/img/car1.jpg" alt="<%= car.brand %> <%= car.model %>">
+                            <% } %>
+                        </div>
+                        <div class="car-desc">
+                            <summary>About <%= car.brand %> <%= car.model %><hr></summary>
+                            <p>Experience the perfect blend of luxury and performance with the <%= car.brand %> <%= car.model %>. 
+                               This <%= car.type.toLowerCase() %> offers exceptional comfort with <%= car.specs.seats %> seats, 
+                               <%= car.specs.fuel %> engine, and <%= car.specs.transmission %> transmission. 
+                               Perfect for your next adventure or business trip.</p>
+                        </div>
+                    </div>
+    
+                    <div class="Pricing">
+                        <div class="pricing-options">
+                            <div class="pricing-option" data-period="daily">
+                                <span class="period">Daily</span>
+                                <span class="price">$<%= car.pricePerDay %></span>
+                            </div>
+                            <div class="pricing-option" data-period="weekly">
+                                <span class="period">Weekly</span>
+                                <span class="price">$<%= (car.pricePerDay * 7 * 0.9).toFixed(0) %></span>
+                                <span class="discount">10% off</span>
+                            </div>
+                            <div class="pricing-option" data-period="monthly">
+                                <span class="period">Monthly</span>
+                                <span class="price">$<%= (car.pricePerDay * 30 * 0.8).toFixed(0) %></span>
+                                <span class="discount">20% off</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </section>
-
-            <div class="vline"></div>
-
-            <section class="car-image">
-                <div class="carimage">
-                    <div>
-                        <% if (car.image && car.image.data) { %>
-                            <img src="/api/cars/<%= car._id %>/image" alt="<%= car.brand %> <%= car.model %>">
+            <!-- Reviews Section -->
+                <div class="reviews-section">
+                        <h3>Customer Reviews</h3>
+                        <% if (reviews && reviews.length > 0) { %>
+                            <div class="reviews-container">
+                                <% reviews.forEach(review => { %>
+                                    <div class="review-card">
+                                        <div class="review-header">
+                                            <div class="reviewer-name"><%= review.user.firstName %> <%= review.user.lastName %></div>
+                                            <div class="review-rating">
+                                                <% for(let i = 1; i <= 5; i++) { %>
+                                                    <span class="star <%= i <= review.rating ? 'filled' : '' %>">⭐</span>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <% if (review.comment) { %>
+                                            <div class="review-comment"><%= review.comment %></div>
+                                        <% } %>
+                                        <div class="review-date"><%= new Date(review.createdAt).toLocaleDateString() %></div>
+                                    </div>
+                                <% }) %>
+                            </div>
                         <% } else { %>
-                            <img src="/img/car1.jpg" alt="<%= car.brand %> <%= car.model %>">
+                            <p class="no-reviews">No reviews yet. Be the first to review this car!</p>
                         <% } %>
                     </div>
-                    <div class="car-desc">
-                        <summary>About <%= car.brand %> <%= car.model %><hr></summary>
-                        <p>Experience the perfect blend of luxury and performance with the <%= car.brand %> <%= car.model %>. 
-                           This <%= car.type.toLowerCase() %> offers exceptional comfort with <%= car.specs.seats %> seats, 
-                           <%= car.specs.fuel %> engine, and <%= car.specs.transmission %> transmission. 
-                           Perfect for your next adventure or business trip.</p>
-                    </div>
-                </div>
-
-                <div class="Pricing">
-                    <div class="pricing-options">
-                        <div class="pricing-option" data-period="daily">
-                            <span class="period">Daily</span>
-                            <span class="price">$<%= car.pricePerDay %></span>
-                        </div>
-                        <div class="pricing-option" data-period="weekly">
-                            <span class="period">Weekly</span>
-                            <span class="price">$<%= (car.pricePerDay * 7 * 0.9).toFixed(0) %></span>
-                            <span class="discount">10% off</span>
-                        </div>
-                        <div class="pricing-option" data-period="monthly">
-                            <span class="period">Monthly</span>
-                            <span class="price">$<%= (car.pricePerDay * 30 * 0.8).toFixed(0) %></span>
-                            <span class="discount">20% off</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Reviews Section -->
-                <div class="reviews-section">
-                    <h3>Customer Reviews</h3>
-                    <% if (reviews && reviews.length > 0) { %>
-                        <div class="reviews-container">
-                            <% reviews.forEach(review => { %>
-                                <div class="review-card">
-                                    <div class="review-header">
-                                        <div class="reviewer-name"><%= review.user.firstName %> <%= review.user.lastName %></div>
-                                        <div class="review-rating">
-                                            <% for(let i = 1; i <= 5; i++) { %>
-                                                <span class="star <%= i <= review.rating ? 'filled' : '' %>">⭐</span>
-                                            <% } %>
-                                        </div>
-                                    </div>
-                                    <% if (review.comment) { %>
-                                        <div class="review-comment"><%= review.comment %></div>
-                                    <% } %>
-                                    <div class="review-date"><%= new Date(review.createdAt).toLocaleDateString() %></div>
-                                </div>
-                            <% }) %>
-                        </div>
-                    <% } else { %>
-                        <p class="no-reviews">No reviews yet. Be the first to review this car!</p>
-                    <% } %>
-                </div>
             </section>
-        </section>
+        
     </main>
 
     <footer>
@@ -155,6 +157,7 @@
             availability: '<%= car.availability %>'
         };
     </script>
+
     <script src="/js/index.js"></script>
     <script src="/js/cardetails.js"></script>
 </body>
