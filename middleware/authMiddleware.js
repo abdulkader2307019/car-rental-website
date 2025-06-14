@@ -9,7 +9,7 @@ const protect = async (req, res, next) => {
     if (req.session && req.session.userId) {
       const user = await User.findById(req.session.userId).select('-password');
       if (user) {
-        req.user = user;
+        req.user = { id: user._id, ...user.toObject() };
         return next();
       }
     }
@@ -38,7 +38,7 @@ const protect = async (req, res, next) => {
       });
     }
     
-    req.user = user;
+    req.user = { id: user._id, ...user.toObject() };
     req.session.userId = user._id;
     next();
   } catch (error) {

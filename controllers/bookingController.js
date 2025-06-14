@@ -107,7 +107,7 @@ const confirmBooking = async (req, res) => {
 const viewBooking = async (req, res) => {
   try {
     const bookings = await Booking.find({ user: req.user.id })
-      .populate('car')
+      .populate('car', 'brand model pricePerDay')
       .sort({ startDate: -1 });
 
     res.json({ success: true, bookings });
