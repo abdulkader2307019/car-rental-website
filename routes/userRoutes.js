@@ -1,7 +1,6 @@
 
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 
 const userController = require('../controllers/userController')
 
@@ -24,5 +23,6 @@ router.get("/booking/:carId", userController.user_get_booking);
 router.get("/LoginPage/login", (req, res) => {
   res.render("LoginPage/login");
 });
+
 
 module.exports = router;

@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const sessionMiddleware = require('./middleware/sessionMiddleware');
-
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -12,16 +11,9 @@ app.use(cookieParser());
 app.use(sessionMiddleware);
 app.set('view engine', 'ejs');
 app.set("views", path.join(__dirname, "views"));
-
 require('dotenv').config();
 const port = process.env.PORT || 3000;
 const DB_URL = process.env.MONGODB_URI ;
-
-const Car = require('./models/carSchema');
-const User = require('./models/User');
-const Booking = require('./models/bookingSchema');
-const Discount = require('./models/discountSchema');
-
 
 const authRoutes = require('./routes/authRoutes');
 const profileRoutes = require('./routes/profileRoutes');
@@ -41,22 +33,6 @@ app.use('/api/admin', adminRoutes);
 app.use('/AdminPage',adminDashRoutes);
 app.use(userRoutes);
 
-
-
-app.get('/api/cars/:id/image', async (req, res) => {
-  try {
-    const car = await Car.findById(req.params.id);
-    if (!car || !car.image || !car.image.data) {
-      return res.status(404).send('Image not found');
-    }
-    
-    res.set('Content-Type', car.image.contentType);
-    res.send(car.image.data);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error loading image');
-  }
-});
 
 app.use((err, req, res, next) => {
   console.error('Global error handler:', err);
